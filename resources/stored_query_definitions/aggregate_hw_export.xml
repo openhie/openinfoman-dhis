@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<careServicesFunction xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:xforms="http://www.w3.org/2002/xforms"
+  xmlns:hfp="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:csd="urn:ihe:iti:csd:2013" 
+  xmlns="urn:ihe:iti:csd:2013" 
+  uuid="97601c2c-04b6-4608-8405-1594811d613d">
+  <description> 
+    Returns DHIS2 DXF quaterly report of number of health workers by facility 
+    
+    Reuqest parameters:
+      assigningAuthorityName: the assignining authority name for the csd:facility/csd:otherID in which the DHIS code is stored
+  </description>
+  <definition ><xi:include parse='text' href='aggregate_hw_export.xq'/></definition>
+  <xforms:instance>
+    <careServicesRequest>
+      <assigningAuthorityName/>
+    </careServicesRequest>
+  </xforms:instance>
+</careServicesFunction>
