@@ -26,4 +26,10 @@ declare function dxf:orgunit_get_level($doc,$orgUnit ) {
   return count($parents)
 };
 
+declare function dxf:get_children($doc, $orgUnit){
+let $parent_id := $orgUnit/dxf:id/text()
+let $child_id := $doc/dxf:dxf/dxf:organisationUnitRelationships/dxf:organisationUnitRelationship[./dxf:parent/text() = $parent_id]/dxf:child/text()
+return $doc/dxf:dxf/dxf:organisationUnits/dxf:organisationUnit[./dxf:id/text()  = $child_id]
+};
+
 
