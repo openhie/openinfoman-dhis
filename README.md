@@ -27,3 +27,6 @@ basex -Vc "REPO INSTALL dxf_1_0.xqm"
 cd ~/basex/resources/stored_query_definitions
 ln -sf ~/openinfoman-dhis/resources/stored_query_definitions/* .
 </pre>
+
+Be sure to reload the stored functions: 
+> https://github.com/openhie/openinfoman/wiki/Install-Instructions#Loading_Stored_Queries
