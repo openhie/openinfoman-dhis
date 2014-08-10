@@ -6,7 +6,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:csd="urn:ihe:iti:csd:2013" 
   xmlns="urn:ihe:iti:csd:2013" 
-  uuid="97601c2c-04b6-4608-8405-1594811d613d">
+  urn="urn:dhis2:org:csd:num_hws">
   <description> 
     Returns DHIS2 DXF quaterly report of number of health workers by facility 
     

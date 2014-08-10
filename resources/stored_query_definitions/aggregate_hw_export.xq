@@ -19,9 +19,9 @@ return
     <dataValueSet>
       {
 	for $fac in $facilities
-	let $facoid := $fac/@oid
+	let $facurn := $fac/@urn
 	let $faccode := $fac/csd:otherID[@assigningAuthorityName= $assName ]/@code
-	let $facProviders := $providers[csd:facilities/csd:facility/@oid=$facoid]    
+	let $facProviders := $providers[csd:facilities/csd:facility/@urn=$facurn]    
 	where $faccode   
 	return 
         <dataValue period='{$period}' orgUnit='{$faccode}' dataElement='numProviders' value='{count($facProviders)}'/>
