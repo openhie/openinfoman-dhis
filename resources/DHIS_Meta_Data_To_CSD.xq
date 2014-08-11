@@ -50,15 +50,20 @@ return
       for $orgUnit in $orgUnits
       let $displayName:=string($orgUnit/@name)
       let $id:=string($orgUnit/@id)
+      let $pid:=string($orgUnit/dxf:parent/@id)
       let $level :=   xs:integer($orgUnit/@level)
+      where ($level > 3) 
       return 
-	if ($level > 3) 
-	then
 	   <csd:facility oid="{$urn_base_fac}:{$id}">
 	    <csd:codedType code="{$level}" codingScheme="{$urn_base}"/>
 	    <csd:primaryName>{$displayName}</csd:primaryName>
+	    { if ($pid) then 
+	      <csd:organizations>
+	       <csd:organization urn="{$urn_base_org}:{$pid}"/>
+	      </csd:organizations>
+	      else () 
+	    }
 	   </csd:facility>
-	else ()
     }
   </csd:facilityDirectory>
   <csd:providerDirectory/>
