@@ -3,20 +3,11 @@ To use:
   basex  -i /path/to/source/metaData.xml -o /tmp/dhis_metadata_as_csd.xml DHIS_Meta_Data_To_CSD.xq 
 
 :)
-
+import module namespace dxf_conf = "http://dhis2.org/csd/config" at "DHIS_config.xqm";
 declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 declare namespace csd = "urn:ihe:iti:csd:2013";
 
 
-
-
-let $urn_base := "urn:dhis.org:sierra-leone-demo"
-let $oid_base := "2.268234768686152474523705575269868869248" (:decimal representaiton of  UUID:)
-let $oid_orgtype:= concat($oid_base,".1") (: cross references org level :)
-let $oid_hwtype:= concat($oid_base,".2") (: cross references authority group :)
-let $urn_base_fac := concat($urn_base , ":csd:facility")
-let $urn_base_org := concat($urn_base , ":csd:organization")
-let $urn_base_hw := concat($urn_base , ":csd:provider")
 
 let $get_children := function($doc,$orgUnit) {
   let $id := $orgUnit/@id
@@ -29,7 +20,7 @@ let $get_org_hws := function($doc,$orgUnit) {
   let $hwid := string($hw/@id)
   return 
   <csd:contact>
-    <csd:provider urn="{$urn_base_hw}:{$hwid}"/>
+    <csd:provider urn="{$dxf_conf:urn_base_hw}:{$hwid}"/>
   </csd:contact>
 }
 
@@ -64,14 +55,14 @@ return
       return 
 	if (($level < 4) or (($level = 4) and (count($get_children(/, $orgUnit)) >0))) 
 	then
-  	  <csd:organization urn="{$urn_base_org}:{$id}">
-	    <csd:codedType code="{$level}" codingScheme="{$oid_orgtype}"/>
+  	  <csd:organization urn="{$dxf_conf:urn_base_org}:{$id}">
+	    <csd:codedType code="{$level}" codingScheme="{$dxf_conf:oid_orgtype}"/>
 	    <csd:primaryName>{$displayName}</csd:primaryName>
 	    {
 	      if ($level > 1) 
 	      then
 		let $pid := string($orgUnit/dxf:parent/@id)
-		return	<csd:parent urn="{$urn_base_org}:{$pid}"/>
+		return	<csd:parent urn="{$dxf_conf:urn_base_org}:{$pid}"/>
 	      else ()
              }
 	     {$get_org_hws(/,$orgUnit)}
@@ -90,12 +81,12 @@ return
       let $level :=   xs:integer($orgUnit/@level)
       where ($level > 3) 
       return 
-	   <csd:facility oid="{$urn_base_fac}:{$id}">
-	    <csd:codedType code="{$level}" codingScheme="{$urn_base}"/>
+	   <csd:facility oid="{$dxf_conf:urn_base_fac}:{$id}">
+	    <csd:codedType code="{$level}" codingScheme="{$dxf_conf:oid_hwtype}"/>
 	    <csd:primaryName>{$displayName}</csd:primaryName>
 	    { if ($pid) then 
 	      <csd:organizations>
-	       <csd:organization urn="{$urn_base_org}:{$pid}"/>
+	       <csd:organization urn="{$dxf_conf:urn_base_org}:{$pid}"/>
 	      </csd:organizations>
 	      else () 
 	    }
@@ -108,7 +99,7 @@ return
    {
      for $user in $orgUsers 
      let $id := string($user/@id)
-     let $urn := concat($urn_base_hw , ':',$id)     
+     let $urn := concat($dxf_conf:urn_base_hw , ':',$id)     
      let $fore := $user/dxf:firstName/text()
      let $sur := $user/dxf:surname/text()
      let $email := $user/dxf:email/text()
@@ -118,7 +109,7 @@ return
          {
 	   for $ag in $user/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup
 	   return 
-           <csd:codedType code="{$ag/@id}" codingScheme="{$oid_hwtype}"/>
+           <csd:codedType code="{$ag/@id}" codingScheme="{$dxf_conf:oid_hwtype}"/>
 	 }
 	 <csd:demographic>
 	   <csd:name>
@@ -145,7 +136,7 @@ return
 	   {
 	     for $org in $user/dxf:organisationUnits/dxf:organisationUnit
 	     let $orgid := string($org/@id)
-	     return <csd:organization urn="{$urn_base_org}:{$orgid}"/>
+	     return <csd:organization urn="{$dxf_conf:urn_base_org}:{$orgid}"/>
 	   }
 	 </csd:organizations>
 
