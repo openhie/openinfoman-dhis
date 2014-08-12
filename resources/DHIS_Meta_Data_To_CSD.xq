@@ -15,6 +15,8 @@ let $get_children := function($doc,$orgUnit) {
 
 
 let $urn_base := "urn:dhis.org:sierra-leone-demo"
+let $oid_base := "2.268234768686152474523705575269868869248" (:decimal representaiton of  UUID:)
+let $oid_orgtype:= concat($oid_base,".1")
 let $urn_base_fac := concat($urn_base , ":csd:facility")
 let $urn_base_org := concat($urn_base , ":csd:organization")
 
@@ -31,7 +33,7 @@ return
 	if (($level < 4) or (($level = 4) and (count($get_children(/, $orgUnit)) >0))) 
 	then
   	  <csd:organization urn="{$urn_base_org}:{$id}">
-	    <csd:codedType code="{$level}" codingScheme="{$urn_base}"/>
+	    <csd:codedType code="{$level}" codingScheme="{$oid_orgtype}"/>
 	    <csd:primaryName>{$displayName}</csd:primaryName>
 	    {
 	      if ($level > 1) 
