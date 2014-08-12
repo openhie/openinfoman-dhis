@@ -131,14 +131,47 @@ return
 	     </csd:contactPoint>
 	     else ()
 	   }
-	 </csd:demographic>	     
-	 <csd:organizations>
-	   {
-	     for $org in $user/dxf:organisationUnits/dxf:organisationUnit
-	     let $orgid := string($org/@id)
-	     return <csd:organization urn="{$dxf_conf:urn_base_org}:{$orgid}"/>
+	 </csd:demographic>
+	 {
+	   let $torgs := $user/dxf:organisationUnits/dxf:organisationUnit
+	   let $orgs := 
+	     for $torg in $torgs 
+	     let $level :=  string(/dxf:metaData/dxf:organisationUnits/dxf:organisationUnit[@id = $torg/@id]/@level)
+	     where ($level = "1" or $level = "2" or $level = "3")
+	     return $torg
+	         
+	   return if (count($orgs) > 0)
+	     then
+	       <csd:organizations>
+		 {
+		   for $org in $orgs
+		   let $orgid := string($org/@id)
+		   return <csd:organization urn="{$dxf_conf:urn_base_org}:{$orgid}"/>
+		 }
+		 
+	       </csd:organizations>
+	     else ()
 	   }
-	 </csd:organizations>
+	   {
+	   let $tfacs := $user/dxf:organisationUnits/dxf:organisationUnit
+	   let $facs := 
+	     for $tfac in $tfacs
+	     let $level :=  string(/dxf:metaData/dxf:organisationUnits/dxf:organisationUnit[@id = $tfac/@id]/@level)
+	     where ($level = "4" or $level = "5")
+	     return $tfac
+
+	   return if (count($facs) > 0)
+	       then
+	       <csd:facilities>
+		 {
+		   for $org in $facs
+		   let $orgid := string($org/@id)
+		   return <csd:facility urn="{$dxf_conf:urn_base_org}:{$orgid}"/>
+		 }
+		 
+	       </csd:facilities>
+	     else ()
+	   }
 
       </csd:provider>
 

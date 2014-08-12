@@ -11524,9 +11524,9 @@
           <csd:surname>User</csd:surname>
         </csd:name>
       </csd:demographic>
-      <csd:organizations>
-        <csd:organization urn="urn:dhis.org:sierra-leone-demo:csd:organization:DiszpKrYNg8"/>
-      </csd:organizations>
+      <csd:facilities>
+        <csd:facility urn="urn:dhis.org:sierra-leone-demo:csd:organization:DiszpKrYNg8"/>
+      </csd:facilities>
     </csd:provider>
     <csd:provider urn="urn:dhis.org:sierra-leone-demo:csd:provider:oXD88WWSQpR">
       <csd:codedType code="Ufph3mGRmMo" codingScheme="2.25.268234768686152474523705575269868869248.2"/>
@@ -11659,9 +11659,9 @@
           <csd:codedType code="EMAIL" codingScheme="urn:ihe:iti:csd:2013:contactPoint">mobile@tmail.com</csd:codedType>
         </csd:contactPoint>
       </csd:demographic>
-      <csd:organizations>
-        <csd:organization urn="urn:dhis.org:sierra-leone-demo:csd:organization:DiszpKrYNg8"/>
-      </csd:organizations>
+      <csd:facilities>
+        <csd:facility urn="urn:dhis.org:sierra-leone-demo:csd:organization:DiszpKrYNg8"/>
+      </csd:facilities>
     </csd:provider>
     <csd:provider urn="urn:dhis.org:sierra-leone-demo:csd:provider:NOOF56dveaZ">
       <csd:codedType code="jRWSNIHdKww" codingScheme="2.25.268234768686152474523705575269868869248.2"/>
