@@ -1,0 +1,14 @@
+<svs:ValueSet xmlns:svs="urn:ihe:iti:svs:2008" id="2.268234768686152474523705575269868869248.2" version="2014.8.12" displayName="DHIS Sierra Leone Demo Data Health Worker Type">
+  <svs:ConceptList xml:lang="en-US">
+    <svs:Concept code="aNk5AyC7ydy" displayName="MNCH / PNC (Adult Woman) program" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="txB7vu1w2Pr" displayName="Facility tracker" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="TMK9CMZ2V98" displayName="Child health program" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="DRdaVRtwmG5" displayName="Inpatient program" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="XS0dNzuZmfH" displayName="Guest" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="LGWLyWNro4x" displayName="System administrator (ALL)" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="Euq3XfEIEbx" displayName="Data entry clerk" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="cUlTcejWree" displayName="TB program" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="Ufph3mGRmMo" displayName="Superuser" codeSystem="2.268234768686152474523705575269868869248.2"/>
+    <svs:Concept code="jRWSNIHdKww" displayName="M and E Officer" codeSystem="2.268234768686152474523705575269868869248.2"/>
+  </svs:ConceptList>
+</svs:ValueSet>
