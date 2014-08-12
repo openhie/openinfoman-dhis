@@ -52,6 +52,9 @@ return
       let $displayName:= string($orgUnit/@name)
       let $id:=string($orgUnit/@id)
       let $level := xs:integer($orgUnit/@level)
+      let $lm := string($orgUnit/@lastUpdated)
+      let $created := string($orgUnit/@created)
+
       return 
 	if (($level < 4) or (($level = 4) and (count($get_children(/, $orgUnit)) >0))) 
 	then
@@ -67,6 +70,7 @@ return
              }
 	     {$get_org_hws(/,$orgUnit)}
 	    {$get_geocode(/,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
+	    <csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
 	   </csd:organization>
         else () 
       }
@@ -79,6 +83,8 @@ return
       let $id:=string($orgUnit/@id)
       let $pid:=string($orgUnit/dxf:parent/@id)
       let $level :=   xs:integer($orgUnit/@level)
+      let $lm := string($orgUnit/@lastUpdated)
+      let $created := string($orgUnit/@created)
       where ($level > 3) 
       return 
 	   <csd:facility oid="{$dxf_conf:urn_base_fac}:{$id}">
@@ -92,6 +98,7 @@ return
 	    }
 	    {$get_org_hws(/,$orgUnit)}
 	    {$get_geocode(/,$orgUnit)}
+	    <csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
 	   </csd:facility>
     }
   </csd:facilityDirectory>
@@ -104,6 +111,8 @@ return
      let $sur := $user/dxf:surname/text()
      let $email := $user/dxf:email/text()
      let $phone := $user/dxf:phoneNumber/text()
+     let $lm := string($user/@lastUpdated)
+     let $created := string($user/@created)
      return 
       <csd:provider urn="{$urn}">
          {
@@ -172,7 +181,7 @@ return
 	       </csd:facilities>
 	     else ()
 	   }
-
+	   <csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
       </csd:provider>
 
    }
