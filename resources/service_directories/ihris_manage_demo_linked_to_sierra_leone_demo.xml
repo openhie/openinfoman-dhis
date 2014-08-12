@@ -1,5 +1,5 @@
 <csd:CSD xmlns:csd="urn:ihe:iti:csd:2013">
-  <csd:organisationDirectory/>
+  <csd:organizationDirectory/>
   <csd:serviceDirectory/>
   <csd:facilityDirectory/>
   <csd:providerDirectory>

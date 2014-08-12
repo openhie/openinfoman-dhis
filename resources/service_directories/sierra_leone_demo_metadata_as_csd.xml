@@ -1,5 +1,5 @@
 <csd:CSD xmlns:csd="urn:ihe:iti:csd:2013">
-  <csd:organisationDirectory>
+  <csd:organizationDirectory>
     <csd:organization urn="urn:dhis.org:sierra-leone-demo:csd:organization:g8DdBm7EmUt">
       <csd:codedType code="3" codingScheme="2.25.268234768686152474523705575269868869248.1"/>
       <csd:primaryName>Sittia</csd:primaryName>
@@ -1071,7 +1071,7 @@
       <csd:parent urn="urn:dhis.org:sierra-leone-demo:csd:organization:O6uvpzGd5pu"/>
       <csd:record created="2014-08-12T10:24:28.681+0000" updated="2014-08-12T10:24:28.711+0000" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
     </csd:organization>
-  </csd:organisationDirectory>
+  </csd:organizationDirectory>
   <csd:serviceDirectory/>
   <csd:facilityDirectory>
     <csd:facility oid="urn:dhis.org:sierra-leone-demo:csd:facility:xa4F6gesVJm">

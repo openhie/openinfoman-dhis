@@ -11,7 +11,7 @@ let $cadres := ("AHP","PHM","MD","NUR")
 
 return 
 <csd:CSD>
-  <csd:organisationDirectory/>
+  <csd:organizationDirectory/>
   <csd:serviceDirectory/>
   <csd:facilityDirectory/>
   <csd:providerDirectory>

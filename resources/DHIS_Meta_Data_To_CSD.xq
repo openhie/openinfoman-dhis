@@ -46,7 +46,7 @@ let $orgUnits := /dxf:metaData/dxf:organisationUnits/dxf:organisationUnit
 let $orgUsers := /dxf:metaData/dxf:users/dxf:user[count(./dxf:organisationUnits/dxf:organisationUnit) > 0]
 return 
 <csd:CSD xmlns:csd="urn:ihe:iti:csd:2013">
-  <csd:organisationDirectory>
+  <csd:organizationDirectory>
     {
       for $orgUnit in $orgUnits
       let $displayName:= string($orgUnit/@name)
@@ -74,7 +74,7 @@ return
 	   </csd:organization>
         else () 
       }
-  </csd:organisationDirectory>
+  </csd:organizationDirectory>
   <csd:serviceDirectory/>
   <csd:facilityDirectory>
     {
