@@ -25,7 +25,7 @@ return
 	let $count := count($facProviders)
 	where $faccode  and $count > 0
 	return 
-        <dataValue period="{$period}" orgUnit="{$faccode}" dataElement="numProviders" value="{$count}" urn="{$facurn}"/>
+        <dataValue period="{$period}" orgUnit="{$faccode}" dataElement="numProviders" value="{$count}" />
       }
     </dataValueSet>
   </dxf>
