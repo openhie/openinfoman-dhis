@@ -19,4 +19,5 @@
       <assigningAuthorityName/>
     </careServicesRequest>
   </xforms:instance>
+  <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>
 </careServicesFunction>
