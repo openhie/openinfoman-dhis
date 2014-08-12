@@ -11525,7 +11525,7 @@
         </csd:name>
       </csd:demographic>
       <csd:facilities>
-        <csd:facility urn="urn:dhis.org:sierra-leone-demo:csd:organization:DiszpKrYNg8"/>
+        <csd:facility urn="urn:dhis.org:sierra-leone-demo:csd:facility:DiszpKrYNg8"/>
       </csd:facilities>
     </csd:provider>
     <csd:provider urn="urn:dhis.org:sierra-leone-demo:csd:provider:oXD88WWSQpR">
@@ -11660,7 +11660,7 @@
         </csd:contactPoint>
       </csd:demographic>
       <csd:facilities>
-        <csd:facility urn="urn:dhis.org:sierra-leone-demo:csd:organization:DiszpKrYNg8"/>
+        <csd:facility urn="urn:dhis.org:sierra-leone-demo:csd:facility:DiszpKrYNg8"/>
       </csd:facilities>
     </csd:provider>
     <csd:provider urn="urn:dhis.org:sierra-leone-demo:csd:provider:NOOF56dveaZ">

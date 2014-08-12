@@ -166,7 +166,7 @@ return
 		 {
 		   for $org in $facs
 		   let $orgid := string($org/@id)
-		   return <csd:facility urn="{$dxf_conf:urn_base_org}:{$orgid}"/>
+		   return <csd:facility urn="{$dxf_conf:urn_base_fac}:{$orgid}"/>
 		 }
 		 
 	       </csd:facilities>
