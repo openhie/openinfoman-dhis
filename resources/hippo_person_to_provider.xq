@@ -19,6 +19,8 @@ return
     for $person in /pma_xml_export/database/*
     let $id := $person/column[@name='id']/text()
     let $urn := concat("urn:ihris.org:manage-demo:csd:provider:",$id)
+    let $lm := replace($person/column[@name='last_modified']/text(),' ' , 'T')
+    let $created := $lm
     let $sur := $person/column[@name='firstname']/text()
     let $fore := $person/column[@name='surname']/text()    
     let $cpos := random:integer(count($cadres)-1)+1
@@ -43,6 +45,7 @@ return
 	   return <csd:facility urn="urn:dhis.org:sierra-leone-demo:csd:facility:{$fac_urn}"/>
 	 }
 	</csd:facilities>
+	<csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.ihris.org/manage"/>
       </csd:provider>
   }
   </csd:providerDirectory>
