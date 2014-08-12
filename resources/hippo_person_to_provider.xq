@@ -6,6 +6,7 @@ declare namespace csd = "urn:ihe:iti:csd:2013";
 
 let $urn_moh := "urn:dhis.org:sierra-leone-demo:csd:organization:ImspTQPwCqd"
 let $fac_urns := ("AvGz949akv4","F7u30K5OIpi","gUPhNWkSXvD","RVAkLOVWSWc","GQpxsB7tekR","cZZG5BMDLps","svCLFkT99Yx","AFi1GjbeejL","ZZmMpGIE7pD","gei3Sqw8do7","ZALwM386w0T","XfVYz6l2rzg","M721NHGtdZV","W7ekX3gi0ut","XJ6DqDkMlPv","Bift1B4gjru","gsypzntLahf","MuZJ8lprGqK","ZKL5hlVG6F6","dCvUVvKnhMe","jk1TtiBM5hz","mEUUK7MHLSF","jNb63DIHuwU","TSyzvBiovKh","Umh4HKqqFp6","DiszpKrYNg8","bvV8jXFvZ4K","ZIqREl9AlUJ","zfLTswAf6Q2","OqfQZ8hOxbm")
+let $cadres := ("AHP","PHM","MD","NUR")
 
 
 return 
@@ -19,9 +20,12 @@ return
     let $id := $person/column[@name='id']/text()
     let $urn := concat("urn:ihris.org:manage-demo:csd:provider:",$id)
     let $sur := $person/column[@name='firstname']/text()
-    let $fore := $person/column[@name='surname']/text()
+    let $fore := $person/column[@name='surname']/text()    
+    let $cpos := random:integer(count($cadres)-1)+1
+    let $cadre := $cadres[position() = $cpos]
     return 
-      <csd:provider urn="{$urn}">
+      <csd:provider urn="{$urn}">        
+        <csd:codedType code="{$cadre}" codingScheme="2.25.11111176868615247452370557526986886924"/>
 	<csd:demographic>
 	  <csd:name>
 	    <csd:commonName>{$sur}, {$fore}</csd:commonName>
