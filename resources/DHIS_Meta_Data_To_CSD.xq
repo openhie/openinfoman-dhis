@@ -87,7 +87,8 @@ return
       let $created := string($orgUnit/@created)
       where ($level > 3) 
       return 
-	   <csd:facility oid="{$dxf_conf:urn_base_fac}:{$id}">
+	   <csd:facility urn="{$dxf_conf:urn_base_fac}:{$id}">
+	    <csd:otherID assigningAuthorityName="dhis.org:orgid" code="{$id}"/>
 	    <csd:codedType code="{$level}" codingScheme="{$dxf_conf:oid_hwtype}"/>
 	    <csd:primaryName>{$displayName}</csd:primaryName>
 	    { if ($pid) then 
