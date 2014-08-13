@@ -20,4 +20,5 @@
     </careServicesRequest>
   </xforms:instance>
   <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>
+  <csd:extension type='createDXF' urn='urn:openhie.org:openinfoman:adapter:dhis2:action'/>
 </careServicesFunction>

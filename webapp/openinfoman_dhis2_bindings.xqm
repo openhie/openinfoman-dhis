@@ -15,9 +15,17 @@ declare function page:is_dhis($search_name) {
   return (count($ext) > 0) 
 };
 
+
+declare function page:get_actions($search_name) {
+  let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
+  return 
+    for $act in $function//csd:extension[  @urn='urn:openhie.org:openinfoman:adapter:dhis2:action']/@type
+    return string($act)
+};
+
 declare
   %rest:path("/CSD/adapter/dhis2/{$search_name}")
-  %output:media-type("xhtml")
+  %output:method("xhtml")
   function page:show_endpoints($search_name) 
 {  
   let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
@@ -31,7 +39,7 @@ declare
 	    <h2>DHIS2 Aggregating Documents</h2>
             <ul>
               {
-  		for $doc_name in csd_dm:registered_documents($csd_webconf:db,true())      
+  		for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
 		return
   		<li>
 		  <a href="{$csd_webconf:baseurl}CSD/adapter/dhis2/{$search_name}/{$doc_name}">{string($doc_name)}</a>
@@ -39,7 +47,7 @@ declare
 	      }
 	    </ul>
 	  </div>
-       return $contents
+       return csd_webconf:wrapper($contents)
 
  
 };
@@ -48,7 +56,7 @@ declare
 
 declare
   %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}")
-  %output:media-type("xhtml")
+  %output:method("xhtml")
   function page:show_endpoints($search_name,$doc_name) 
 {  
   let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
@@ -56,20 +64,29 @@ declare
     if (not(page:is_dhis($search_name)) ) 
     then ('Not a DHIS2 Compatible stored function'    )
     else 
+      let $actions := page:get_actions($search_name)
       let $contents := 
       <div>
-        <h2>Aggregate Health Worker Data</h2>
-	  {
-	    let $url := concat($csd_webconf:baseurl, "CSD/adapter/dhis2/",$search_name, "/", $doc_name, "/aggregate")
-	    return <a href="{$url}">Get DXF</a>
-	  }
+        <h2>DHIS Operations on {$doc_name}</h2>
+        { 
+          if ($actions = 'createDXF')  
+	  then
+	   <span>
+             <h3>Aggregate Health Worker Data</h3>
+	     {
+	       let $url := concat($csd_webconf:baseurl, "CSD/adapter/dhis2/",$search_name, "/", $doc_name, "/createDXF")
+	       return <a href="{$url}">Get DXF</a>
+	     }
+	   </span>
+	  else ()
+	}
       </div>
-      return $contents
+      return csd_webconf:wrapper($contents)
 };
 
 
 declare
-  %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}/aggregate") 
+  %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}/createDXF") 
   function page:execute2($search_name,$doc_name) 
 {
   let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
