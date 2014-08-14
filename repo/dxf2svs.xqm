@@ -24,21 +24,4 @@ declare function dxf2svs:extract-health-worker-type($doc) {
 };
 
 
-declare function dxf2svs:extract-organization-type($doc) {
-
-  let $list_name := concat($dxf_conf:instance_name, " Organization Level")
-    
-  let $version := concat(year-from-date(current-date()),'.',month-from-date(current-date()),'.',day-from-date(current-date()))
-    
-  return 
-  <svs:ValueSet id="{$dxf_conf:oid_orgtype}" version="{$version}" displayName="{$list_name}">
-    <svs:ConceptList xml:lang="en-US">
-      {
-	for $level in $doc/dxf:metaData/dxf:organisationUnitLevels/dxf:organisationUnitLevel
-	return   <svs:Concept code="{$level/@level}" displayName="{$level/@name}" codeSystem="{$dxf_conf:oid_orgtype}"/>
-      }
-    </svs:ConceptList>
-  </svs:ValueSet>
-};
-
 

@@ -6,11 +6,11 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:csd="urn:ihe:iti:csd:2013" 
   xmlns="urn:ihe:iti:csd:2013" 
-  urn="urn:dhis2.org:csd:stored-function:dxf2csd">
+  urn="urn:dhis2.org:csd:stored-function:dxf2svs">
   <description> 
-    Updates the CSD document with a transform of the DHIS2 DXF.  
+    Update SVS lists from a DHIS2 MetaData Export
   </description>
-  <definition ><xi:include parse='text' href='dxf_to_csd.xq'/></definition>
+  <definition ><xi:include parse='text' href='dxf_to_svs.xq'/></definition>
   <xforms:instance>
     <careServicesRequest>
       <dxf/>

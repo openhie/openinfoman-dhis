@@ -84,12 +84,12 @@ declare
 	  else ()
 	}
         { 
-          if ($actions = 'uploadDXF')  
+          if ($actions = 'upload')  
 	  then
 	   <span>
-             <h3>Upload DXF as CSD Directory</h3>
+             <h3>Upload DXF Document</h3>
 	     {
-	       let $url := concat($csd_webconf:baseurl, "CSD/adapter/dhis2/",$search_name, "/", $doc_name, "/updateDXF")
+	       let $url := concat($csd_webconf:baseurl, "CSD/adapter/dhis2/",$search_name, "/", $doc_name, "/upload")
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
 		   <label for='dxf'>DXF File</label>
@@ -100,12 +100,12 @@ declare
 	   </span>
 	  else ()
 	}
-
       </div>
       return csd_webconf:wrapper($contents)
 };
 
 
+ 
 declare
   %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}/createDXF")
   function page:execute2($search_name,$doc_name) 
@@ -118,20 +118,17 @@ declare
     let $assName := "dhis.org:orgid"
     let $careServicesRequest := 
       <csd:careServicesRequest>
-	<csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
-	  <csd:requestParams >
-	    <assigningAuthorityName>{$assName}</assigningAuthorityName>
-	  </csd:requestParams>
-	</csd:function>
+       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
+         <csd:requestParams >
+           <assigningAuthorityName>{$assName}</assigningAuthorityName>
+         </csd:requestParams>
+       </csd:function>
       </csd:careServicesRequest>
     return csr_proc:process_CSR_stored_results($csd_webconf:db, $doc,$careServicesRequest)
 };
 
-
-
-
 declare updating
-  %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}/updateDXF")   
+  %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}/upload")   
   %rest:POST
   %rest:form-param("dxf", "{$dxf}")
   function page:update_doc($search_name,$doc_name,$dxf) 
@@ -147,19 +144,17 @@ declare updating
 
     let $careServicesRequest := 
       <csd:careServicesRequest>
-	<csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
-	  <csd:requestParams >
-	    <dxf>{$content}</dxf>
-	    <oid>{$oid}</oid>
-	    <urn>{$urn}</urn>
-	  </csd:requestParams>
-	</csd:function>
+       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
+         <csd:requestParams >
+           <dxf>{$content}</dxf>
+           <oid>{$oid}</oid>
+           <urn>{$urn}</urn>
+         </csd:requestParams>
+       </csd:function>
       </csd:careServicesRequest>
     return 
        (
-	 csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest)
-	 ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)
+        csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest)
+        ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)
        )
 };
-
-
