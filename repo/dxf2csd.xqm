@@ -30,13 +30,16 @@ declare function dxf2csd:get_children($doc,$orgUnit) {
 
 
 
-declare function dxf2csd:get_org_hws($doc,$orgUnit,$urn_base) {
-  
+declare function dxf2csd:get_org_hws($doc,$orgUnit,$urn_base,$oid_base) {
+  let $oid := dxf2csd:oid_hwtype($oid_base)    
+
   for $hw in $doc/dxf:metaData/dxf:users/dxf:user[count(./dxf:organisationUnits/dxf:organisationUnit[@id = $orgUnit/@id]) > 0]
   let $hwid := string($hw/@id)
   let $urn := concat(dxf2csd:urn_base_hw($urn_base),':',$hwid)
+  let $role := ($hw/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup/@id)[1]
   return 
     <csd:contact>
+      {if (exists($role)) then <csd:codedType code="{$role}" codingScheme="{$oid}"/> else ()}
       <csd:provider urn="{$urn}"/>
     </csd:contact>
 };
@@ -66,7 +69,7 @@ declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit,$urn_base,$oid_base)  {
   let $level :=   xs:integer($orgUnit/@level)
   let $lm := string($orgUnit/@lastUpdated)
   let $created := string($orgUnit/@created)
-  let $oid := dxf2csd:oid_hwtype($oid_base)
+  let $oid := dxf2csd:oid_hwtype($oid_base)   
   let $urn := concat(dxf2csd:urn_base_fac($urn_base),':',$id)
   return 
   <csd:facility urn="{$urn}">
@@ -82,7 +85,7 @@ declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit,$urn_base,$oid_base)  {
 	</csd:organizations>
     else () 
     }
-    {dxf2csd:get_org_hws($doc,$orgUnit,$urn_base)}
+    {dxf2csd:get_org_hws($doc,$orgUnit,$urn_base,$oid_base)}
     {dxf2csd:get_geocode($doc,$orgUnit)}
     <csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
   </csd:facility>
@@ -108,7 +111,7 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$urn_base,$oid_base)  {
 	    return	<csd:parent urn="{$purn}"/>
 	  else ()
         }
-	{dxf2csd:get_org_hws($doc,$orgUnit,$urn_base)}
+	{dxf2csd:get_org_hws($doc,$orgUnit,$urn_base,$oid_base)}
 	{dxf2csd:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
 	<csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
       </csd:organization>
