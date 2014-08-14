@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<careServicesFunction xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:xforms="http://www.w3.org/2002/xforms"
+  xmlns:hfp="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:csd="urn:ihe:iti:csd:2013" 
+  xmlns="urn:ihe:iti:csd:2013" 
+  urn="urn:dhis2.org:csd:stored-function:dxf2csd">
+  <description> 
+    Updates the CSD document with a transform of the DHIS2 DXF.  
+  </description>
+  <definition ><xi:include parse='text' href='dxf_to_csd.xq'/></definition>
+  <xforms:instance>
+    <careServicesRequest>
+      <dxf/>
+      <oid/>
+      <urn/>
+    </careServicesRequest>
+  </xforms:instance>
+  <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>
+  <csd:extension type='uploadDXF' urn='urn:openhie.org:openinfoman:adapter:dhis2:action'/>
+  <csd:extension urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid' type='2.25.268234768686152474523705575269868869248' />
+  <csd:extension urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:urn' type='urn:dhis.org:sierra-leone-demo' />
+</careServicesFunction>
