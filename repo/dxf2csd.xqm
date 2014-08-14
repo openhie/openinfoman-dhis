@@ -1,7 +1,7 @@
 module namespace dxf2csd = "http://dhis2.org/csd/dxf/2.0"; 
 
-
 import module namespace dxf_conf = "http://dhis2.org/csd/config";
+
 declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 declare namespace csd = "urn:ihe:iti:csd:2013";
 
@@ -12,13 +12,17 @@ declare function dxf2csd:get_children($doc,$orgUnit) {
   return $doc/dxf:metaData/dxf:organisationUnits/dxf:organisationUnit[./dxf:parent/@id  = $id]
 };
 
-declare function dxf2csd:get_org_hws($doc,$orgUnit) {
+
+
+declare function dxf2csd:get_org_hws($doc,$orgUnit,$urn_base) {
+  
   for $hw in $doc/dxf:metaData/dxf:users/dxf:user[count(./dxf:organisationUnits/dxf:organisationUnit[@id = $orgUnit/@id]) > 0]
   let $hwid := string($hw/@id)
+  let $urn := concat(dxf_conf:urn_base_hw($urn_base),':',$hwid)
   return 
-  <csd:contact>
-    <csd:provider urn="{$dxf_conf:urn_base_hw}:{$hwid}"/>
-  </csd:contact>
+    <csd:contact>
+      <csd:provider urn="{$urn}"/>
+    </csd:contact>
 };
 
 
@@ -39,50 +43,56 @@ declare  function dxf2csd:get_geocode($doc,$orgUnit) {
 };
 
 
-declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit)  {
+declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit,$urn_base,$oid_base)  {
   let $displayName:=string($orgUnit/@name)
   let $id:=string($orgUnit/@id)
   let $pid:=string($orgUnit/dxf:parent/@id)
   let $level :=   xs:integer($orgUnit/@level)
   let $lm := string($orgUnit/@lastUpdated)
   let $created := string($orgUnit/@created)
+  let $oid := dxf_conf:oid_hwtype($oid_base)
+  let $urn := concat(dxf_conf:urn_base_fac($urn_base),':',$id)
   return 
-  <csd:facility urn="{$dxf_conf:urn_base_fac}:{$id}">
+  <csd:facility urn="{$urn}">
     <csd:otherID assigningAuthorityName="dhis.org:orgid" code="{$id}"/>
-    <csd:codedType code="{$level}" codingScheme="{$dxf_conf:oid_hwtype}"/>
+    <csd:codedType code="{$level}" codingScheme="{$oid}"/>
     <csd:primaryName>{$displayName}</csd:primaryName>
     { 
     if ($pid) then 
-      <csd:organizations>
-	<csd:organization urn="{$dxf_conf:urn_base_org}:{$pid}"/>
-      </csd:organizations>
+      let $purn := concat(dxf_conf:urn_base_org($urn_base),':',$pid)
+      return 
+        <csd:organizations>
+	  <csd:organization urn="{$purn}"/>
+	</csd:organizations>
     else () 
     }
-    {dxf2csd:get_org_hws($doc,$orgUnit)}
+    {dxf2csd:get_org_hws($doc,$orgUnit,$urn_base)}
     {dxf2csd:get_geocode($doc,$orgUnit)}
     <csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
   </csd:facility>
 };
 
-declare function dxf2csd:orgUnit-to-org($doc,$orgUnit)  {
+declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$urn_base,$oid_base)  {
   let $displayName:= string($orgUnit/@name)
   let $id:=string($orgUnit/@id)
   let $level := xs:integer($orgUnit/@level)
   let $lm := string($orgUnit/@lastUpdated)
   let $created := string($orgUnit/@created)
-
+  let $urn := concat(dxf_conf:urn_base_org($urn_base),':',$id)
+  let $oid := dxf_conf:oid_orgtype($oid_base)
   return 
-      <csd:organization urn="{$dxf_conf:urn_base_org}:{$id}">
-	<csd:codedType code="{$level}" codingScheme="{$dxf_conf:oid_orgtype}"/>
+      <csd:organization urn="{$oid}">
+	<csd:codedType code="{$level}" codingScheme="{$oid}"/>
 	<csd:primaryName>{$displayName}</csd:primaryName>
 	{
 	  if ($level > 1) 
 	    then
 	    let $pid := string($orgUnit/dxf:parent/@id)
-	    return	<csd:parent urn="{$dxf_conf:urn_base_org}:{$pid}"/>
+	    let $purn := concat(dxf_conf:urn_base_org($urn_base),':',$pid)
+	    return	<csd:parent urn="{$purn}"/>
 	  else ()
         }
-	{dxf2csd:get_org_hws($doc,$orgUnit)}
+	{dxf2csd:get_org_hws($doc,$orgUnit,$urn_base)}
 	{dxf2csd:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
 	<csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
       </csd:organization>
@@ -91,9 +101,10 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit)  {
 
 
 
-declare function dxf2csd:user-to-provider($doc,$user) {
+declare function dxf2csd:user-to-provider($doc,$user,$urn_base,$oid_base) {
   let $id := string($user/@id)
-  let $urn := concat($dxf_conf:urn_base_hw , ':',$id)     
+  let $urn := concat(dxf_conf:urn_base_hw($urn_base) , ':',$id)     
+  let $oid := dxf_conf:oid_hwtype($oid_base)
   let $fore := $user/dxf:firstName/text()
   let $sur := $user/dxf:surname/text()
   let $email := $user/dxf:email/text()
@@ -105,7 +116,7 @@ declare function dxf2csd:user-to-provider($doc,$user) {
     {
       for $ag in $user/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup
       return 
-      <csd:codedType code="{$ag/@id}" codingScheme="{$dxf_conf:oid_hwtype}"/>
+      <csd:codedType code="{$ag/@id}" codingScheme="{$oid}"/>
     }
     <csd:demographic>
       <csd:name>
@@ -142,7 +153,8 @@ declare function dxf2csd:user-to-provider($doc,$user) {
 	    {
 	      for $org in $orgs
 	      let $orgid := string($org/@id)
-	      return <csd:organization urn="{$dxf_conf:urn_base_org}:{$orgid}"/>
+	      let $purn := concat(dxf_conf:urn_base_org($urn_base),':',$orgid)
+	      return <csd:organization urn="{$purn}"/>
 	    }
 	  
 	  </csd:organizations>
@@ -162,7 +174,8 @@ declare function dxf2csd:user-to-provider($doc,$user) {
 	      {
 		for $org in $facs
 		let $orgid := string($org/@id)
-		return <csd:facility urn="{$dxf_conf:urn_base_fac}:{$orgid}"/>
+		let $furn := concat(dxf_conf:urn_base_fac($urn_base),':',$orgid)
+		return <csd:facility urn="{$furn}"/>
 	      }	    
 	    </csd:facilities>
 	  else ()
@@ -171,15 +184,9 @@ declare function dxf2csd:user-to-provider($doc,$user) {
   </csd:provider>
 };
 
-declare function dxf2csd:extract-directory($doc) {
-  dxf2csd:extract-directory($doc,4)
-};
 
-declare function dxf2csd:extract-directory($doc,$level) {
-  dxf2csd:extract-directory($doc,$level,true())
-};
-
-declare function dxf2csd:extract-directory($doc,$level,$include_providers) {
+declare function dxf2csd:extract-directory($doc,$urn_base,$oid_base) {
+  let $level := 4
   let $orgUnits := $doc/dxf:metaData/dxf:organisationUnits/dxf:organisationUnit
   return 
   <csd:CSD xmlns:csd="urn:ihe:iti:csd:2013">
@@ -188,7 +195,7 @@ declare function dxf2csd:extract-directory($doc,$level,$include_providers) {
       for $orgUnit in $orgUnits
       let $lvl := xs:integer($orgUnit/@level)
       where (($lvl < $level) or (($lvl = $level) and (count(dxf2csd:get_children($doc, $orgUnit)) >0)))
-      return dxf2csd:orgUnit-to-org($doc,$orgUnit)
+      return dxf2csd:orgUnit-to-org($doc,$orgUnit,$urn_base,$oid_base)
     }
     </csd:organizationDirectory>
     <csd:serviceDirectory/>
@@ -197,15 +204,13 @@ declare function dxf2csd:extract-directory($doc,$level,$include_providers) {
 	for $orgUnit in $orgUnits
 	let $lvl := xs:integer($orgUnit/@level)
 	where ($lvl >= $level)
-	return dxf2csd:orgUnit-to-fac($doc,$orgUnit)
+	return dxf2csd:orgUnit-to-fac($doc,$orgUnit,$urn_base,$oid_base)
       }
     </csd:facilityDirectory>
     <csd:providerDirectory>
       {
-	if ($include_providers)  then
-	  for $user in $doc/dxf:metaData/dxf:users/dxf:user[count(./dxf:organisationUnits/dxf:organisationUnit) > 0]
-	  return dxf2csd:user-to-provider($doc,$user)
-	else ()
+	for $user in $doc/dxf:metaData/dxf:users/dxf:user[count(./dxf:organisationUnits/dxf:organisationUnit) > 0]
+	return dxf2csd:user-to-provider($doc,$user,$urn_base,$oid_base)
       }  
     </csd:providerDirectory>
   </csd:CSD>
