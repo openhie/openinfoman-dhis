@@ -5,6 +5,7 @@ import module namespace csd_webconf =  "https://github.com/openhie/openinfoman/c
 import module namespace csr_proc = "https://github.com/openhie/openinfoman/csr_proc";
 import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm";
 import module namespace csd_mcs = "https://github.com/openhie/openinfoman/csd_mcs";
+import module namespace functx = "http://www.functx.com";
 
 declare namespace csd = "urn:ihe:iti:csd:2013";
 
@@ -89,11 +90,21 @@ declare
 	   <span>
              <h3>Upload DXF Document</h3>
 	     {
+	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
+	       let $urn := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:urn']/@type)
+	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
 	       let $url := concat($csd_webconf:baseurl, "CSD/adapter/dhis2/",$search_name, "/", $doc_name, "/upload")
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
-		   <label for='dxf'>DXF File</label>
+		   <label for='dxf' >DHIS2 Metadata DXF 2.0 File</label>
 		   <input type='file' name='dxf'/>
+		   <br/>
+		   <label for='urn' >Root URN for directory entries</label>
+		   <input type='text' size='60' value="{$urn}" name='urn'/>
+		   <br/>
+		   <label for='oid' >Root OID for SVS list ID</label>
+		   <input type='text' size='60' value="{$oid}" name='oid'/>
+		   <br/>
 		   <input type='submit' value='Upload'/>
 		 </form>
 	     }
@@ -131,14 +142,20 @@ declare updating
   %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}/upload")   
   %rest:POST
   %rest:form-param("dxf", "{$dxf}")
-  function page:update_doc($search_name,$doc_name,$dxf) 
+  %rest:form-param("oid", "{$oid}",'')
+  %rest:form-param("urn", "{$urn}",'')
+  function page:update_doc($search_name,$doc_name,$dxf,$oid,$urn) 
 {
   if (not(page:is_dhis($search_name)) ) then
     db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD/bad</restxq:redirect>)
   else 
     let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
-    let $urn := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:urn']/@type)
-    let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)
+    let $d_urn := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:urn']/@type)
+    let $d_oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)
+    
+    let $s_oid := if ($oid = '') then $d_oid else $oid
+    let $s_urn := if ($urn = '') then $d_urn else $urn
+
     let $name :=  map:keys($dxf)[1]
     let $content := parse-xml(convert:binary-to-string($dxf($name)))
 
@@ -147,8 +164,8 @@ declare updating
        <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
          <csd:requestParams >
            <dxf>{$content}</dxf>
-           <oid>{$oid}</oid>
-           <urn>{$urn}</urn>
+           <oid>{$s_oid}</oid>
+           <urn>{$s_urn}</urn>
          </csd:requestParams>
        </csd:function>
       </csd:careServicesRequest>
@@ -157,4 +174,5 @@ declare updating
         csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest)
         ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)
        )
+
 };
