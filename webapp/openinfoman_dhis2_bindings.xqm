@@ -31,37 +31,10 @@ declare function page:get_actions($search_name) {
   )
 };
 
-declare
-  %rest:path("/CSD/adapter/dhis2/{$search_name}")
-  %output:method("xhtml")
-  function page:show_endpoints($search_name) 
-{  
-    if (not(page:is_dhis($search_name)))
-      then ("Not a DHIS2 function")
-    else 
-      let 
-	$contents :=
-	  <div>
-	    <h2>DHIS2 Documents</h2>
-            <ul>
-              {
-  		for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
-		return
-  		<li>
-		  <a href="{$csd_webconf:baseurl}CSD/adapter/dhis2/{$search_name}/{$doc_name}">{string($doc_name)}</a>
-		</li>
-	      }
-	    </ul>
-	  </div>
-       return csd_webconf:wrapper($contents)
-
- 
-};
-
 
 
 declare
-  %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}")
+  %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2")
   %output:method("xhtml")
   function page:show_endpoints($search_name,$doc_name) 
 {  
@@ -78,7 +51,7 @@ declare
 	   <span>
              <h3>Aggregate Health Worker Data</h3>
 	     {
-	       let $url := concat($csd_webconf:baseurl, "CSD/adapter/dhis2/",$search_name, "/", $doc_name, "/createDXF")
+	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/createDXF")
 	       return <a href="{$url}">Get DXF</a>
 	     }
 	   </span>
@@ -93,7 +66,7 @@ declare
 	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
 	       let $urn := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:urn']/@type)
 	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
-	       let $url := concat($csd_webconf:baseurl, "CSD/adapter/dhis2/",$search_name, "/", $doc_name, "/upload")
+	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/upload")
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
 		   <label for='dxf' >DHIS2 Metadata DXF 2.0 File</label>
@@ -118,7 +91,7 @@ declare
 
  
 declare
-  %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}/createDXF")
+  %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2/createDXF")
   function page:execute2($search_name,$doc_name) 
 {
   if (not(page:is_dhis($search_name)) ) 
@@ -139,7 +112,7 @@ declare
 };
 
 declare updating
-  %rest:path("/CSD/adapter/dhis2/{$search_name}/{$doc_name}/upload")   
+  %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2/upload")
   %rest:POST
   %rest:form-param("dxf", "{$dxf}")
   %rest:form-param("oid", "{$oid}",'')
