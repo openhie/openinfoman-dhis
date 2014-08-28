@@ -100,7 +100,7 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$urn_base,$oid_base)  {
   let $urn := concat(dxf2csd:urn_base_org($urn_base),':',$id)
   let $oid := dxf2csd:oid_orgtype($oid_base)
   return 
-      <csd:organization urn="{$oid}">
+      <csd:organization urn="{$urn}">
 	<csd:codedType code="{$level}" codingScheme="{$oid}"/>
 	<csd:primaryName>{$displayName}</csd:primaryName>
 	{
