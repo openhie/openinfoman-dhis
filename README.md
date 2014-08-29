@@ -24,8 +24,13 @@ cd ~/
 git clone https://github.com/openhie/openinfoman-dhis
 cd ~/openinfoman-dhis/repo
 basex -Vc "REPO INSTALL dxf_1_0.xqm"
+basex -Vc "REPO INSTALL dxf2csd.xqm "
 cd ~/basex/resources/stored_query_definitions
 ln -sf ~/openinfoman-dhis/resources/stored_query_definitions/* .
+cd ~/basex/resources/stored_updating_query_definitions
+ln -sf ~/openinfoman-dhis/resources/stored_updating_query_definitions/* .
+cd ~/basex/webapp
+ln -sf ~/openinfoman-dhis/webapp/openinfoman_dhis2_bindings.xqm
 </pre>
 
 Be sure to reload the stored functions: 
