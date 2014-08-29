@@ -31,6 +31,8 @@ cd ~/basex/resources/stored_updating_query_definitions
 ln -sf ~/openinfoman-dhis/resources/stored_updating_query_definitions/* .
 cd ~/basex/webapp
 ln -sf ~/openinfoman-dhis/webapp/openinfoman_dhis2_bindings.xqm
+cd ~/basex/resources/service_directories/
+ln -s ~/openinfoman-dhis/resources/service_directories/* .
 </pre>
 
 Be sure to reload the stored functions: 
