@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svs:ValueSet xmlns:svs="urn:ihe:iti:svs:2008" id="2.25.11111176868615247452370557526986886924" displayName="Cadre" version="1">
+  <svs:ConceptList xml:lang="en-US">
+    <svs:Concept displayName="AHP - Allied Health Professional" code="AHP" codeSystem="2.25.11111176868615247452370557526986886924"/>
+    <svs:Concept displayName="PHM - Pharmacist" code="PHM" codeSystem="2.25.11111176868615247452370557526986886924"/>
+    <svs:Concept displayName="MD - Medical Doctor" code="MD" codeSystem="2.25.11111176868615247452370557526986886924"/>
+    <svs:Concept displayName="NUR - Nurse" code="NUR" codeSystem="2.25.11111176868615247452370557526986886924"/>
+  </svs:ConceptList>
+</svs:ValueSet>

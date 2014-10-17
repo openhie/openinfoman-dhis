@@ -6,19 +6,19 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:csd="urn:ihe:iti:csd:2013" 
   xmlns="urn:ihe:iti:csd:2013" 
-  urn="urn:dhis2.org:csd:stored-function:aggregate_hw_export">
+  urn="urn:dhis2.org:csd:stored-function:dxf2csd">
   <description> 
-    Returns DHIS2 DXF quaterly report of number of health workers by facility 
-    
-    Reuqest parameters:
-      assigningAuthorityName: the assignining authority name for the csd:facility/csd:otherID in which the DHIS code is stored
+    Updates the CSD document with a transform of the DHIS2 DXF.  
   </description>
-  <definition ><xi:include parse='text' href='aggregate_hw_export.xq'/></definition>
+  <definition ><xi:include parse='text' href='dxf_to_csd.xq'/></definition>
   <xforms:instance>
     <careServicesRequest>
-      <assigningAuthorityName/>
+      <dxf/>
+      <oid/>
+      <urn/>
     </careServicesRequest>
   </xforms:instance>
   <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>
-  <csd:extension type='createDXF' urn='urn:openhie.org:openinfoman:adapter:dhis2:action'/>
+  <csd:extension type='upload' urn='urn:openhie.org:openinfoman:adapter:dhis2:action'/>
+  <csd:extension urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid' type='2.25.268234768686152474523705575269868869248' />
 </careServicesFunction>
