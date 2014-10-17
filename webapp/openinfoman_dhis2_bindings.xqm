@@ -64,16 +64,12 @@ declare
              <h3>Upload DXF Document</h3>
 	     {
 	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
-	       let $urn := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:urn']/@type)
 	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
 	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/upload")
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
 		   <label for='dxf' >DHIS2 Metadata DXF 2.0 File</label>
 		   <input type='file' name='dxf'/>
-		   <br/>
-		   <label for='urn' >Root URN for directory entries</label>
-		   <input type='text' size='60' value="{$urn}" name='urn'/>
 		   <br/>
 		   <label for='oid' >Root OID for SVS list ID</label>
 		   <input type='text' size='60' value="{$oid}" name='oid'/>
@@ -116,18 +112,15 @@ declare updating
   %rest:POST
   %rest:form-param("dxf", "{$dxf}")
   %rest:form-param("oid", "{$oid}",'')
-  %rest:form-param("urn", "{$urn}",'')
-  function page:update_doc($search_name,$doc_name,$dxf,$oid,$urn) 
+  function page:update_doc($search_name,$doc_name,$dxf,$oid) 
 {
   if (not(page:is_dhis($search_name)) ) then
     db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD/bad</restxq:redirect>)
   else 
     let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
-    let $d_urn := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:urn']/@type)
     let $d_oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)
     
     let $s_oid := if ($oid = '') then $d_oid else $oid
-    let $s_urn := if ($urn = '') then $d_urn else $urn
 
     let $name :=  map:keys($dxf)[1]
     let $content := parse-xml(convert:binary-to-string($dxf($name)))
@@ -138,7 +131,6 @@ declare updating
          <csd:requestParams >
            <dxf>{$content}</dxf>
            <oid>{$s_oid}</oid>
-           <urn>{$s_urn}</urn>
          </csd:requestParams>
        </csd:function>
       </csd:careServicesRequest>

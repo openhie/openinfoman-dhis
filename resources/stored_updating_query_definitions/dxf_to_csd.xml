@@ -21,5 +21,4 @@
   <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>
   <csd:extension type='upload' urn='urn:openhie.org:openinfoman:adapter:dhis2:action'/>
   <csd:extension urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid' type='2.25.268234768686152474523705575269868869248' />
-  <csd:extension urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:urn' type='urn:dhis.org:sierra-leone-demo' />
 </careServicesFunction>
