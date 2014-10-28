@@ -76,7 +76,7 @@ declare function dxf2csd:get_org_hws($doc,$orgUnit,$oid_base) {
 
   for $hw in $doc/dxf:metaData/dxf:users/dxf:user[count(./dxf:organisationUnits/dxf:organisationUnit[@id = $orgUnit/@id]) > 0]
   let $hwid := string($hw/@id)
-  let $entityID := dxf2csd:generate_UUID_v3(concat('provider:',$hwid))
+  let $entityID := concat("urn:uuid:",dxf2csd:generate_UUID_v3(concat('provider:',$hwid)))
   let $role := ($hw/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup/@id)[1]
   return 
     <csd:contact>
@@ -111,7 +111,7 @@ declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit,$oid_base)  {
   let $lm := string($orgUnit/@lastUpdated)
   let $created := string($orgUnit/@created)
   let $oid := dxf2csd:oid_hwtype($oid_base)   
-  let $entityID := dxf2csd:generate_UUID_v3(concat('facility:',$id))
+  let $entityID := concat("urn:uuid:",dxf2csd:generate_UUID_v3(concat('facility:',$id)))
   return 
   <csd:facility entityID="{$entityID}">
     <csd:otherID assigningAuthorityName="dhis.org:orgid" code="{$id}"/>
@@ -119,7 +119,7 @@ declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit,$oid_base)  {
     <csd:primaryName>{$displayName}</csd:primaryName>
     { 
     if ($pid) then 
-      let $pEntityID := dxf2csd:generate_UUID_v3(concat('organization:',$pid))
+      let $pEntityID := concat("urn:uuid:", dxf2csd:generate_UUID_v3(concat('organization:',$pid)))
       return 
         <csd:organizations>
 	  <csd:organization entityID="{$pEntityID}"/>
@@ -138,7 +138,7 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$oid_base)  {
   let $level := xs:integer($orgUnit/@level)
   let $lm := string($orgUnit/@lastUpdated)
   let $created := string($orgUnit/@created)
-  let $entityID := dxf2csd:generate_UUID_v3(concat('organization:',$id))
+  let $entityID := concat("urn:uuid:",dxf2csd:generate_UUID_v3(concat('organization:',$id)))
   let $oid := dxf2csd:oid_orgtype($oid_base)
   return 
       <csd:organization entityID="{$entityID}">
@@ -148,7 +148,7 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$oid_base)  {
 	  if ($level > 1) 
 	    then
 	    let $pid := string($orgUnit/dxf:parent/@id)
-	    let $pEntityID := dxf2csd:generate_UUID_v3(concat('organization:',$pid))
+	    let $pEntityID := concat("urn:uuid:",dxf2csd:generate_UUID_v3(concat('organization:',$pid)))
 	    return	<csd:parent entityID="{$pEntityID}"/>
 	  else ()
         }
@@ -163,7 +163,7 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$oid_base)  {
 
 declare function dxf2csd:user-to-provider($doc,$user,$oid_base) {
   let $id := string($user/@id)
-  let $entityID := dxf2csd:generate_UUID_v3(concat('provider:',$id))
+  let $entityID := concat("urn:uuid:",dxf2csd:generate_UUID_v3(concat('provider:',$id)))
   let $oid := dxf2csd:oid_hwtype($oid_base)
   let $fore := $user/dxf:firstName/text()
   let $sur := $user/dxf:surname/text()
@@ -213,7 +213,7 @@ declare function dxf2csd:user-to-provider($doc,$user,$oid_base) {
 	    {
 	      for $org in $orgs
 	      let $orgid := string($org/@id)
-	      let $pEntityID := dxf2csd:generate_UUID_v3(concat('organization:',$orgid))
+	      let $pEntityID := concat("urn:uuid:",dxf2csd:generate_UUID_v3(concat('organization:',$orgid)))
 	      return <csd:organization entityID="{$pEntityID}"/>
 	    }
 	  
@@ -234,7 +234,7 @@ declare function dxf2csd:user-to-provider($doc,$user,$oid_base) {
 	      {
 		for $org in $facs
 		let $orgid := string($org/@id)
-		let $fEntityID :=dxf2csd:generate_UUID_v3( concat('facility:',$orgid))
+		let $fEntityID :=concat("urn:uuid:",dxf2csd:generate_UUID_v3( concat('facility:',$orgid)))
 		return <csd:facility entityID="{$fEntityID}"/>
 	      }	    
 	    </csd:facilities>
