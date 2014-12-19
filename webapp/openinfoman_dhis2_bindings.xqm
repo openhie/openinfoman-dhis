@@ -96,15 +96,12 @@ declare
     let $doc :=  csd_dm:open_document($csd_webconf:db,$doc_name)
     let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
     let $assName := "dhis.org:orgid"
-    let $careServicesRequest := 
-      <csd:careServicesRequest>
-       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
-         <csd:requestParams >
-           <assigningAuthorityName>{$assName}</assigningAuthorityName>
-         </csd:requestParams>
-       </csd:function>
-      </csd:careServicesRequest>
-    return csr_proc:process_CSR_stored_results($csd_webconf:db, $doc,$careServicesRequest)
+    let $requestParams := 
+      <csd:requestParams function="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
+        <assigningAuthorityName>{$assName}</assigningAuthorityName>
+      </csd:requestParams>
+
+    return csr_proc:process_CSR_stored_results($csd_webconf:db, $doc,$requestParams)
 };
 
 declare updating
