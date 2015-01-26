@@ -1,0 +1,9 @@
+<metaData xmlns="http://dhis2.org/schema/dxf/2.0">
+  <organisationUnits>
+    <organisationUnit xmlns="" level="1" name="Connectathon CSD IDN One" shortName="Connectathon CSD IDN One" uuid="08c3286e-2163-462c-b77f-1f431d7351ab" lastUpdated="2014-12-01T14:00:00+00:00" created="2014-12-01T14:00:00+00:00"/>
+    <organisationUnit xmlns="" level="1" name="Connectathon CSD NGO One" shortName="Connectathon CSD NGO One" uuid="cfbf2236-62d3-409f-95ab-372fbc93afd0" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+    <organisationUnit xmlns="" level="1" name="Connectathon CSD NGO Two" shortName="Connectathon CSD NGO Two" uuid="8cd347e8-8a2c-4900-98d2-a79dcd953995" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+    <organisationUnit xmlns="" level="1" name="Connectathon CSD NGO Quatre" shortName="Connectathon CSD NGO Quatre" uuid="d7dd6a08-203e-4333-a086-ed2fcde572d4" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+    <organisationUnit xmlns="" level="1" name="Connectathon CSD NGO Trois" shortName="Connectathon CSD NGO Trois" uuid="c3bab4bd-d830-4d5d-9d72-265b45894451" lastUpdated="2013-12-13T12:00:00+00:00" created="2013-12-13T12:00:00+00:00"/>
+  </organisationUnits>
+</metaData>
