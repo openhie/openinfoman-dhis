@@ -49,7 +49,7 @@ declare
           if ($actions = 'createDXF')  
 	  then
 	   <span>
-             <h3>Aggregate Health Worker Data</h3>
+             <h3>Generate DHIS2 DXF Document</h3>
 	     {
 	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/createDXF")
 	       return <a href="{$url}">Get DXF</a>
