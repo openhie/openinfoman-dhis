@@ -1,0 +1,50 @@
+<metaData xmlns="http://dhis2.org/schema/dxf/2.0">
+  <organisationUnitGroups>
+    <organisationUnitGroup code="103-001" name="Ambulatory Surgery Center">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-002" name="Cancer Center">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-003" name="Dialysis Center">
+      <organisationUnits>
+        <organisationUnit uuid="a3eb03db-0094-4059-9156-8de081cb58854" name="Connectathon Dialysis Facility One"/>
+        <organisationUnit uuid="be4d27c3-21b8-481f-9fed-6524a8eb9bac4" name="Connectathon Dialysis Facility Two"/>
+      </organisationUnits>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-004" name="Hearing Services">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-005" name="Hospital">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-006" name="Laboratory">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-007" name="Occupational Therapy">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-008" name="Pharmacy">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-009" name="Physical Therapy">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-110" name="Radiology - Imaging Services">
+      <organisationUnits>
+        <organisationUnit uuid="e9964293-e169-4298-b4d0-ab07bf0cd78f4" name="Connectathon Radiology Facility"/>
+      </organisationUnits>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-111" name="Vision Center">
+      <organisationUnits/>
+    </organisationUnitGroup>
+    <organisationUnitGroup code="103-112" name="Womens Health">
+      <organisationUnits/>
+    </organisationUnitGroup>
+  </organisationUnitGroups>
+  <organisationUnits>
+    <organisationUnit xmlns="" level="1" name="Connectathon Radiology Facility" shortName="Connectathon Radiology Facility" uuid="e9964293-e169-4298-b4d0-ab07bf0cd78f" lastUpdated="2014-12-01T14:00:00+00:00" created="2014-12-01T14:00:00+00:00"/>
+    <organisationUnit xmlns="" level="1" name="Connectathon Dialysis Facility One" shortName="Connectathon Dialysis Facility One" uuid="a3eb03db-0094-4059-9156-8de081cb5885" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+    <organisationUnit xmlns="" level="1" name="Connectathon Dialysis Facility Two" shortName="Connectathon Dialysis Facility Two" uuid="be4d27c3-21b8-481f-9fed-6524a8eb9bac" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+  </organisationUnits>
+</metaData>
