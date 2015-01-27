@@ -275,3 +275,94 @@ declare function dxf2csd:extract-directory($doc,$oid_base) {
     </csd:providerDirectory>
   </csd:CSD>
 };
+
+
+
+
+declare function dxf2csd:get_level($doc,$org) {
+  let $orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
+  let $parent := ($orgs[@entityID = $org/csd:parent/@entityID ])[1]
+  return 
+    if (not(exists($parent)))
+    then 1
+    else 1 + dxf2csd:get_level($doc,$parent)
+};
+
+declare function dxf2csd:entityid_to_dhis_id($entity_id) {
+  (: do something to turn it into a dhis id -- from Jim G.  :)
+  $entity_id
+};
+
+
+declare function dxf2csd:extract_uuid_from_entityid($entity_id) {
+  if  ( starts-with(lower-case($entity_id),'urn:uuid:') )
+  then substring($entity_id,10)
+  else ''
+};
+
+
+declare function dxf2csd:make_org_from_org($doc,$org){
+  let $orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
+  let $level := dxf2csd:get_level($doc,$org)
+  let $name := $org/csd:primaryName/text()
+  let $uuid := dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
+  let $created := string($org/csd:record/@created)
+  let $lm := string($org/csd:record/@updated)
+  let $parent_org := ($orgs[@entityID = $org/csd:parent/@entityID ])[1]
+  let $parent := ()
+(:  Need DHIS2 to allow <parent uuid='blah'/> instead of <parent id='blah'/>  Morten promised this 
+    if (exists($parent_org))
+    then 
+       let $parent_id := dxf2csd:entity_id_to_dhis_id(string($parent_org/@entityID))
+       return <parent id="{$parent_id}"/>
+    else ()
+:)
+  return 
+    if ($uuid) 
+    then
+      <organisationUnit 
+        level="{$level}"
+	name="{$name}"
+	shortName="{substring($name,1,50)}"
+	uuid="{$uuid}" 
+	lastUpdated="{$lm}"
+	created="{$created}"
+	>
+	{$parent}
+      </organisationUnit>
+    else ()
+};
+
+
+declare function dxf2csd:make_org_from_fac($doc,$fac) {
+  let $orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
+  let $level := dxf2csd:get_level($doc,$fac)
+  let $name := $fac/csd:primaryName/text()
+  let $uuid := dxf2csd:extract_uuid_from_entityid(string($fac/@entityID))
+  let $created := string($fac/csd:record/@created)
+  let $lm := string($fac/csd:record/@updated)
+  (: in CSD we can have multiple "parents" but not so DXF.  We just choose the first one :)
+  let $org := ($orgs[@entityID = ($fac/csd:organizations/csd:organization)[1]/@entityID ])[1]
+  let $parent := ()
+(:  Need DHIS2 to allow <parent uuid='blah'/> instead of <parent id='blah'/>  Morten promised this 
+    if (exists($org))
+    then 
+       let $org_id := dxf2csd:entity_id_to_dhis_id(string($org/@entityID))
+       return <parent id="{$org_id}"/>
+    else ()
+:)
+  return 
+    if ($uuid) 
+    then
+      <organisationUnit 
+        level="{$level}"
+	name="{$name}"
+	shortName="{substring($name,1,50)}"
+	uuid="{$uuid}" 
+	lastUpdated="{$lm}"
+	created="{$created}"
+	>
+	{$parent}
+      </organisationUnit>
+    else ()
+};

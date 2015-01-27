@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaData xmlns="http://dhis2.org/schema/dxf/2.0" created="2015-01-22T04:37:32.978+0000">
+  <users>
+    <user id="h9jih6aQaTi" name="admin admin" created="2015-01-21T15:52:25.817+0000" lastUpdated="2015-01-21T15:52:25.817+0000">
+      <surname>admin</surname>
+      <firstName>admin</firstName>
+      <userCredentials id="HN7wD16KT4J" code="admin" name="admin admin" created="2015-01-21T15:52:25.860+0000" lastUpdated="2015-01-22T04:37:32.985+0000">
+        <username>admin</username>
+        <passwordLastUpdated>2015-01-21T15:52:26.003+0000</passwordLastUpdated>
+        <userRoles>
+          <userRole id="vmYa1zOj6ix" name="Superuser" created="2015-01-21T15:52:25.834+0000" lastUpdated="2015-01-21T15:52:25.835+0000"/>
+        </userRoles>
+        <lastLogin>2015-01-22T04:36:15.932+0000</lastLogin>
+        <selfRegistered>false</selfRegistered>
+        <disabled>false</disabled>
+      </userCredentials>
+    </user>
+  </users>
+  <userRoles>
+    <userRole id="vmYa1zOj6ix" name="Superuser" created="2015-01-21T15:52:25.834+0000" lastUpdated="2015-01-21T15:52:25.835+0000">
+      <authorities>
+        <authority>F_CHART_PUBLIC_ADD</authority>
+        <authority>F_DASHBOARD_PUBLIC_ADD</authority>
+        <authority>F_INSERT_CUSTOM_JS_CSS</authority>
+        <authority>F_MAP_PUBLIC_ADD</authority>
+        <authority>F_VIEW_UNAPPROVED_DATA</authority>
+        <authority>ALL</authority>
+        <authority>F_CHART_EXTERNAL</authority>
+        <authority>F_APPROVE_DATA_LOWER_LEVELS</authority>
+        <authority>F_METADATA_EXPORT</authority>
+        <authority>F_METADATA_IMPORT</authority>
+        <authority>F_ACCEPT_DATA_LOWER_LEVELS</authority>
+        <authority>F_REPORTTABLE_EXTERNAL</authority>
+        <authority>F_REPORTTABLE_PUBLIC_ADD</authority>
+        <authority>F_APPROVE_DATA</authority>
+        <authority>F_MAP_EXTERNAL</authority>
+        <authority>F_SQLVIEW_EXTERNAL</authority>
+        <authority>F_USERGROUP_PUBLIC_ADD</authority>
+      </authorities>
+    </userRole>
+  </userRoles>
+  <categories>
+    <category id="MOJi35r13zr" name="default" created="2015-01-21T15:48:00.520+0000" lastUpdated="2015-01-22T00:05:49.669+0000" shortName="default">
+      <dataDimensionType>disaggregation</dataDimensionType>
+      <categoryOptions>
+        <categoryOption id="vw6gWc3Sv2k" name="default" created="2015-01-21T15:48:00.507+0000" lastUpdated="2015-01-21T15:48:00.525+0000"/>
+      </categoryOptions>
+      <dataDimension>false</dataDimension>
+    </category>
+  </categories>
+  <categoryOptions>
+    <categoryOption id="vw6gWc3Sv2k" name="default" created="2015-01-21T15:48:00.507+0000" lastUpdated="2015-01-21T15:48:00.525+0000" shortName="default"/>
+  </categoryOptions>
+  <categoryCombos>
+    <categoryCombo id="lEGHg0wVc3S" name="default" created="2015-01-21T15:48:00.523+0000" lastUpdated="2015-01-21T15:48:00.525+0000">
+      <categories>
+        <category id="MOJi35r13zr" name="default" created="2015-01-21T15:48:00.520+0000" lastUpdated="2015-01-22T00:05:49.669+0000"/>
+      </categories>
+      <dimensionType>disaggregation</dimensionType>
+      <skipTotal>false</skipTotal>
+    </categoryCombo>
+  </categoryCombos>
+  <categoryOptionCombos>
+    <categoryOptionCombo id="vbTJ5kTsHvp" name="(default)" created="2015-01-21T15:48:00.524+0000" lastUpdated="2015-01-21T15:48:00.524+0000">
+      <categoryCombo id="lEGHg0wVc3S" name="default" created="2015-01-21T15:48:00.523+0000" lastUpdated="2015-01-21T15:48:00.525+0000"/>
+      <categoryOptions>
+        <categoryOption id="vw6gWc3Sv2k" name="default" created="2015-01-21T15:48:00.507+0000" lastUpdated="2015-01-21T15:48:00.525+0000"/>
+      </categoryOptions>
+    </categoryOptionCombo>
+  </categoryOptionCombos>
+  <trackedEntities>
+    <trackedEntity id="gKFX6zaLTa8" name="Person">
+      <description>Person</description>
+    </trackedEntity>
+  </trackedEntities>
+</metaData>
