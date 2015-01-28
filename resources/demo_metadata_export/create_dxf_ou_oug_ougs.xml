@@ -11,67 +11,45 @@
   </dxf:organisationUnits>
   <dxf:organisationUnitGroups>
     <dxf:organisationUnitGroup code="103-001" name="Ambulatory Surgery Center" shortName="Ambulatory Surgery Center">
-      <dxf:organisationUnits>
-        <k>103-001 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-002" name="Cancer Center" shortName="Cancer Center">
-      <dxf:organisationUnits>
-        <k>103-002 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-003" name="Dialysis Center" shortName="Dialysis Center">
       <dxf:organisationUnits>
-        <k>103-003 - 1.3.6.1.4.1.21367.100.1</k>
         <dxf:organisationUnit uuid="a3eb03db-0094-4059-9156-8de081cb5885" name="Connectathon Dialysis Facility One"/>
         <dxf:organisationUnit uuid="be4d27c3-21b8-481f-9fed-6524a8eb9bac" name="Connectathon Dialysis Facility Two"/>
       </dxf:organisationUnits>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-004" name="Hearing Services" shortName="Hearing Services">
-      <dxf:organisationUnits>
-        <k>103-004 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-005" name="Hospital" shortName="Hospital">
-      <dxf:organisationUnits>
-        <k>103-005 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-006" name="Laboratory" shortName="Laboratory">
-      <dxf:organisationUnits>
-        <k>103-006 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-007" name="Occupational Therapy" shortName="Occupational Therapy">
-      <dxf:organisationUnits>
-        <k>103-007 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-008" name="Pharmacy" shortName="Pharmacy">
-      <dxf:organisationUnits>
-        <k>103-008 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-009" name="Physical Therapy" shortName="Physical Therapy">
-      <dxf:organisationUnits>
-        <k>103-009 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-110" name="Radiology - Imaging Services" shortName="Radiology - Imaging Services">
       <dxf:organisationUnits>
-        <k>103-110 - 1.3.6.1.4.1.21367.100.1</k>
         <dxf:organisationUnit uuid="e9964293-e169-4298-b4d0-ab07bf0cd78f" name="Connectathon Radiology Facility"/>
       </dxf:organisationUnits>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-111" name="Vision Center" shortName="Vision Center">
-      <dxf:organisationUnits>
-        <k>103-111 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
     <dxf:organisationUnitGroup code="103-112" name="Womens Health" shortName="Womens Health">
-      <dxf:organisationUnits>
-        <k>103-112 - 1.3.6.1.4.1.21367.100.1</k>
-      </dxf:organisationUnits>
+      <dxf:organisationUnits/>
     </dxf:organisationUnitGroup>
   </dxf:organisationUnitGroups>
   <dxf:organisationUnitGroupSets>
