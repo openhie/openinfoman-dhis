@@ -290,7 +290,9 @@ declare function dxf2csd:get_level($doc,$org) {
 
 declare function dxf2csd:entityid_to_dhis_id($entity_id) {
   (: do something to turn it into a dhis id -- from Jim G.  :)
-  $entity_id
+  if  ( starts-with(lower-case($entity_id),'urn:uuid:') )
+  then  concat('A',substring(replace(substring(string($entity_id),10),'-',''),1,10))
+  else ''
 };
 
 
@@ -306,14 +308,15 @@ declare function dxf2csd:make_org_from_org($doc,$org){
   let $level := dxf2csd:get_level($doc,$org)
   let $name := $org/csd:primaryName/text()
   let $uuid := dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
+  let $id := dxf2csd:entityid_to_dhis_id(string($org/@entityID)) 
   let $created := string($org/csd:record/@created)
   let $lm := string($org/csd:record/@updated)
   let $parent_org := ($orgs[@entityID = $org/csd:parent/@entityID ])[1]
-  let $parent := ()
-(:  Need DHIS2 to allow <parent uuid='blah'/> instead of <parent id='blah'/>  Morten promised this 
+  let $parent :=  ()
+(:  Really need DHIS2 to allow <parent uuid='blah'/> instead of <parent id='blah'/>  Morten promised this  
     if (exists($parent_org))
     then 
-       let $parent_id := dxf2csd:entity_id_to_dhis_id(string($parent_org/@entityID))
+       let $parent_id := dxf2csd:entityid_to_dhis_id(string($parent_org/@entityID))
        return <parent id="{$parent_id}"/>
     else ()
 :)
@@ -325,6 +328,7 @@ declare function dxf2csd:make_org_from_org($doc,$org){
 	name="{$name}"
 	shortName="{substring($name,1,50)}"
 	uuid="{$uuid}" 
+	id="{$id}"
 	lastUpdated="{$lm}"
 	created="{$created}"
 	>
@@ -339,15 +343,16 @@ declare function dxf2csd:make_org_from_fac($doc,$fac) {
   let $level := dxf2csd:get_level($doc,$fac)
   let $name := $fac/csd:primaryName/text()
   let $uuid := dxf2csd:extract_uuid_from_entityid(string($fac/@entityID))
+  let $id := dxf2csd:entityid_to_dhis_id(string($fac/@entityID)) 
   let $created := string($fac/csd:record/@created)
   let $lm := string($fac/csd:record/@updated)
   (: in CSD we can have multiple "parents" but not so DXF.  We just choose the first one :)
   let $org := ($orgs[@entityID = ($fac/csd:organizations/csd:organization)[1]/@entityID ])[1]
   let $parent := ()
-(:  Need DHIS2 to allow <parent uuid='blah'/> instead of <parent id='blah'/>  Morten promised this 
+(:  Need DHIS2 to allow <parent uuid='blah'/> instead of <parent id='blah'/>  Morten promised this  
     if (exists($org))
     then 
-       let $org_id := dxf2csd:entity_id_to_dhis_id(string($org/@entityID))
+       let $org_id := dxf2csd:entityid_to_dhis_id(string($org/@entityID))
        return <parent id="{$org_id}"/>
     else ()
 :)
@@ -359,6 +364,7 @@ declare function dxf2csd:make_org_from_fac($doc,$fac) {
 	name="{$name}"
 	shortName="{substring($name,1,50)}"
 	uuid="{$uuid}" 
+	id="{$id}" 
 	lastUpdated="{$lm}"
 	created="{$created}"
 	>

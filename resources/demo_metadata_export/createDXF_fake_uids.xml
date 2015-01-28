@@ -1,0 +1,76 @@
+<dxf:metaData xmlns:dxf="http://dhis2.org/csd/dxf/2.0">
+  <dxf:organisationUnits>
+    <organisationUnit level="1" name="Connectathon CSD IDN One" shortName="Connectathon CSD IDN One" uuid="08c3286e-2163-462c-b77f-1f431d7351ab" id="A08c3286e21" lastUpdated="2014-12-01T14:00:00+00:00" created="2014-12-01T14:00:00+00:00"/>
+    <organisationUnit level="1" name="Connectathon CSD NGO One" shortName="Connectathon CSD NGO One" uuid="cfbf2236-62d3-409f-95ab-372fbc93afd0" id="Acfbf223662" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+    <organisationUnit level="1" name="Connectathon CSD NGO Two" shortName="Connectathon CSD NGO Two" uuid="8cd347e8-8a2c-4900-98d2-a79dcd953995" id="A8cd347e88a" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+    <organisationUnit level="1" name="Connectathon CSD NGO Quatre" shortName="Connectathon CSD NGO Quatre" uuid="d7dd6a08-203e-4333-a086-ed2fcde572d4" id="Ad7dd6a0820" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+    <organisationUnit level="1" name="Connectathon CSD NGO Trois" shortName="Connectathon CSD NGO Trois" uuid="c3bab4bd-d830-4d5d-9d72-265b45894451" id="Ac3bab4bdd8" lastUpdated="2013-12-13T12:00:00+00:00" created="2013-12-13T12:00:00+00:00"/>
+    <organisationUnit level="1" name="Connectathon Radiology Facility" shortName="Connectathon Radiology Facility" uuid="e9964293-e169-4298-b4d0-ab07bf0cd78f" id="Ae9964293e1" lastUpdated="2014-12-01T14:00:00+00:00" created="2014-12-01T14:00:00+00:00"/>
+    <organisationUnit level="1" name="Connectathon Dialysis Facility One" shortName="Connectathon Dialysis Facility One" uuid="a3eb03db-0094-4059-9156-8de081cb5885" id="Aa3eb03db00" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+    <organisationUnit level="1" name="Connectathon Dialysis Facility Two" shortName="Connectathon Dialysis Facility Two" uuid="be4d27c3-21b8-481f-9fed-6524a8eb9bac" id="Abe4d27c321" lastUpdated="2014-12-13T12:00:00+00:00" created="2014-12-13T12:00:00+00:00"/>
+  </dxf:organisationUnits>
+  <dxf:organisationUnitGroups>
+    <dxf:organisationUnitGroup code="103-001" name="Ambulatory Surgery Center" shortName="Ambulatory Surgery Center">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-002" name="Cancer Center" shortName="Cancer Center">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-003" name="Dialysis Center" shortName="Dialysis Center">
+      <dxf:organisationUnits>
+        <dxf:organisationUnit uuid="a3eb03db-0094-4059-9156-8de081cb5885" id="Aa3eb03db00" name="Connectathon Dialysis Facility One"/>
+        <dxf:organisationUnit uuid="be4d27c3-21b8-481f-9fed-6524a8eb9bac" id="Abe4d27c321" name="Connectathon Dialysis Facility Two"/>
+      </dxf:organisationUnits>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-004" name="Hearing Services" shortName="Hearing Services">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-005" name="Hospital" shortName="Hospital">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-006" name="Laboratory" shortName="Laboratory">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-007" name="Occupational Therapy" shortName="Occupational Therapy">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-008" name="Pharmacy" shortName="Pharmacy">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-009" name="Physical Therapy" shortName="Physical Therapy">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-110" name="Radiology - Imaging Services" shortName="Radiology - Imaging Services">
+      <dxf:organisationUnits>
+        <dxf:organisationUnit uuid="e9964293-e169-4298-b4d0-ab07bf0cd78f" id="Ae9964293e1" name="Connectathon Radiology Facility"/>
+      </dxf:organisationUnits>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-111" name="Vision Center" shortName="Vision Center">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+    <dxf:organisationUnitGroup code="103-112" name="Womens Health" shortName="Womens Health">
+      <dxf:organisationUnits/>
+    </dxf:organisationUnitGroup>
+  </dxf:organisationUnitGroups>
+  <dxf:organisationUnitGroupSets>
+    <dxf:organisationUnitGroupSet name="Facility Type">
+      <dxf:description>Facility Type</dxf:description>
+      <dxf:compulsory>true</dxf:compulsory>
+      <dxf:dataDimension>true</dxf:dataDimension>
+      <dxf:organisationUnitGroups>
+        <dxf:organisationUnitGroup code="103-001" name="Ambulatory Surgery Center"/>
+        <dxf:organisationUnitGroup code="103-002" name="Cancer Center"/>
+        <dxf:organisationUnitGroup code="103-003" name="Dialysis Center"/>
+        <dxf:organisationUnitGroup code="103-004" name="Hearing Services"/>
+        <dxf:organisationUnitGroup code="103-005" name="Hospital"/>
+        <dxf:organisationUnitGroup code="103-006" name="Laboratory"/>
+        <dxf:organisationUnitGroup code="103-007" name="Occupational Therapy"/>
+        <dxf:organisationUnitGroup code="103-008" name="Pharmacy"/>
+        <dxf:organisationUnitGroup code="103-009" name="Physical Therapy"/>
+        <dxf:organisationUnitGroup code="103-110" name="Radiology - Imaging Services"/>
+        <dxf:organisationUnitGroup code="103-111" name="Vision Center"/>
+        <dxf:organisationUnitGroup code="103-112" name="Womens Health"/>
+      </dxf:organisationUnitGroups>
+    </dxf:organisationUnitGroupSet>
+  </dxf:organisationUnitGroupSets>
+</dxf:metaData>
