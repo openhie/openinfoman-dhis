@@ -9,7 +9,7 @@ Homepage: https://github.com/openhie/openinfoman-dhis
 
 Package: openinfoman-dhis
 Architecture: all
-Depends: openinfoman (>= 1.0.11)
+Depends: openinfoman (>= 1.0.11~utopic)
 Recommends: 
 Description: OpenInfoMan DHIS2 Library
  Library of stored functions for OpenInfoMan to provide services for DHIS2
