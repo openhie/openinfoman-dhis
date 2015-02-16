@@ -37,7 +37,7 @@ read INCVERS
 if [[ "$INCVERS" == "y" || "$INCVERS" == "Y" ]];  then
     COMMITMSG="Release Version $VERS"
     WIDTH=68
-    URL="https://github.com/openhie/openinfoman-ilr/commit/"
+    URL="https://github.com/openhie/openinfoman-dhis/commit/"
 
 
 
