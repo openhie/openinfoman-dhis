@@ -111,6 +111,7 @@ do
     cd $PKGDIR/var/lib && git clone https://github.com/openhie/$PKG openinfoman
     rm -fr $PKGDIR/var/lib/openinfoman/.git
     rm -f $PKGDIR/var/lib/openinfoman/.gitignore
+    rm -f $PKGDIR/var/lib/openinfoman/packaging
     mkdir -p $PKGDIR/var/lib/openinfoman/repo
     mv $PKGDIR/var/lib/openinfoman/repo $PKGDIR/var/lib/openinfoman/repo-src 
     cp  -R $TARGETDIR/* $PKGDIR
