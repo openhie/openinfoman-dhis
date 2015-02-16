@@ -97,7 +97,7 @@ fi
 
 
 BUILD=$HOME/builds
-OIDIR=$PKGDIR/var/lib/openinfoman
+
 
 for TARGET in "${TARGETS[@]}"
 do
@@ -108,6 +108,7 @@ do
     PKGDIR=${BUILD}/${PKG}-${RLS}~${TARGET}
     SRCDIR=${PKGDIR}/tmp-src
     CHANGES=${BUILD}/${PKG}_${RLS}~${TARGET}_source.changes
+    OIDIR=$PKGDIR/var/lib/openinfoman
 
     echo  "echo Building Package $PKG  on Release $RLS for Target $TARGET"
 
