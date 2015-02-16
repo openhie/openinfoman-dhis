@@ -4,3 +4,10 @@
 \#*\#
 *.log
 .DS_Store
+.gnupg
+packaging/.gitconfig
+packaging/.gnupg
+packaging/*/.gnupg
+packaging/builds
+pubring.gpg
+secring.gpg

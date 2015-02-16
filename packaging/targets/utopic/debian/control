@@ -1,0 +1,15 @@
+Source: openinfoman-dhis
+Maintainer: Carl Leitner <litlfred@ibiblio.org>
+Section: web
+Priority: optional
+Standards-Version: 3.9.1
+Build-Depends: debhelper (>= 7)
+Homepage: https://github.com/openhie/openinfoman
+
+
+Package: openinfoman-dhis
+Architecture: all
+Depends: openinfoman (>= 1.0.11)
+Recommends: 
+Description: OpenInfoMan DHIS2 Library
+ Library of stored functions for OpenInfoMan to provide services for DHIS2
