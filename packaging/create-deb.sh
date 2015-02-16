@@ -7,7 +7,6 @@ PPA=mhero
 CPDIRS=("webapp" "resources" )
 CPFILES=()
 
-
 #Don't edit below
 
 HOME=`pwd`
@@ -98,6 +97,7 @@ fi
 
 
 BUILD=$HOME/builds
+OIDIR=$PKGDIR/var/lib/openinfoman
 
 for TARGET in "${TARGETS[@]}"
 do
@@ -112,23 +112,23 @@ do
     echo  "echo Building Package $PKG  on Release $RLS for Target $TARGET"
 
     rm -fr $PKGDIR
-    mkdir -p $PKGDIR/var/lib/openinfoman
+    mkdir -p $OIDIR
     mkdir -p $SRCDIR
     git clone https://github.com/openhie/$PKG.git  $SRCDIR
     for CPDIR in "${CPDIRS[@]}"
     do
 	if [ -d "$SRCDIR/$CPDIR" ]; then
-	    cp -R $SRCDIR/$CPDIR $PKGDIR
+	    cp -R $SRCDIR/$CPDIR $OIDIR
 	fi
     done
     for CPFILE in "${CPFILES[@]}"
     do
 	if [ -e "$SRCDIR/$CPFILE" ]; then
-	    cp  $SRCFILE/$CPFILE $PKGFILE
+	    cp  $SRCFILE/$CPFILE $OIDIR
 	fi
     done
     if [ -d "$SRCDIR/repo" ]; then
-	mv $SRCDIR/repo $PKGDIR/var/lib/openinfoman/repo-src 
+	mv $SRCDIR/repo $OIDIR/repo-src 
     fi
 
     cp  -R $TARGETDIR/* $PKGDIR
