@@ -54,7 +54,7 @@ $LOGLINES" |  $XARGS -0 | $AWK '{printf "%-'"$WIDTH.$WIDTH"'s\n" , $0}')
     done
     cd $HOME
 
-    $GIT diff
+    $GIT  --no-pager diff
     $GIT add .
 
     echo "Incrementing version"
@@ -138,3 +138,5 @@ done
 
 cd $HOME
 
+git push
+git push --tags
