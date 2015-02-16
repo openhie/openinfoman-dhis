@@ -1,9 +1,12 @@
 #!/bin/bash
 #Exit on error
 set -e
-set -x
+
 
 PPA=mhero
+CPDIRS=("webapp" "resources" )
+CPFILES=()
+
 
 #Don't edit below
 
@@ -37,7 +40,8 @@ read INCVERS
 if [[ "$INCVERS" == "y" || "$INCVERS" == "Y" ]];  then
     COMMITMSG="Release Version $VERS"
     WIDTH=68
-    URL="https://github.com/openhie/openinfoman-dhis/commit/"
+    URL=$($GIT config --get remote.origin.url | $SED 's/\.git//' | $SED 's/$/\/commmit\//')
+
 
 
 
@@ -102,18 +106,31 @@ do
     RLS=`$HEAD -1 $TARGETDIR/debian/changelog | $AWK '{print $2}' | $AWK -F~ '{print $1}' | $AWK -F\( '{print $2}'`
     PKG=`$HEAD -1 $TARGETDIR/debian/changelog | $AWK '{print $1}'`
     PKGDIR=${BUILD}/${PKG}-${RLS}~${TARGET}
+    SRCDIR=${PKGDIR}/tmp-src
     CHANGES=${BUILD}/${PKG}_${RLS}~${TARGET}_source.changes
 
     echo  "echo Building Package $PKG  on Release $RLS for Target $TARGET"
 
     rm -fr $PKGDIR
-    mkdir -p $PKGDIR/var/lib
-    cd $PKGDIR/var/lib && git clone https://github.com/openhie/$PKG openinfoman
-    rm -fr $PKGDIR/var/lib/openinfoman/.git
-    rm -f $PKGDIR/var/lib/openinfoman/.gitignore
-    rm -fr $PKGDIR/var/lib/openinfoman/packaging
-    mkdir -p $PKGDIR/var/lib/openinfoman/repo
-    mv $PKGDIR/var/lib/openinfoman/repo $PKGDIR/var/lib/openinfoman/repo-src 
+    mkdir -p $PKGDIR/var/lib/openinfoman
+    mkdir -p $SRCDIR
+    git clone https://github.com/openhie/$PKG.git  $SRCDIR
+    for CPDIR in "${CPDIRS[@]}"
+    do
+	if [ -d "$SRCDIR/$CPDIR" ]; then
+	    cp -R $SRCDIR/$CPDIR $PKGDIR
+	fi
+    done
+    for CPFILE in "${CPFILES[@]}"
+    do
+	if [ -e "$SRCDIR/$CPFILE" ]; then
+	    cp  $SRCFILE/$CPFILE $PKGFILE
+	fi
+    done
+    if [ -d "$SRCDIR/repo" ]; then
+	mv $SRCDIR/repo $PKGDIR/var/lib/openinfoman/repo-src 
+    fi
+
     cp  -R $TARGETDIR/* $PKGDIR
 
     cd $PKGDIR  
