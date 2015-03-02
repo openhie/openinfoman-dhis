@@ -1,3 +1,9 @@
+openinfoman-dhis (1.0.18~utopic) utopic; urgency=medium
+
+  * Release Version 1.0.18
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 02 Mar 2015 14:26:05 -0500
+
 openinfoman-dhis (1.0.17~utopic) utopic; urgency=medium
 
   * Release Version 1.0.17
