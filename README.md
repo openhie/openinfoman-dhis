@@ -3,8 +3,22 @@ openinfoman-dhis
 
 XQuery Libary for DHIS2 and DXF support using CSD
 
-Prerequisites
-=============
+It makes use of the OpenInfoMan software https://github.com/openhie/openinfoman
+
+Ubuntu Installation
+===================
+You can easily install on Ubuntu 14.04 and Ubuntu 14.10 using the following commands
+<pre>
+sudo add-apt-repository ppa:openhie/release
+sudo apt-get update
+sudo apt-get install openinfoman-fhir
+</pre>
+
+
+
+Manual Installation
+===================
+
 
 Assumes that you have installed BaseX and OpenInfoMan according to:
 > https://github.com/openhie/openinfoman/wiki/Install-Instructions
@@ -18,7 +32,7 @@ and the FunctX XQuery Library:
 </pre>
 
 Directions
-==========
+----------
 <pre>
 cd ~/
 git clone https://github.com/openhie/openinfoman-dhis
