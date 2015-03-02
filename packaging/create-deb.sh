@@ -3,7 +3,7 @@
 set -e
 
 
-PPA=mhero
+PPA=release
 CPDIRS=("webapp" "resources" )
 CPFILES=()
 
