@@ -11,7 +11,7 @@ You can easily install on Ubuntu 14.04 and Ubuntu 14.10 using the following comm
 <pre>
 sudo add-apt-repository ppa:openhie/release
 sudo apt-get update
-sudo apt-get install openinfoman-fhir
+sudo apt-get install openinfoman-dhis
 </pre>
 
 
