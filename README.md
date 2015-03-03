@@ -14,6 +14,9 @@ sudo apt-get update
 sudo apt-get install openinfoman-dhis
 </pre>
 
+Once installed, you should be able to access OpenInfoMan at:
+> http://localhost:8984/CSD
+
 
 
 Manual Installation
