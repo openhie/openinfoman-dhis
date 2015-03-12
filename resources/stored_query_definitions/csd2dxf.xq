@@ -66,21 +66,26 @@ return
 	}
       </dxf:organisationUnitGroups>
 
-      <dxf:organisationUnitGroupSets>
-	<dxf:organisationUnitGroupSet name='Facility Type'>
-	  <dxf:description>Facility Type</dxf:description>
-	  <dxf:compulsory>true</dxf:compulsory>
-	  <dxf:dataDimension>true</dxf:dataDimension>
-	  <dxf:organisationUnitGroups>
-	    {
-	      for $org_unit_group in $org_unit_groups
-	      let $code := string($org_unit_group/@code)
-	      let $scheme := string($org_unit_group/@codeSystem)
-	      let $name := string($org_unit_group/@name)
-	      return   <dxf:organisationUnitGroup code="{$code}" name="{$name}" />
-	    }
-	  </dxf:organisationUnitGroups>
-	</dxf:organisationUnitGroupSet>	
-      </dxf:organisationUnitGroupSets>
+      { 
+      if (count($org_unit_groups) > 0)
+      then
+        <dxf:organisationUnitGroupSets>
+	  <dxf:organisationUnitGroupSet name='Facility Type'>
+	    <dxf:description>Facility Type</dxf:description>
+	    <dxf:compulsory>true</dxf:compulsory>
+	    <dxf:dataDimension>true</dxf:dataDimension>
+	    <dxf:organisationUnitGroups>
+	      {
+		for $org_unit_group in $org_unit_groups
+		let $code := string($org_unit_group/@code)
+		let $scheme := string($org_unit_group/@codeSystem)
+		let $name := string($org_unit_group/@name)
+		return   <dxf:organisationUnitGroup code="{$code}" name="{$name}" />
+	      }
+	    </dxf:organisationUnitGroups>
+	  </dxf:organisationUnitGroupSet>	
+	</dxf:organisationUnitGroupSets>
+      else () 
+      }
 
     </dxf:metaData>
