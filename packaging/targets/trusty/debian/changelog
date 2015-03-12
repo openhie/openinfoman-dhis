@@ -1,3 +1,17 @@
+openinfoman-dhis (1.0.19~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.19
+    -12419b3 fix for csd2dxf in case the facility type list/org unit gr
+    --https://github.com/openhie/openinfoman-dhis/commmit/12419b3
+    -24e64b9 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/24e64b9
+    -0b16703 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/0b16703
+    -1410939 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/1410939
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 12 Mar 2015 18:12:10 +0000
+
 openinfoman-dhis (1.0.18~trusty) trusty; urgency=medium
 
   * Release Version 1.0.18
