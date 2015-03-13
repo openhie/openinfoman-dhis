@@ -57,7 +57,7 @@ return
 		  for $fac in $facilities[./csd:codedType[@codingScheme = $scheme and @code = $code]]
 		  let $uuid := dxf2csd:extract_uuid_from_entityid($fac/@entityID)
 		  let $fac_name := $fac/csd:primaryName/text()
-		  let $id := dxf2csd:entityid_to_dhis_id(string($fac/@entityID))
+		  let $id := string($fac/@entityID)
 		  return     
 		     <dxf:organisationUnit uuid="{$uuid}" id="{$id}" name="{$fac_name}" />
 		}
