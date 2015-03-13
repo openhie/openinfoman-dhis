@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.21~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.21
+    -6f1bcc4 updated aggregate HW report for CP-800
+    --https://github.com/openhie/openinfoman-dhis/commmit/6f1bcc4
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 13 Mar 2015 14:30:32 +0000
+
 openinfoman-dhis (1.0.20~trusty) trusty; urgency=medium
 
   * Release Version 1.0.20
