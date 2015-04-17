@@ -15,6 +15,10 @@ declare function dxf2csd:oid_hwtype($oid_base){
   concat($oid_base,".2") 
 };
 
+declare function dxf2csd:fixup_date($date) {
+  return replace(substring(string($date),1,19),'\+(\d{2})(\d{2})','+$1:$2');
+}
+
 
 
 declare function dxf2csd:hexdec($hex) {
@@ -80,7 +84,6 @@ declare function dxf2csd:get_org_hws($doc,$orgUnit,$oid_base) {
   let $role := ($hw/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup/@id)[1]
   return 
     <csd:contact>
-      {if (exists($role)) then <csd:codedType code="{$role}" codingScheme="{$oid}"/> else ()}
       <csd:provider entityID="{$entityID}"/>
     </csd:contact>
 };
@@ -108,8 +111,8 @@ declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit,$oid_base)  {
   let $id:=string($orgUnit/@id)
   let $pid:=string($orgUnit/dxf:parent/@id)
   let $level :=   xs:integer($orgUnit/@level)
-  let $lm := substring(string($orgUnit/@lastUpdated),1,19)
-  let $created := substring(string($orgUnit/@created),1,19)
+  let $lm := dxf2csd:fixup_date($orgUnit/@lastUpdated)
+  let $created := dxf2csd:fixup_date($orgUnit/@created)
   let $oid := dxf2csd:oid_hwtype($oid_base)   
   let $entityID := concat("urn:uuid:",dxf2csd:generate_UUID_v3(concat('facility:',$id)))
   return 
@@ -136,8 +139,8 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$oid_base)  {
   let $displayName:= string($orgUnit/@name)
   let $id:=string($orgUnit/@id)
   let $level := xs:integer($orgUnit/@level)
-  let $lm := substring(string($orgUnit/@lastUpdated),1,19)
-  let $created := substring(string($orgUnit/@created),1,19)
+  let $lm := dxf2csd:fixup_date($orgUnit/@lastUpdated)
+  let $created := dxf2csd:fixup_date($orgUnit/@created)
 
   let $entityID := concat("urn:uuid:",dxf2csd:generate_UUID_v3(concat('organization:',$id)))
   let $oid := dxf2csd:oid_orgtype($oid_base)
@@ -145,6 +148,8 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$oid_base)  {
       <csd:organization entityID="{$entityID}">
 	<csd:codedType code="{$level}" codingScheme="{$oid}"/>
 	<csd:primaryName>{$displayName}</csd:primaryName>
+	{dxf2csd:get_org_hws($doc,$orgUnit,$oid_base)}
+	{dxf2csd:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
 	{
 	  if ($level > 1) 
 	    then
@@ -153,8 +158,6 @@ declare function dxf2csd:orgUnit-to-org($doc,$orgUnit,$oid_base)  {
 	    return	<csd:parent entityID="{$pEntityID}"/>
 	  else ()
         }
-	{dxf2csd:get_org_hws($doc,$orgUnit,$oid_base)}
-	{dxf2csd:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
 	<csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
       </csd:organization>
 
@@ -170,8 +173,8 @@ declare function dxf2csd:user-to-provider($doc,$user,$oid_base) {
   let $sur := $user/dxf:surname/text()
   let $email := $user/dxf:email/text()
   let $phone := $user/dxf:phoneNumber/text()
-  let $lm := substring(string($user/@lastUpdated),1,19)
-  let $created := substring(string($user/@created),1,19)
+  let $lm := dxf2csd:fixup_date($user/@lastUpdated)
+  let $created := dxf2csd:fixup_date($user/@created)
   return 
   <csd:provider entityID="{$entityID}">
     {
@@ -310,8 +313,8 @@ declare function dxf2csd:make_org_from_org($doc,$org){
   let $name := $org/csd:primaryName/text()
   let $uuid := dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
   let $id := dxf2csd:entityid_to_dhis_id(string($org/@entityID)) 
-  let $created := substring(string($org/csd:record/@created),1,19)
-  let $lm := substring(string($org/csd:record/@updated),1,19)
+  let $created := dxf2csd:fixup_date($org/csd:record/@created)
+  let $lm := dxf2csd:fixup_date($org/csd:record/@updated)
   let $parent_org := ($orgs[@entityID = $org/csd:parent/@entityID ])[1]
   let $parent :=  ()
 (:  Really need DHIS2 to allow <parent uuid='blah'/> instead of <parent id='blah'/>  Morten promised this  
@@ -346,8 +349,8 @@ declare function dxf2csd:make_org_from_fac($doc,$fac) {
   let $name := $fac/csd:primaryName/text()
   let $uuid := dxf2csd:extract_uuid_from_entityid(string($fac/@entityID))
   let $id := dxf2csd:entityid_to_dhis_id(string($fac/@entityID)) 
-  let $created := substring(string($fac/csd:record/@created),1,19)
-  let $lm := substring(string($fac/csd:record/@updated),1,19)
+  let $created := dxf2csd:fixup_date($fac/csd:record/@created)
+  let $lm := dxf2csd:fixup_date($fac/csd:record/@updated)
   (: in CSD we can have multiple "parents" but not so DXF.  We just choose the first one :)
   let $org := ($orgs[@entityID = ($fac/csd:organizations/csd:organization)[1]/@entityID ])[1]
   let $parent := ()
