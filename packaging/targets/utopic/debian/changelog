@@ -1,3 +1,23 @@
+openinfoman-dhis (1.0.22~utopic) utopic; urgency=medium
+
+  * Release Version 1.0.22
+    -4db4f41 refresh sierra leone demo data
+    --https://github.com/openhie/openinfoman-dhis/commmit/4db4f41
+    -ccf9c6f fixed issues with hierarchy
+    --https://github.com/openhie/openinfoman-dhis/commmit/ccf9c6f
+    -0dfdcac updated sierra leone demo csd service directory
+    --https://github.com/openhie/openinfoman-dhis/commmit/0dfdcac
+    -d78481c more fixups for dxf2csd
+    --https://github.com/openhie/openinfoman-dhis/commmit/d78481c
+    -6826a1f Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/6826a1f
+    -4bc43bb some fixes for generating CSD
+    --https://github.com/openhie/openinfoman-dhis/commmit/4bc43bb
+    -38e91c0 uncommented/removed the workarounds for when we couldn't u
+    --https://github.com/openhie/openinfoman-dhis/commmit/38e91c0
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 17 Apr 2015 12:41:40 -0400
+
 openinfoman-dhis (1.0.21~utopic) utopic; urgency=medium
 
   * Release Version 1.0.21
