@@ -20,6 +20,23 @@ declare function dxf2csd:fixup_date($date) {
 };
 
 
+declare function dxf2csd:ensure_properly_ordered_orgs($orgs) {
+  (:
+    ideally this would just return $orgs, but DHIS2 only does a single pass when importing so if an orgUnit references another
+    orgUnit, then the referenced orgUnit needs to be listed first
+   :)
+   let $oredered_list :=     
+     for $p_org in $orgs
+       let $p_uuid := $p_org/@uuid
+       let $p_pos := $p_org/position()
+       let $prev_orgs := $orgs[./position() <= $p_pos]
+       let $children := $prev_orgs[./parent/@uuid = $p_uuid]
+       let $non_children := $prev_orgs[/parent/@uuid != $p_uuid]
+       let $ordered := ($non_children,$p_org,$children)
+       return $ordered
+   return $oredered_list
+};
+
 
 declare function dxf2csd:hexdec($hex) {
   let $zero := convert:binary-to-bytes('0')
@@ -260,7 +277,7 @@ declare function dxf2csd:user-to-provider($doc,$user,$oid_base) {
 
 
 declare function dxf2csd:extract-directory($doc,$oid_base) {
-  let $level := 1
+  let $level := 3
   let $orgUnits := $doc/dxf:metaData/dxf:organisationUnits/dxf:organisationUnit
   return 
   <csd:CSD xmlns:csd="urn:ihe:iti:csd:2013">
@@ -310,20 +327,26 @@ declare function dxf2csd:extract_uuid_from_entityid($entity_id) {
   else ''
 };
 
+declare function dxf2csd:extract_id_from_entityid($entity_id) {
+  if  ( starts-with(lower-case($entity_id),'urn:uuid:') )
+  then concat('A', substring($entity_id,10,10))
+  else ''
+};
+
 
 declare function dxf2csd:make_org_from_org($doc,$org){
   let $orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
   let $level := dxf2csd:get_level($doc,$org)
   let $name := $org/csd:primaryName/text()
   let $uuid := dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
-  let $id := dxf2csd:extract_uuid_from_entityid(string($org/@entityID)) 
+  let $id := dxf2csd:extract_id_from_entityid(string($org/@entityID)) 
   let $created := dxf2csd:fixup_date($org/csd:record/@created)
   let $lm := dxf2csd:fixup_date($org/csd:record/@updated)
   let $parent_org := ($orgs[@entityID = $org/csd:parent/@entityID ])[1]
   let $parent :=  
     if (exists($parent_org))
     then 
-       let $parent_id := dxf2csd:extract_uuid_from_entityid(string($parent_org/@entityID))
+       let $parent_id := dxf2csd:extract_id_from_entityid(string($parent_org/@entityID))
        return <parent id="{$parent_id}"/>
     else ()
 
@@ -351,7 +374,7 @@ declare function dxf2csd:make_org_from_fac($doc,$fac) {
   let $level := dxf2csd:get_level($doc,$fac)
   let $name := $fac/csd:primaryName/text()
   let $uuid := dxf2csd:extract_uuid_from_entityid(string($fac/@entityID))
-  let $id := dxf2csd:extract_uuid_from_entityid(string($fac/@entityID)) 
+  let $id := dxf2csd:extract_id_from_entityid(string($fac/@entityID)) 
   let $created := dxf2csd:fixup_date($fac/csd:record/@created)
   let $lm := dxf2csd:fixup_date($fac/csd:record/@updated)
   (: in CSD we can have multiple "parents" but not so DXF.  We just choose the first one :)
@@ -359,7 +382,7 @@ declare function dxf2csd:make_org_from_fac($doc,$fac) {
   let $parent := 
     if (exists($org))
     then 
-       let $org_id := string($org/@entityID)
+       let $org_id := dxf2csd:extract_id_from_entityid($org/@entityID)
        return <parent id="{$org_id}"/>
     else ()
   return 

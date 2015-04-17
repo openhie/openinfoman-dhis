@@ -33,7 +33,7 @@ return
     <dxf:metaData>
       <dxf:organisationUnits>
         {
-	  for $org in $orgs
+	  for $org in dxf2csd:ensure_properly_ordered_orgs($orgs)
 	  return dxf2csd:make_org_from_org($doc,$org) 
 	}
         {
