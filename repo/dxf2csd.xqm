@@ -16,8 +16,8 @@ declare function dxf2csd:oid_hwtype($oid_base){
 };
 
 declare function dxf2csd:fixup_date($date) {
-  return replace(substring(string($date),1,19),'\+(\d{2})(\d{2})','+$1:$2');
-}
+  replace(substring(string($date),1,19),'\+(\d{2})(\d{2})','+$1:$2')
+};
 
 
 
@@ -120,6 +120,8 @@ declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit,$oid_base)  {
     <csd:otherID assigningAuthorityName="dhis.org:orgid" code="{$id}"/>
     <csd:codedType code="{$level}" codingScheme="{$oid}"/>
     <csd:primaryName>{$displayName}</csd:primaryName>
+    {dxf2csd:get_org_hws($doc,$orgUnit,$oid_base)}
+    {dxf2csd:get_geocode($doc,$orgUnit)}
     { 
     if ($pid) then 
       let $pEntityID := concat("urn:uuid:", dxf2csd:generate_UUID_v3(concat('organization:',$pid)))
@@ -129,8 +131,6 @@ declare function dxf2csd:orgUnit-to-fac($doc,$orgUnit,$oid_base)  {
 	</csd:organizations>
     else () 
     }
-    {dxf2csd:get_org_hws($doc,$orgUnit,$oid_base)}
-    {dxf2csd:get_geocode($doc,$orgUnit)}
     <csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="http://demo.dhis2.org"/>
   </csd:facility>
 };
@@ -175,12 +175,25 @@ declare function dxf2csd:user-to-provider($doc,$user,$oid_base) {
   let $phone := $user/dxf:phoneNumber/text()
   let $lm := dxf2csd:fixup_date($user/@lastUpdated)
   let $created := dxf2csd:fixup_date($user/@created)
+  let $urs := $user/dxf:userCredentials/dxf:userRoles/dxf:userRole
+  let $ags := $user/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup
   return 
   <csd:provider entityID="{$entityID}">
     {
-      for $ag in $user/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup
+      for $ag in $ags
       return 
       <csd:codedType code="{$ag/@id}" codingScheme="{$oid}"/>
+    }
+    {
+      for $ur in $urs
+      return 
+      <csd:codedType code="{$ur/@id}" codingScheme="{$oid}"/>
+    }
+    {
+      if (count(($urs,$ags)) = 0) 
+      then <csd:codedType code="NOROLE" codingScheme="{$oid}"/>
+      else ()
+
     }
     <csd:demographic>
       <csd:name>
