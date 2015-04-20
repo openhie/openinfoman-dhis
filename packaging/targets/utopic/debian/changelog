@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.23~utopic) utopic; urgency=medium
+
+  * Release Version 1.0.23
+    -21fdbf8 copied wrong file on commit of sierra_leone_demo_metadata_
+    --https://github.com/openhie/openinfoman-dhis/commmit/21fdbf8
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 20 Apr 2015 09:40:13 -0400
+
 openinfoman-dhis (1.0.22~utopic) utopic; urgency=medium
 
   * Release Version 1.0.22
