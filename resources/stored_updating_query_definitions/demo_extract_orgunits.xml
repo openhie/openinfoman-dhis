@@ -6,7 +6,7 @@
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:csd="urn:ihe:iti:csd:2013" 
   xmlns="urn:ihe:iti:csd:2013" 
-  urn="urn:demo.dhis.org:extract_orgunits:v2.19">
+  urn="urn:demo.dhis.org:demo_extract_orgunits:v2.19">
   <description>
     <pre>
     Extracts Organisation Unit hierarchy and Facility/Site list from DHIS2 as CSD Organization and Facility entities.   
