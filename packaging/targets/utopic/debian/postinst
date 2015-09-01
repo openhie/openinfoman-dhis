@@ -8,7 +8,7 @@ USERNAME=oi
 BASEX=$OI/bin/basex
 
 
-REPOS=("dxf2csd.xqm" "dxf_1_0.xqm")
+REPOS=("dxf2csd.xqm" "dxf_1_0.xqm" "uuid.xqm")
 
 
 for REPO in ${REPOS[@]}

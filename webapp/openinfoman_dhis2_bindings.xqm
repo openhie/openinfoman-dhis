@@ -80,6 +80,25 @@ declare
 	   </span>
 	  else ()
 	}
+        { 
+          if ($actions = 'simpe_upload')  
+	  then
+	   <span>
+             <h3>Upload Meta-Data Export (DXF Document)</h3>
+	     {
+	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
+	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
+	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/simple_upload")
+	       return 
+	         <form action="{$url}" method="POST" enctype="multipart/form-data">
+		   <label for='dxf' >DHIS2 Metadata DXF 2.0 File</label>
+		   <input type='file' name='dxf'/>
+		   <input type='submit' value='Upload'/>
+		 </form>
+	     }
+	   </span>
+	  else ()
+	}
       </div>
       return csd_webconf:wrapper($contents)
 };
@@ -128,6 +147,37 @@ declare updating
          <csd:requestParams >
            <dxf>{$content}</dxf>
            <oid>{$s_oid}</oid>
+         </csd:requestParams>
+       </csd:function>
+      </csd:careServicesRequest>
+    return 
+       (
+        csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest)
+        ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)
+       )
+
+};
+
+
+
+declare updating
+  %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2/simple_upload")
+  %rest:POST
+  %rest:form-param("dxf", "{$dxf}")
+  function page:update_doc($search_name,$doc_name,$dxf) 
+{
+  if (not(page:is_dhis($search_name)) ) then
+    db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD/bad</restxq:redirect>)
+  else 
+    let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
+    let $name :=  map:keys($dxf)[1]
+    let $content := parse-xml(convert:binary-to-string($dxf($name)))
+
+    let $careServicesRequest := 
+      <csd:careServicesRequest>
+       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
+         <csd:requestParams >
+           <dxf>{$content}</dxf>
          </csd:requestParams>
        </csd:function>
       </csd:careServicesRequest>
