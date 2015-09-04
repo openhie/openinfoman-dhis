@@ -1,8 +1,10 @@
-module namespace uuid = "https://github.com/openhie/openinfoman-dhis/util";
+module namespace util = "https://github.com/openhie/openinfoman-dhis/util";
 
 declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 declare namespace csd = "urn:ihe:iti:csd:2013";
 import module namespace functx = "http://www.functx.com";
+
+declare variable $util:namespace_uuid := "10df44d2-55f4-11e4-af21-705681a860b7";
 
 declare function util:uuid_tobits($tokens) {
   if (count($tokens) > 1)
@@ -49,12 +51,19 @@ declare  function util:get_geocode($doc,$orgUnit) {
     
   return 
     if ($ft = 'Point' and $lat and $long) 
-      then
+    then
       <csd:geocode>
         <csd:latitude>{$lat}</csd:latitude>
         <csd:longitude>{$long}</csd:longitude>
-      </csd:geocode>csd:geocode>
+      </csd:geocode>
     else ()
 };
+
+
+
+
+
+
+
 
 

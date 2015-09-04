@@ -257,7 +257,7 @@ declare function dxf2csd:user-to-provider($doc,$user,$oid_base) {
      }
      {
        let $tfacs := $user/dxf:organisationUnits/dxf:organisationUnit
-       let $facs := $tfacs
+
 
 	return if (count($facs) > 0)
 	  then

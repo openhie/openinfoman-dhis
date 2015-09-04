@@ -81,19 +81,72 @@ declare
 	  else ()
 	}
         { 
-          if ($actions = 'simpe_upload')  
+          if ($actions = 'simple_upload')  
 	  then
 	   <span>
              <h3>Upload Meta-Data Export (DXF Document)</h3>
+	     <p>
+	     This extracts all organisation units matching the given facility conditions as a CSD facility entity.  
+	     It also extracts all organisation units a CSD organization entity.  
+	     In the case that a CSD facility entity is created, it will have as an organizational association to it's corresponding organization entity.
+	     These two entities will have distinct entity IDs (UUIDs)
+	     </p>
 	     {
 	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
 	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
 	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/simple_upload")
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
-		   <label for='dxf' >DHIS2 Metadata DXF 2.0 File</label>
+		   <label for='dxf' >Meta-data Export. (Required)</label>
+		   <p>DHIS2 Meta-data export (DXF 2.0) File. </p>
 		   <input type='file' name='dxf'/>
-		   <input type='submit' value='Upload'/>
+		   <br/>
+		   <label for='url' >URL(Required)</label>
+		   <p>The URL of the source DHIS2 system. </p>
+
+		   <input type='text' size='120' name='url'/>
+		   <label for='group_codes' >Group Codes</label>
+		   <p>Comma seperated list of the Group Codes used to identify a facility</p>
+		   <input type='text' size='120' name='group_codes'/>
+		   <br/>
+		   <label for='level' >Levels</label>
+		   <p>		   Levels used to identify a facility</p>
+
+		   <input type='checkbox' name='level' value='1'/>1 		   
+		   <input type='checkbox' name='level' value='2'/>2
+		   <input type='checkbox' name='level' value='3'/>3
+		   <input type='checkbox' name='level' value='4'/>4
+		   <input type='checkbox' name='level' value='5'/>5
+		   <input type='checkbox' name='level' value='6'/>6
+		   <input type='checkbox' name='level' value='7'/>7
+		   <input type='checkbox' name='level' value='8'/>8
+		   <input type='checkbox' name='level' value='9'/>9
+		   <br/>
+		   <label for='oid' >OID</label>
+		   <p>
+		     The root OID used for publishing SVS lists of the extracted meta-data (e.g. org unit groups, org unit levels).  		     
+		     If you don't have one, OpenInfoMan will make a random one of the form '2.25.$RANDOM' where $RANDOM is the decimal 
+		     representation of a Version 3 UUID generated from the DHIS2 host URL.
+		   </p>		   
+		   <input type='text' size='120' name='oid'/>
+		   <br/>
+		   <br/>
+		   <label for='do_hws' >Process Users</label>
+		   <p>
+		   Process DHIS2 users as health workers (CSD Providers).
+
+		   In order to do so, you will need to have included Users, UserRoles and UserAuthorityGroups in your DXF2 meta-data extract
+		   </p>
+
+		   <select name='do_hws'>
+		     <option value='0'>No</option>
+		     <option value='1'>Yes</option>
+		   </select>
+		   
+		   <hr/>
+		   <span class='pull-right'>
+		     <input type='submit' value='Upload'/>
+		   </span>
 		 </form>
 	     }
 	   </span>
@@ -164,7 +217,12 @@ declare updating
   %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2/simple_upload")
   %rest:POST
   %rest:form-param("dxf", "{$dxf}")
-  function page:update_doc($search_name,$doc_name,$dxf) 
+  %rest:form-param("oid", "{$oid}")
+  %rest:form-param("url", "{$url}")
+  %rest:form-param("level", "{$level}")
+  %rest:form-param("group_codes", "{$group_codes}")
+  %rest:form-param("do_hws", "{$do_hws}")
+  function page:update_doc($search_name,$doc_name,$dxf,$oid,$url,$level,$group_codes,$do_hws) 
 {
   if (not(page:is_dhis($search_name)) ) then
     db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD/bad</restxq:redirect>)
@@ -172,12 +230,18 @@ declare updating
     let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
     let $name :=  map:keys($dxf)[1]
     let $content := parse-xml(convert:binary-to-string($dxf($name)))
-
+    let $levels := for $l in $level return <level>{$l}</level>
+    let $group_codes_exploded := for $g in tokenize($group_codes,',') return <group_code>{$g}</group_code>
     let $careServicesRequest := 
       <csd:careServicesRequest>
        <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
          <csd:requestParams >
            <dxf>{$content}</dxf>
+	   <groupCodes>{$group_codes_exploded}</groupCodes>
+	   <levels>{$levels}</levels>
+	   <URL>{$url}</URL>
+	   <OID>{$oid}</OID>
+	   <usersAreHealthWorkers>{if ($do_hws = '1') then '1' else '0'}</usersAreHealthWorkers>
          </csd:requestParams>
        </csd:function>
       </csd:careServicesRequest>
