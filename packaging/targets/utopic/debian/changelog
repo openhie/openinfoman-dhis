@@ -1,3 +1,19 @@
+openinfoman-dhis (1.0.24~utopic) utopic; urgency=medium
+
+  * Release Version 1.0.24
+    -c70294f add screenshot in docs
+    --https://github.com/openhie/openinfoman-dhis/commmit/c70294f
+    -f9f7f5f added forgotten files in last commit
+    --https://github.com/openhie/openinfoman-dhis/commmit/f9f7f5f
+    -18072a7 added a simplied DHIS2 DXF->CSD transform whose UI let's c
+    --https://github.com/openhie/openinfoman-dhis/commmit/18072a7
+    -9c400e2 fixed urn of demo stored extraction query
+    --https://github.com/openhie/openinfoman-dhis/commmit/9c400e2
+    -ba772bf pulled some datim util functionality into dhis2 source.
+    --https://github.com/openhie/openinfoman-dhis/commmit/ba772bf
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 04 Sep 2015 14:33:37 +0000
+
 openinfoman-dhis (1.0.23~utopic) utopic; urgency=medium
 
   * Release Version 1.0.23
