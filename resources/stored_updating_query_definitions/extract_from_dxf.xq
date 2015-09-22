@@ -140,8 +140,8 @@ let $entities:=
 (: create dhis2 users as health workers/providers if requested :)
 
 let $providers := 
-  if ()
-  then (<csd:provider entityID='null'>{$do_hws}</csd:provider>)
+  if (not($do_hws))
+  then ()
   else 
     for $user in $dxf/dxf:metaData/dxf:users/dxf:user 
     let $id := string($user/@id)
