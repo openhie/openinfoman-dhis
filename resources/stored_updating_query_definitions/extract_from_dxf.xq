@@ -29,11 +29,12 @@ let $oid :=
   then $t_oid
   else 
     (:generate it from the uuid :)
-    util:uuid_generate('rootoid',$namespace_uuid)
+    concat('2.25.',util:hexdec(util:uuid_generate('rootoid',$namespace_uuid)))
 
 let $orgUnits := $dxf/dxf:metaData/dxf:organisationUnits/dxf:organisationUnit
 let $orgGroups := $dxf/dxf:metaData/dxf:organisationUnitGroups/dxf:organisationUnitGroup
-
+let $userRoles := $dxf/dxf:metaData/dxf:userRoles
+let $dataSets := $dxf/dxf:metaData/dxf:dataSets
 
 let $doc_name := string($careServicesRequest/@resource)
 let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
@@ -160,6 +161,7 @@ let $providers :=
     let $created := util:fixup_date($user/@created)
     let $urs := $user/dxf:userCredentials/dxf:userRoles/dxf:userRole
     let $ags := $user/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup
+
     return 
     <csd:provider entityID="{$entityID}">
       <csd:otherID assigningAuthorityName="{$dhis_url}/api/User" code="id">{$id}</csd:otherID>
@@ -227,9 +229,25 @@ let $providers :=
 	let $tfacs := $user/dxf:organisationUnits/dxf:organisationUnit
 	let $facs := 
           for $tfac in $tfacs 
-    	  let $facEntityID := concat("urn:uuid:",util:uuid_generate(concat('facility:',string($tfac/@id)),$namespace_uuid))
+	  let $tfac_id := $tfac/@id
+    	  let $facEntityID := concat("urn:uuid:",util:uuid_generate(concat('facility:',string($tfac_id)),$namespace_uuid))
+	  let $fac_srvcs := 
+	    if (not($do_srvcs))
+	    then ()
+	    else 
+	      for $r in $urs
+	      let $r_id := $r/@id
+	      let $role := ($userRoles/dxf:userRole[@id = $r_id])[1]
+	      for $ds_ref in $role/dxf:dataSets/dxf:dataSet
+	        let $ds_id := $ds_ref/@id
+		let $ds := ($dataSets/dxf:dataSet[@id = $ds_id])[1]
+		let $ds_orgunit := $ds/dxf:organisationUnits/dxf:organisationUnit[@id = $tfac_id]
+		for $de in  $ds_orgunit/../../dxf:dataElements/dxf:dataElement
+		  let $de_id := $de/@id
+		  let $srvc_entity_id := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+	          return <csd:service entityID="{$srvc_entity_id}"/>
           where  (exists($entities[@entityID = $facEntityID]))
-	  return <csd:facility entityID="{$facEntityID}"/>
+	  return <csd:facility entityID="{$facEntityID}">{$fac_srvcs}</csd:facility>
 	  
 	return 
 	  if (count($facs) > 0) then
@@ -254,38 +272,44 @@ let $srvcs :=
     let $entityID := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
     let $cat_id := $de/dxf:categoryCombo/@id
     let $cc :=  ($catCombos/dxf:categoryCombo[@id = $cat_id])[1]
+(:
     let $cc_id := $cc/@id
     let $cc_oid := string-join(for $cp in string-to-codepoints(string($cc_id)) return string($cp))
-  
+:)  
     let $disaggregatorSet := 
       for $disag in  $cc/dxf:categories/dxf:category
       let $disag_id := $disag/@id
       let $disag_code := $disag/@code
       let $disag_oid := string-join(for $cp in string-to-codepoints(string($disag_id)) return string($cp))
-      let $oid :=  concat($oid , '.6.' , $disag_oid )
+      let $doid :=  concat($oid , '.6.' , $disag_oid )
       let $attr_display:= string($disag/@name)
-      let $attr :=
+      let $attr := $disag_code
+	(:need to be able to make it into an attribute for compatibility with ADX :)
+(:
         try {
-	  attribute {xs:string($disag_code)} {()}  (:need to be able to make it into an attribute for compatibility with ADX :)
+	  attribute {xs:string($disag_code)} {()}
 	} catch * {
 	  ''
 	}
+:)
       let $attr_name := string($attr)
-      where ( not(functx:all-whitespace($attr_name))  and  not($attr_display = 'default'))
-      return <adx:disaggregator id="{$oid}" name="{$attr_name}">{$attr_display}</adx:disaggregator>
-    where ( not(functx:all-whitespace($code)))  
+      where ( not(functx:all-whitespace($attr_name))  and  not($attr_display = 'default')) 
+      return <adx:disaggregator id="{$doid}" name="{$attr_name}">{$attr_display}</adx:disaggregator>
+
     return 
       <csd:service entityID="urn:uuid:{$entityID}">
-	{comment{($name)}}
 	<csd:primaryName>{$name}</csd:primaryName>
 	<csd:codedType codingScheme="urn:{$dhis_url}/api/dataElement" code="{$de/dxf:type/text()}" /> 
 	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="id">{$de_id}</csd:otherID>
-	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="code">{$code}</csd:otherID>
+	{ if (not(functx:all-whitespace($code)))
+	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="code">{$code}</csd:otherID>
+	  else ()
+	}
 	{
 	  if (count($disaggregatorSet) = 0) 
 	  then ()
 	  else 
-	    <csd:extension urn="urn:http:www.datim.org:adx" type="disaggreators">
+	    <csd:extension urn="urn:http://www.openhie.org/adx" type="disaggreators">
 	      <adx:disaggregatorSet>
 		{$disaggregatorSet}
 	      </adx:disaggregatorSet>
@@ -318,25 +342,20 @@ let $svs_srvcs :=
       let $disag_opt_code := string($catOption/@code)
       let $date := max(($disag_date,$disag_date,$disag_opt_date))
       where (not((functx:all-whitespace($disag_opt_code)) ))
-      return <svs:Concept code="{$disag_opt_code}" displayName="{$disag_opt_name}" codeSystem="urn:www.datim.org:disaggregators:{$disag_name}" lu="{$date}"/>
+      return <svs:Concept code="{$disag_opt_code}" displayName="{$disag_opt_name}" codeSystem="{$dhis_url}/adx/disaggregators/{$disag_name}" lu="{$date}"/>
 
     let $date := max(( for $d in $svs_vals_0/@lu return xs:dateTime($d)))
     let $svs_vals_1 := functx:remove-attributes-deep($svs_vals_0,'lu')
     
     let $oid :=  concat($oid , '.6.' , $disag_oid)	
 
-    let $attr :=
-      try {
-	attribute {xs:string($disag_code)} {()}  (:need to be able to make it into an attribute for compatibility with ADX :)
-      } catch * {
-	''
-      }
-    let $code := string($attr)
+    let $attr := $disag_code
+
     let $svs_doc :=
-      <svs:ValueSet  xmlns:svs="urn:ihe:iti:svs:2008" id="{$oid}" version="{$date}" displayName="[ADX $code] Disaggregator for {$disag_name}">
+      <svs:ValueSet  xmlns:svs="urn:ihe:iti:svs:2008" id="{$oid}" version="{$date}" displayName="[ADX $disag_code] Disaggregator for {$disag_name}">
 	<svs:ConceptList xml:lang="en-US" >{$svs_vals_1}</svs:ConceptList>
       </svs:ValueSet>
-    where ( not(functx:all-whitespace($code))  and not($disag_name = 'default'))   
+    where ( not(functx:all-whitespace($disag_code))  and not($disag_name = 'default'))   
     return $svs_doc
 
 
@@ -351,7 +370,7 @@ let $svs_levels :=
     <svs:ConceptList xml:lang="en-US" >
       {
 	for $level in $levels
-	return <svs:Concept code="{$level/@level}" displayName="{$level/@name}" codeSystem="urn:{$dhis_url}/api/organisationUnitLevel" />
+	return <svs:Concept code="{$level/@level}" displayName="{$level/@name}" codeSystem="{$dhis_url}/api/organisationUnitLevel" />
       }
     </svs:ConceptList>
   </svs:ValueSet>
@@ -365,7 +384,7 @@ let $svs_groups :=
     <svs:ConceptList xml:lang="en-US" >
       {
 	for $group in $orgGroups
-	return <svs:Concept code="{$group/@code}" displayName="{$group/@name}" codeSystem="urn:{$dhis_url}/api/organisationUnitGroup" />
+	return <svs:Concept code="{$group/@code}" displayName="{$group/@name}" codeSystem="{$dhis_url}/api/organisationUnitGroup" />
       }
     </svs:ConceptList>
   </svs:ValueSet>
@@ -386,7 +405,7 @@ let $svs_providers :=
 	<svs:ConceptList xml:lang="en-US" >
 	  {
 	    for $ur in ($urs,<userRole id='NOROLE' name='No Role'/>)
-	    return <svs:Concept code="{$ur/@id}" displayName="{$ur/@name}" codeSystem="urn:{$dhis_url}/api/userRoles" />
+	    return <svs:Concept code="{$ur/@id}" displayName="{$ur/@name}" codeSystem="{$dhis_url}/api/userRoles" />
 	  }
 	</svs:ConceptList>
       </svs:ValueSet>
@@ -395,7 +414,7 @@ let $svs_providers :=
 	<svs:ConceptList xml:lang="en-US" >
 	  {
 	    for $ag in $ags
-	    return <svs:Concept code="{$ag/@id}" displayName="{$ag/@name}" codeSystem="urn:{$dhis_url}/api/userRoles" />
+	    return <svs:Concept code="{$ag/@id}" displayName="{$ag/@name}" codeSystem="{$dhis_url}/api/userRoles" />
 	  }
 	</svs:ConceptList>
       </svs:ValueSet>

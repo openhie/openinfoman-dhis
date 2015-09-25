@@ -15,6 +15,19 @@ declare function util:uuid_tobits($tokens) {
   else $tokens
 };
 
+declare function util:hexdec($hex) {
+  let $zero := convert:binary-to-bytes('0')
+  let $nine := convert:binary-to-bytes('9')
+  let $a := convert:binary-to-bytes('A')
+  let $e := convert:binary-to-bytes('E')
+  let $u_hex := convert:binary-to-bytes(upper-case($hex))
+  let $dec := $u_hex
+    ! xs:decimal(if ( (. >= $zero and . <= $nine)) then (. - $zero) else if ( (. >= $a and . <= $e)) then (. - $a + 10) else ())
+  return  fold-left($dec, 0, function($a, $b) { $a * 16 + $b }) 
+};
+
+
+
 declare function util:uuid_generate($name,$namespace) {
   (: adapted from http://www.ietf.org/rfc/rfc4122.txt and https://gist.github.com/dahnielson/508447 :)
   let $bits := util:uuid_tobits(functx:chars(translate($namespace,'-','' )))
