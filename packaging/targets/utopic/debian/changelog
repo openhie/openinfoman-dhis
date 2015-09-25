@@ -1,3 +1,15 @@
+openinfoman-dhis (1.0.25~utopic) utopic; urgency=medium
+
+  * Release Version 1.0.25
+    -009711d added dataElements as a CSD service with disaggregators ac
+    --https://github.com/openhie/openinfoman-dhis/commmit/009711d
+    -f667ee4 Fixed syntax error
+    --https://github.com/openhie/openinfoman-dhis/commmit/f667ee4
+    -01fbb48 Fixed a bug where by var facs was not declared
+    --https://github.com/openhie/openinfoman-dhis/commmit/01fbb48
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 25 Sep 2015 03:44:44 +0000
+
 openinfoman-dhis (1.0.24~utopic) utopic; urgency=medium
 
   * Release Version 1.0.24
