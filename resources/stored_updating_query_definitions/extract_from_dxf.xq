@@ -2,7 +2,7 @@ declare namespace csd = "urn:ihe:iti:csd:2013";
 
 declare namespace svs = "urn:ihe:iti:svs:2008";
 declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
-
+declare namespace adx = "http://www.openhie.org/adx";
 
 import module namespace csd_webconf =  "https://github.com/openhie/openinfoman/csd_webconf";
 import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm";
@@ -14,13 +14,14 @@ declare variable $careServicesRequest as item() external;
 
 
 
-let $dhis_url := $careServicesRequest/URL/text()
+let $dhis_url := replace($careServicesRequest/URL/text(),'/+^','')
 let $namespace_uuid := util:uuid_generate($dhis_url,$util:namespace_uuid)
 
 let $dxf := $careServicesRequest/dxf
 let $facility_group_codes := $careServicesRequest/groupCodes/groupCode/text()
 let $facility_levels := $careServicesRequest/levels/level/text()
 let $do_hws :=  ($careServicesRequest/usersAreHealthWorkers/text() = '1')
+let $do_srvcs :=  ($careServicesRequest/dataelementsAreServices/text() = '1')
 
 let $t_oid := $careServicesRequest/oid/text()  
 let $oid :=      
@@ -39,6 +40,7 @@ let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
 let $org_dir := $doc/csd:CSD/csd:organizationDirectory
 let $fac_dir := $doc/csd:CSD/csd:facilityDirectory
 let $prov_dir := $doc/csd:CSD/csd:providerDirectory
+let $srvc_dir := $doc/csd:CSD/csd:serviceDirectory
 
 let $now := current-dateTime()
 
@@ -238,6 +240,107 @@ let $providers :=
     </csd:provider>
 
 
+(: Create CSD Services for DHIS2 Data Elements :) 
+
+let $catCombos := $dxf/dxf:metaData/dxf:categoryCombos
+let $srvcs := 
+  if (not($do_srvcs))
+  then ()
+  else 
+    for $de in (<dxf:dataElement/>,$dxf/dxf:metaData/dxf:dataElements/dxf:dataElement)
+    let $de_id := string($de/@id)
+    let $name := string($de/@name)
+    let $code := string($de/@code)
+    let $entityID := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+    let $cat_id := $de/dxf:categoryCombo/@id
+    let $cc :=  ($catCombos/dxf:categoryCombo[@id = $cat_id])[1]
+    let $cc_id := $cc/@id
+    let $cc_oid := string-join(for $cp in string-to-codepoints(string($cc_id)) return string($cp))
+  
+    let $disaggregatorSet := 
+      for $disag in  $cc/dxf:categories/dxf:category
+      let $disag_id := $disag/@id
+      let $disag_code := $disag/@code
+      let $disag_oid := string-join(for $cp in string-to-codepoints(string($disag_id)) return string($cp))
+      let $oid :=  concat($oid , '.6.' , $disag_oid )
+      let $attr_display:= string($disag/@name)
+      let $attr :=
+        try {
+	  attribute {xs:string($disag_code)} {()}  (:need to be able to make it into an attribute for compatibility with ADX :)
+	} catch * {
+	  ''
+	}
+      let $attr_name := string($attr)
+      where ( not(functx:all-whitespace($attr_name))  and  not($attr_display = 'default'))
+      return <adx:disaggregator id="{$oid}" name="{$attr_name}">{$attr_display}</adx:disaggregator>
+    where ( not(functx:all-whitespace($code)))  
+    return 
+      <csd:service entityID="urn:uuid:{$entityID}">
+	{comment{($name)}}
+	<csd:primaryName>{$name}</csd:primaryName>
+	<csd:codedType codingScheme="urn:{$dhis_url}/api/dataElement" code="{$de/dxf:type/text()}" /> 
+	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="id">{$de_id}</csd:otherID>
+	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="code">{$code}</csd:otherID>
+	{
+	  if (count($disaggregatorSet) = 0) 
+	  then ()
+	  else 
+	    <csd:extension urn="urn:http:www.datim.org:adx" type="disaggreators">
+	      <adx:disaggregatorSet>
+		{$disaggregatorSet}
+	      </adx:disaggregatorSet>
+	    </csd:extension>
+	}
+	<csd:record 
+          created="{$de/@created}" 
+          updated="{$de/@lastUpdated}" 
+          status="Active" 
+	  sourceDirectory="{$dhis_url}"/>        
+      </csd:service>
+
+
+(: Create an SVS list for each of the disaggregator sets in  the service :)
+let $categories := $dxf/dxf:metaData/dxf:categories/dxf:category[dxf:dataDimensionType/text() = 'DISAGGREGATION']
+
+let $svs_srvcs := 
+  if (not($do_srvcs))
+  then ()
+  else
+    for $category in $categories
+    let $disag_code := string($category/@code)
+    let $disag_oid := string-join(for $cp in string-to-codepoints(string($disag_code)) return string($cp))      
+    let $disag_date := xs:dateTime(substring(string($category/@lastUpdated),1,19))
+    let $disag_name := string($category/@name)
+    let $svs_vals_0 :=    
+      for $catOption in $category/dxf:categoryOptions/dxf:categoryOption
+      let $disag_opt_date := xs:dateTime(substring(string($catOption/@lastUpdated),1,19))
+      let $disag_opt_name := string($catOption/@name)
+      let $disag_opt_code := string($catOption/@code)
+      let $date := max(($disag_date,$disag_date,$disag_opt_date))
+      where (not((functx:all-whitespace($disag_opt_code)) ))
+      return <svs:Concept code="{$disag_opt_code}" displayName="{$disag_opt_name}" codeSystem="urn:www.datim.org:disaggregators:{$disag_name}" lu="{$date}"/>
+
+    let $date := max(( for $d in $svs_vals_0/@lu return xs:dateTime($d)))
+    let $svs_vals_1 := functx:remove-attributes-deep($svs_vals_0,'lu')
+    
+    let $oid :=  concat($oid , '.6.' , $disag_oid)	
+
+    let $attr :=
+      try {
+	attribute {xs:string($disag_code)} {()}  (:need to be able to make it into an attribute for compatibility with ADX :)
+      } catch * {
+	''
+      }
+    let $code := string($attr)
+    let $svs_doc :=
+      <svs:ValueSet  xmlns:svs="urn:ihe:iti:svs:2008" id="{$oid}" version="{$date}" displayName="[ADX $code] Disaggregator for {$disag_name}">
+	<svs:ConceptList xml:lang="en-US" >{$svs_vals_1}</svs:ConceptList>
+      </svs:ValueSet>
+    where ( not(functx:all-whitespace($code))  and not($disag_name = 'default'))   
+    return $svs_doc
+
+
+
 (: Create an SVS list for the Org Unit Levels :)
 	
 let $level_oid := concat($oid,'.2')
@@ -300,13 +403,13 @@ let $svs_providers :=
 
     return ($svs_urs, $svs_ags)
 
-let $svs_docs := ($svs_levels,$svs_groups,$svs_providers)
+let $svs_docs := ($svs_levels,$svs_groups,$svs_providers,$svs_srvcs)
 
-
+ 
 (:Insert everything we generated into the database :)
 
 return (
-  for $entity in ($entities,$providers)
+  for $entity in ($entities,$providers, $srvcs)
   let $id := $entity/@entityID
   return 
     if (local-name($entity) = 'facility')
@@ -330,7 +433,15 @@ return (
         if (not(exists($existing_prov)))
         then (insert node $entity into $prov_dir)
         else (replace node $existing_prov with $entity)
-    else ()
+    else if (local-name($entity) = 'service')
+    then
+      let $existing_srvc := $srvc_dir/csd:service[@entityID = $id]
+      return
+        if (not(exists($existing_srvc)))
+        then (insert node $entity into $srvc_dir)
+        else (replace node $existing_srvc with $entity)
+
+    else (insert node $entity into /)
   ,
   for $svs_doc in $svs_docs return svs_lsvs:insert($csd_webconf:db,$svs_doc) 
 

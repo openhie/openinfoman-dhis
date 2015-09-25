@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://www.openhie.org/adx"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xforms="http://www.w3.org/2002/xforms"
+  xmlns="http://www.openhie.org/adx" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+
+  <xs:import namespace="http://www.w3.org/2001/XMLSchema"
+    schemaLocation="http://www.w3.org/2001/XMLSchema.xsd"/>
+  <xs:import namespace="http://www.w3.org/2002/xforms"
+    schemaLocation="http://www.w3.org/MarkUp/Forms/2002/XForms-Schema.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+
+  <xs:complexType name="Disaggregator">
+    <xs:attribute name="id">
+      <xs:annotation>
+        <xs:documentation>ID of the valueset (preferably an OID) whose codes are the disaggregator values.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="name">
+      <xs:annotation>
+        <xs:documentation>A name for the value set.  This is constrained so that the value of this attribute can be the attribute within an ADX message.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DisaggregatorSet">
+    <xs:sequence>
+      <xs:element name="disaggregator" type="Disaggregator"/>
+      <xs:element name="namedDisaggregator">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="disaggregatorValue">
+              <xs:complexType>
+                <xs:attribute name="disaggregatorSetID"/>
+                <xs:attribute name="code"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="id"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="disaggregatorSet" type="DisaggregatorSet"/>
+</xs:schema>

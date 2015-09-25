@@ -30,8 +30,9 @@ In order to do so, you will need to have included Users, UserRoles and UserAutho
       <groupCodes/>
       <levels/>
       <URL/>
-      <OID/>
+      <oid/>
       <usersAreHealthWorkers/>
+      <dataelementsAreServices/>
     </careServicesRequest>
   </xforms:instance>
   <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>

@@ -101,36 +101,6 @@ declare
 		   <p>DHIS2 Meta-data export (DXF 2.0) File. </p>
 		   <input type='file' name='dxf'/>
 		   <br/>
-		   <label for='url' >URL(Required)</label>
-		   <p>The URL of the source DHIS2 system. </p>
-
-		   <input type='text' size='120' name='url'/>
-		   <label for='group_codes' >Group Codes</label>
-		   <p>Comma seperated list of the Group Codes used to identify a facility</p>
-		   <input type='text' size='120' name='group_codes'/>
-		   <br/>
-		   <label for='level' >Levels</label>
-		   <p>		   Levels used to identify a facility</p>
-
-		   <input type='checkbox' name='level' value='1'/>1 		   
-		   <input type='checkbox' name='level' value='2'/>2
-		   <input type='checkbox' name='level' value='3'/>3
-		   <input type='checkbox' name='level' value='4'/>4
-		   <input type='checkbox' name='level' value='5'/>5
-		   <input type='checkbox' name='level' value='6'/>6
-		   <input type='checkbox' name='level' value='7'/>7
-		   <input type='checkbox' name='level' value='8'/>8
-		   <input type='checkbox' name='level' value='9'/>9
-		   <br/>
-		   <label for='oid' >OID</label>
-		   <p>
-		     The root OID used for publishing SVS lists of the extracted meta-data (e.g. org unit groups, org unit levels).  		     
-		     If you don't have one, OpenInfoMan will make a random one of the form '2.25.$RANDOM' where $RANDOM is the decimal 
-		     representation of a Version 3 UUID generated from the DHIS2 host URL.
-		   </p>		   
-		   <input type='text' size='120' name='oid'/>
-		   <br/>
-		   <br/>
 		   <label for='do_hws' >Process Users</label>
 		   <p>
 		   Process DHIS2 users as health workers (CSD Providers).
@@ -142,8 +112,53 @@ declare
 		     <option value='0'>No</option>
 		     <option value='1'>Yes</option>
 		   </select>
+		   <br/>
+		   <label for='do_srvcs' >Process Data Elements</label>
+		   <p>
+		   Process DHIS2 Data Elements as CSD Services
+
+		   In order to do so, you will need to have included Data Elements, Categtories and Category Combos in your DXF2 meta-data extract
+		   </p>
+
+		   <select name='do_srvcs'>
+		     <option value='0'>No</option>
+		     <option value='1'>Yes</option>
+		   </select>
 		   
 		   <hr/>
+
+		   <br/>
+		   <h3>Process Faclilities</h3>
+		   <label for='url' >URL(Required)</label>
+		   <p>The URL of the source DHIS2 system. </p>
+
+		   <input type='text' size='120' name='url'/>
+		   <label for='group_codes' >Group Codes</label>
+		   <p>Comma seperated list of the Group Codes used to identify a facility</p>
+		   <input type='text' size='120' name='group_codes'/>
+		   <br/>
+		   <label for='level' >Levels</label>
+		   <p>		   Levels used to identify a facility</p>
+		     <input type='checkbox' name='level1' value='1'/>1 		   
+		     <input type='checkbox' name='level2' value='2'/>2
+		     <input type='checkbox' name='level3' value='3'/>3
+		     <input type='checkbox' name='level4' value='4'/>4
+		     <input type='checkbox' name='level5' value='5'/>5
+		     <input type='checkbox' name='level6' value='6'/>6
+		     <input type='checkbox' name='level7' value='7'/>7
+		     <input type='checkbox' name='level8' value='8'/>8
+		     <input type='checkbox' name='level9' value='9'/>9 
+		   <br/>
+		   <h3>HIE Configuration</h3>
+		   <label for='oid' >OID</label>
+		   <p>
+		     The root OID used for publishing SVS lists of the extracted meta-data (e.g. org unit groups, org unit levels).  		     
+		     If you don't have one, OpenInfoMan will make a random one of the form '2.25.$RANDOM' where $RANDOM is the decimal 
+		     representation of a Version 3 UUID generated from the DHIS2 host URL.
+		   </p>		   
+		   <input type='text' size='120' name='oid'/>
+		   <br/>
+
 		   <span class='pull-right'>
 		     <input type='submit' value='Upload'/>
 		   </span>
@@ -212,17 +227,34 @@ declare updating
 };
 
 
+declare
+  %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2/simple_upload2")
+  %rest:consumes('multipart/*')
+  %rest:POST("{$data}")
+  function page:update_doc2($search_name,$doc_name,$data as item()*) {
+    <pre>{for $d in $data return <d>{$d}</d>}</pre>
+};
 
 declare updating
   %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2/simple_upload")
-  %rest:POST
   %rest:form-param("dxf", "{$dxf}")
   %rest:form-param("oid", "{$oid}")
   %rest:form-param("url", "{$url}")
-  %rest:form-param("level", "{$level}")
+  %rest:form-param("level1", "{$level1}")
+  %rest:form-param("level2", "{$level2}")
+  %rest:form-param("level3", "{$level3}")
+  %rest:form-param("level4", "{$level4}")
+  %rest:form-param("level5", "{$level5}")
+  %rest:form-param("level6", "{$level6}")
+  %rest:form-param("level7", "{$level7}")
+  %rest:form-param("level8", "{$level8}")
+  %rest:form-param("level9", "{$level9}")
   %rest:form-param("group_codes", "{$group_codes}")
   %rest:form-param("do_hws", "{$do_hws}")
-  function page:update_doc($search_name,$doc_name,$dxf,$oid,$url,$level,$group_codes,$do_hws) 
+  %rest:form-param("do_srvcs", "{$do_srvcs}")
+  function page:update_doc($search_name,$doc_name,$dxf,$oid,$url,$group_codes,$do_hws,$do_srvcs,
+                           $level1,$level2,$level3,$level4,$level5,$level6,$level7,$level8,$level9 (:ugly hack b/c basex is not behaving :)
+		       )
 {
   if (not(page:is_dhis($search_name)) ) then
     db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD/bad</restxq:redirect>)
@@ -230,7 +262,18 @@ declare updating
     let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
     let $name :=  map:keys($dxf)[1]
     let $content := parse-xml(convert:binary-to-string($dxf($name)))
-    let $levels := for $l in $level return <level>{$l}</level>
+    let $levels :=
+       (
+	 if ($level1) then (<level>1</level>) else (),
+	 if ($level2) then (<level>2</level>) else (),
+	 if ($level3) then (<level>3</level>) else (),
+	 if ($level4) then (<level>4</level>) else (),
+	 if ($level5) then (<level>5</level>) else (),
+	 if ($level6) then (<level>6</level>) else (),
+	 if ($level7) then (<level>7</level>) else (),
+	 if ($level8) then (<level>8</level>) else (),
+	 if ($level9) then (<level>9</level>) else ()
+       )
     let $group_codes_exploded := for $g in tokenize($group_codes,',') return <group_code>{$g}</group_code>
     let $careServicesRequest := 
       <csd:careServicesRequest>
@@ -242,13 +285,15 @@ declare updating
 	   <URL>{$url}</URL>
 	   <OID>{$oid}</OID>
 	   <usersAreHealthWorkers>{if ($do_hws = '1') then '1' else '0'}</usersAreHealthWorkers>
+	   <dataelementsAreServices>{if ($do_srvcs = '1') then '1' else '0'}</dataelementsAreServices>
+
          </csd:requestParams>
        </csd:function>
       </csd:careServicesRequest>
     return 
        (
-        csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest)
-        ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)
+        csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest) 
+(:        ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)  :)
        )
 
 };
