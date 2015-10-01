@@ -84,7 +84,7 @@ declare
           if ($actions = 'simple_upload')  
 	  then
 	   <span>
-             <h3>Upload Meta-Data Export (DXF Document)</h3>
+             <h2>Upload Meta-Data Export (DXF Document)</h2>
 	     <p>
 	     This extracts all organisation units matching the given facility conditions as a CSD facility entity.  
 	     It also extracts all organisation units a CSD organization entity.  
@@ -97,10 +97,19 @@ declare
 	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/simple_upload")
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
+		   <h3>Data Source</h3>
 		   <label for='dxf' >Meta-data Export. (Required)</label>
 		   <p>DHIS2 Meta-data export (DXF 2.0) File. </p>
 		   <input type='file' name='dxf'/>
 		   <br/>
+
+		   <label for='url' >URL(Required)</label>
+		   <p>The URL of the source DHIS2 system. </p>
+
+		   <input type='text' size='120' name='url'/>
+
+		   <br/>
+		   <h3>Provider Directory</h3>
 		   <label for='do_hws' >Process Users</label>
 		   <p>
 		   Process DHIS2 users as health workers (CSD Providers).
@@ -113,6 +122,7 @@ declare
 		     <option value='1'>Yes</option>
 		   </select>
 		   <br/>
+		   <h3>Service Directory</h3>
 		   <label for='do_srvcs' >Process Data Elements</label>
 		   <p>
 		   Process DHIS2 Data Elements as CSD Services
@@ -126,13 +136,7 @@ declare
 		   </select>
 		   
 		   <hr/>
-
-		   <br/>
-		   <h3>Process Faclilities</h3>
-		   <label for='url' >URL(Required)</label>
-		   <p>The URL of the source DHIS2 system. </p>
-
-		   <input type='text' size='120' name='url'/>
+		   <h3>Facility Directory</h3>
 		   <label for='group_codes' >Group Codes</label>
 		   <p>Comma seperated list of the Group Codes used to identify a facility</p>
 		   <input type='text' size='120' name='group_codes'/>
