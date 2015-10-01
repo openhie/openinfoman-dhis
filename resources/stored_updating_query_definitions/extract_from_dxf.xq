@@ -265,13 +265,16 @@ let $srvcs :=
   if (not($do_srvcs))
   then ()
   else 
-    for $de in (<dxf:dataElement/>,$dxf/dxf:metaData/dxf:dataElements/dxf:dataElement)
+    for $de in ($dxf/dxf:metaData/dxf:dataElements/dxf:dataElement)
     let $de_id := string($de/@id)
     let $name := string($de/@name)
     let $code := string($de/@code)
     let $entityID := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
     let $cat_id := $de/dxf:categoryCombo/@id
     let $cc :=  ($catCombos/dxf:categoryCombo[@id = $cat_id])[1]
+    let $created := util:fixup_date($de/@created)
+    let $lm := util:fixup_date($de/@lastUpdated)
+
 (:
     let $cc_id := $cc/@id
     let $cc_oid := string-join(for $cp in string-to-codepoints(string($cc_id)) return string($cp))
@@ -280,7 +283,7 @@ let $srvcs :=
       for $disag in  $cc/dxf:categories/dxf:category
       let $disag_id := $disag/@id
       let $disag_code := $disag/@code
-      let $disag_oid := string-join(for $cp in string-to-codepoints(string($disag_id)) return string($cp))
+      let $disag_oid := string-join(for $cp in string-to-codepoints(string($disag_code)) return string($cp))
       let $doid :=  concat($oid , '.6.' , $disag_oid )
       let $attr_display:= string($disag/@name)
       let $attr := $disag_code
@@ -330,19 +333,20 @@ let $svs_srvcs :=
   if (not($do_srvcs))
   then ()
   else
-    for $category in $categories
+(:    for $category in $categories :)
+    for $category in $categories[ @id  = $catCombos/dxf:categoryCombo/dxf:categories/dxf:category/@id]
     let $disag_code := string($category/@code)
     let $disag_oid := string-join(for $cp in string-to-codepoints(string($disag_code)) return string($cp))      
     let $disag_date := xs:dateTime(substring(string($category/@lastUpdated),1,19))
     let $disag_name := string($category/@name)
+    let $disag_id := string($category/@id)
     let $svs_vals_0 :=    
       for $catOption in $category/dxf:categoryOptions/dxf:categoryOption
       let $disag_opt_date := xs:dateTime(substring(string($catOption/@lastUpdated),1,19))
       let $disag_opt_name := string($catOption/@name)
-      let $disag_opt_code := string($catOption/@code)
       let $date := max(($disag_date,$disag_date,$disag_opt_date))
-      where (not((functx:all-whitespace($disag_opt_code)) ))
-      return <svs:Concept code="{$disag_opt_code}" displayName="{$disag_opt_name}" codeSystem="{$dhis_url}/adx/disaggregators/{$disag_name}" lu="{$date}"/>
+      where (not((functx:all-whitespace($disag_opt_name)) )) 
+      return <svs:Concept code="{$disag_opt_name}" displayName="{$disag_opt_name}" codeSystem="{$dhis_url}/adx/disaggregators/{$disag_code}" lu="{$date}"/>
 
     let $date := max(( for $d in $svs_vals_0/@lu return xs:dateTime($d)))
     let $svs_vals_1 := functx:remove-attributes-deep($svs_vals_0,'lu')
@@ -352,7 +356,8 @@ let $svs_srvcs :=
     let $attr := $disag_code
 
     let $svs_doc :=
-      <svs:ValueSet  xmlns:svs="urn:ihe:iti:svs:2008" id="{$oid}" version="{$date}" displayName="[ADX $disag_code] Disaggregator for {$disag_name}">
+      <svs:ValueSet  xmlns:svs="urn:ihe:iti:svs:2008" id="{$oid}" version="{$date}" displayName="[ADX {$disag_code}] Disaggregator for {$disag_name}. ( {$disag_id
+} ) Published {$date}.  ">
 	<svs:ConceptList xml:lang="en-US" >{$svs_vals_1}</svs:ConceptList>
       </svs:ValueSet>
     where ( not(functx:all-whitespace($disag_code))  and not($disag_name = 'default'))   
