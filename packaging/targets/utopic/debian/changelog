@@ -1,3 +1,13 @@
+openinfoman-dhis (1.0.28~utopic) utopic; urgency=medium
+
+  * Release Version 1.0.28
+    -0f31001 fixed issues with dates and disaggregators for dxf:dataEle
+    --https://github.com/openhie/openinfoman-dhis/commmit/0f31001
+    -4a06851 improved UI for DXF upload
+    --https://github.com/openhie/openinfoman-dhis/commmit/4a06851
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 01 Oct 2015 03:43:51 +0000
+
 openinfoman-dhis (1.0.27~utopic) utopic; urgency=medium
 
   * Release Version 1.0.27
