@@ -302,7 +302,6 @@ let $srvcs :=
     return 
       <csd:service entityID="{$entityID}">
 	<csd:primaryName>{$name}</csd:primaryName>
-	<csd:codedType codingScheme="urn:{$dhis_url}/api/dataElement" code="{$de/dxf:type/text()}" /> 
 	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="id">{$de_id}</csd:otherID>
 	{ if (not(functx:all-whitespace($code)))
 	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="code">{$code}</csd:otherID>
