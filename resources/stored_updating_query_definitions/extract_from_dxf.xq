@@ -300,7 +300,7 @@ let $srvcs :=
       return <adx:disaggregator id="{$doid}" name="{$attr_name}">{$attr_display}</adx:disaggregator>
 
     return 
-      <csd:service entityID="urn:uuid:{$entityID}">
+      <csd:service entityID="{$entityID}">
 	<csd:primaryName>{$name}</csd:primaryName>
 	<csd:codedType codingScheme="urn:{$dhis_url}/api/dataElement" code="{$de/dxf:type/text()}" /> 
 	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="id">{$de_id}</csd:otherID>
