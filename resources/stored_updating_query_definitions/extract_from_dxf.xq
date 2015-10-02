@@ -318,6 +318,21 @@ let $srvcs :=
 	      </adx:disaggregatorSet>
 	    </csd:extension>
 	}
+	{
+	   <csd:extension urn="urn:http://www.dhis2.org/api/dataElement">
+	     <dxf:dataElement shortname="{$de/@shortName}">
+	       {$de/dxf:aggregationType}
+	       {$de/dxf:dataDimension}
+	       {$de/dxf:domainType}
+	       {$de/dxf:type}
+	       {$de/dxf:numberType}
+	       {$de/dxf:aggregationOperator}
+	       {$de/dxf:url}
+	       {$de/dxf:zeroIsSignificant}
+	     </dxf:dataElement>
+	   </csd:extension>
+	}
+
 	<csd:record 
           created="{$de/@created}" 
           updated="{$de/@lastUpdated}" 
