@@ -1,3 +1,21 @@
+openinfoman-dhis (1.0.29~utopic) utopic; urgency=medium
+
+  * Release Version 1.0.29
+    -276f643 dxf:dataElements as csd:service are now linked to csd:faci
+    --https://github.com/openhie/openinfoman-dhis/commmit/276f643
+    -8228f49 added root organization node to put the full DHIS2 hierarc
+    --https://github.com/openhie/openinfoman-dhis/commmit/8228f49
+    -9c27568 accept gzip uploads of dhis2 metadata exports
+    --https://github.com/openhie/openinfoman-dhis/commmit/9c27568
+    -09d79cd removed redundant data in csd:servivce
+    --https://github.com/openhie/openinfoman-dhis/commmit/09d79cd
+    -330ebd7 added in extension point on csd:service for delta with dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/330ebd7
+    -875618e fixed issue with @entityID for csd:service
+    --https://github.com/openhie/openinfoman-dhis/commmit/875618e
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 07 Oct 2015 14:49:07 +0000
+
 openinfoman-dhis (1.0.28~utopic) utopic; urgency=medium
 
   * Release Version 1.0.28
