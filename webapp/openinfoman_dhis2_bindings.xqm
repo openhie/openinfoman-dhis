@@ -231,13 +231,6 @@ declare updating
 };
 
 
-declare
-  %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2/simple_upload2")
-  %rest:consumes('multipart/*')
-  %rest:POST("{$data}")
-  function page:update_doc2($search_name,$doc_name,$data as item()*) {
-    <pre>{for $d in $data return <d>{$d}</d>}</pre>
-};
 
 declare updating
   %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/dhis2/simple_upload")
@@ -264,8 +257,13 @@ declare updating
     db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD/bad</restxq:redirect>)
   else 
     let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
-    let $name :=  map:keys($dxf)[1]
-    let $content := parse-xml(convert:binary-to-string($dxf($name)))
+    let $name :=  map:keys($dxf)[1]    
+    let $content := 
+      try {
+	parse-xml(convert:binary-to-string($dxf($name))) 
+      } catch bxerr:BXCO0001  {
+        parse-xml(archive:extract-text($dxf($name))[1])
+      }
     let $levels :=
        (
 	 if ($level1) then (<level>1</level>) else (),
@@ -296,7 +294,7 @@ declare updating
       </csd:careServicesRequest>
     return 
        (
-        csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest) 
+        csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest)  
 (:        ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)  :)
        )
 
