@@ -47,6 +47,15 @@ let $now := current-dateTime()
 
 
 (:First we create CSD facility and organization entities from the DHIS2 Org Unit Hierarchy :)
+let $top_orgEntityID := concat("urn:uuid:",util:uuid_generate('organization:root',$namespace_uuid))
+let $top_level_org := 
+    <csd:organization entityID="{$top_orgEntityID}">
+      <csd:codedType codingScheme="urn:{$dhis_url}" code="ROOTNODE" />  
+      <csd:primaryName>Root Organization For {$dhis_url}</csd:primaryName>
+      <csd:record created="{$now}" updated="{$now}" status="Active" sourceDirectory="{$dhis_url}"/>
+    </csd:organization>
+
+
 
 let $entities:= 
   for $orgUnit in $orgUnits
@@ -63,7 +72,10 @@ let $entities:=
   let $group_codes := $groups/@code
   let $facEntityID := concat("urn:uuid:",util:uuid_generate(concat('facility:',$id),$namespace_uuid))
   let $orgEntityID := concat("urn:uuid:",util:uuid_generate(concat('organization:',$id),$namespace_uuid))
-  let $parentEntityID := concat("urn:uuid:",util:uuid_generate(concat('organization:',$pid),$namespace_uuid))
+  let $parentEntityID := 
+    if (not(functx:all-whitespace($pid))) 
+    then concat("urn:uuid:",util:uuid_generate(concat('organization:',$pid),$namespace_uuid))
+    else $top_orgEntityID 
 
   (:first we extract all org units matching our facility conditions :)
   let $fac_entity :=
@@ -126,14 +138,9 @@ let $entities:=
       }
       <csd:primaryName>{$displayName}</csd:primaryName>
       {util:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
-      {
-	if (not(functx:all-whitespace($puuid))) 
-	then 
-          <csd:organizations>
-	    <csd:organization entityID="{$parentEntityID}"/>
-	  </csd:organizations>
-	else () 
-      }
+      <csd:organizations>
+	<csd:organization entityID="{$parentEntityID}"/>
+      </csd:organizations>
       <csd:record created="{$created}" updated="{$lm}" status="Active" sourceDirectory="{$dhis_url}"/>
     </csd:organization>
   return ($org_entity,$fac_entity)
@@ -447,7 +454,7 @@ let $svs_docs := ($svs_levels,$svs_groups,$svs_providers,$svs_srvcs)
 (:Insert everything we generated into the database :)
 
 return (
-  for $entity in ($entities,$providers, $srvcs)
+  for $entity in ($top_level_org, $entities,$providers, $srvcs)
   let $id := $entity/@entityID
   return 
     if (local-name($entity) = 'facility')
