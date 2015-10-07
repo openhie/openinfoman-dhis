@@ -35,6 +35,7 @@ let $orgUnits := $dxf/dxf:metaData/dxf:organisationUnits/dxf:organisationUnit
 let $orgGroups := $dxf/dxf:metaData/dxf:organisationUnitGroups/dxf:organisationUnitGroup
 let $userRoles := $dxf/dxf:metaData/dxf:userRoles
 let $dataSets := $dxf/dxf:metaData/dxf:dataSets
+let $dataElements := $dxf/dxf:metaData/dxf:dataElements
 
 let $doc_name := string($careServicesRequest/@resource)
 let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
@@ -51,7 +52,7 @@ let $top_orgEntityID := concat("urn:uuid:",util:uuid_generate('organization:root
 let $top_level_org := 
     <csd:organization entityID="{$top_orgEntityID}">
       <csd:codedType codingScheme="urn:{$dhis_url}" code="ROOTNODE" />  
-      <csd:primaryName>Root Organization For {$dhis_url}</csd:primaryName>
+      <csd:primaryName>Root organization for {$dhis_url}</csd:primaryName>
       <csd:record created="{$now}" updated="{$now}" status="Active" sourceDirectory="{$dhis_url}"/>
     </csd:organization>
 
@@ -78,6 +79,18 @@ let $entities:=
     else $top_orgEntityID 
 
   (:first we extract all org units matching our facility conditions :)
+  let $fac_srvcs :=
+    if (not($do_srvcs))
+    then (<bad/>)
+    else 
+      let $des :=  
+        for $dset in $dataSets/dxf:dataSet[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]]
+	return $dataElements/dxf:dataElement[@id = $dset/dxf:dataElements/dxf:dataElement/@id]
+      return 
+        for $de in  $des
+	let $de_id := $de/@id
+	let $srvc_entity_id := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+	return <csd:service entityID="{$srvc_entity_id}"/>
   let $fac_entity :=
     if (($group_codes = $facility_group_codes) or ( $level = $facility_levels)) 
     then
@@ -101,12 +114,20 @@ let $entities:=
 	<csd:primaryName>{$displayName}</csd:primaryName>
 	{util:get_geocode($doc,$orgUnit)}
 	{ 
-	  if (not(functx:all-whitespace($puuid))) 
-	  then 
-            <csd:organizations>
-	      <csd:organization entityID="{$parentEntityID}"/>
-	    </csd:organizations>
-	  else () 
+	  let $fac_orgs := 
+	    (
+	      if (not(functx:all-whitespace($puuid))) 
+	      then <csd:organization entityID="{$parentEntityID}"/>
+	      else ()
+	      ,
+	      if (count($fac_srvcs) > 0 )
+	      then <csd:organization entityID="{$top_orgEntityID}">{$fac_srvcs}</csd:organization>
+	      else (<noservices/>)
+	    )
+	   return 
+	     if (count($fac_orgs) > 0)
+             then <csd:organizations>{$fac_orgs}</csd:organizations>
+	     else () 
 	}
 	<csd:record created="{$created}" updated="{$lm}" status="Active" sourceDirectory="{$dhis_url}"/>
       </csd:facility>
@@ -272,7 +293,7 @@ let $srvcs :=
   if (not($do_srvcs))
   then ()
   else 
-    for $de in ($dxf/dxf:metaData/dxf:dataElements/dxf:dataElement)
+    for $de in ($dataElements/dxf:dataElement)
     let $de_id := string($de/@id)
     let $name := string($de/@name)
     let $code := string($de/@code)
