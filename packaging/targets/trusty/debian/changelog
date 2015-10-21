@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.30~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.30
+    -29de9e7 removed debugging statment and clean-up trailing slashes i
+    --https://github.com/openhie/openinfoman-dhis/commmit/29de9e7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 21 Oct 2015 14:09:13 +0000
+
 openinfoman-dhis (1.0.29~trusty) trusty; urgency=medium
 
   * Release Version 1.0.29
