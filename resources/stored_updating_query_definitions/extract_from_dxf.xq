@@ -14,7 +14,7 @@ declare variable $careServicesRequest as item() external;
 
 
 
-let $dhis_url := replace($careServicesRequest/URL/text(),'/+^','')
+let $dhis_url := replace($careServicesRequest/URL/text(),'/+$','')
 let $namespace_uuid := util:uuid_generate($dhis_url,$util:namespace_uuid)
 
 let $dxf := $careServicesRequest/dxf
@@ -81,7 +81,7 @@ let $entities:=
   (:first we extract all org units matching our facility conditions :)
   let $fac_srvcs :=
     if (not($do_srvcs))
-    then (<bad/>)
+    then ()
     else 
       let $des :=  
         for $dset in $dataSets/dxf:dataSet[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]]
