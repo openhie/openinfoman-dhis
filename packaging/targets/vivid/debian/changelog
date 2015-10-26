@@ -1,3 +1,27 @@
+openinfoman-dhis (1.0.31~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.31
+    -b595f64 reload stored functions when installing ubuntu package.  r
+    --https://github.com/openhie/openinfoman-dhis/commmit/b595f64
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 25 Oct 2015 20:37:26 -0400
+
+openinfoman-dhis (1.0.31~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.31
+    -b595f64 reload stored functions when installing ubuntu package.  r
+    --https://github.com/openhie/openinfoman-dhis/commmit/b595f64
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 25 Oct 2015 20:37:09 -0400
+
+openinfoman-dhis (1.0.31~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.31
+    -b595f64 reload stored functions when installing ubuntu package.  r
+    --https://github.com/openhie/openinfoman-dhis/commmit/b595f64
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 25 Oct 2015 20:37:03 -0400
+
 openinfoman-dhis (1.0.0~vivid) vivid; urgency=low
 
   [Carl Leitner <litlfred@ibiblio.org>]

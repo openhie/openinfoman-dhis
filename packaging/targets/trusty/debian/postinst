@@ -6,7 +6,7 @@ set -x
 OI=/var/lib/openinfoman
 USERNAME=oi
 BASEX=$OI/bin/basex
-
+WGET=/usr/bin/wget
 
 REPOS=("dxf2csd.xqm" "dxf_1_0.xqm" "uuid.xqm")
 
@@ -18,5 +18,5 @@ do
 done
 
 chown -R $USERNAME:$USERNAME $OI
-
+$WGET http://localhost:8984/CSD/storedFunctions/reload -O  /dev/null
 
