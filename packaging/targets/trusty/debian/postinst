@@ -8,7 +8,7 @@ USERNAME=oi
 BASEX=$OI/bin/basex
 WGET=/usr/bin/wget
 
-REPOS=("dxf2csd.xqm" "dxf_1_0.xqm" "uuid.xqm")
+REPOS=("dxf2csd.xqm" "dxf_1_0.xqm" "util.xqm")
 
 
 for REPO in ${REPOS[@]}

@@ -1,3 +1,9 @@
+openinfoman-dhis (1.0.34~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.34
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 06 Nov 2015 15:50:35 +0000
+
 openinfoman-dhis (1.0.33~vivid) vivid; urgency=medium
 
   * Release Version 1.0.33
