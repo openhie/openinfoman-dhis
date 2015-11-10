@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Care Services Discovery - Meta Data Loader</title>
+    <link type="text/css" rel="stylesheet" href="./dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
+    <link type="text/css" rel="stylesheet" media="screen" href="./dhis-web-commons/css/menu.css"/>
+    <script type='text/javascript'>
+      window.dhis2 = window.dhis2 || {};
+      dhis2.settings = dhis2.settings || {};
+      dhis2.settings.baseUrl = 'dhis';
+    </script>
+    <script type="text/javascript" src="./dhis-web-commons/javascripts/jQuery/jquery.min.js"/>
+    <script type="text/javascript" src="./dhis-web-commons/javascripts/dhis2/dhis2.translate.js"/>
+    <script type="text/javascript" src="./dhis-web-commons/javascripts/dhis2/dhis2.menu.js"/>
+    <script type="text/javascript" src="./dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js"/>
+    <script type='text/javascript'>
+      $( "#allowcors" ).submit(function( event ) {
+        alert( "CORS Handler for .submit() called." );
+	event.preventDefault();
+      });
+      $( "#getdxf" ).submit(function( event ) {
+        alert( "Get DXF for .submit() called." );
+	event.preventDefault();
+      });
+
+    </script>
+  </head>
+
+  <body style="background-color: black;">
+    
+    <div id="dhisDropDownMenu"></div>div>
+
+    <h1>CSD Meta Data Loader</h1>
+    <p>
+      This application will query a InterLinked Registry (a <a href="http://wiki.ihe.net/index.php?title=Care_Services_Discovery">Care Services Discover(CSD)<a/>-compliant InfoManager) 
+      to load metadata into your DHIS2 instance.
+      
+      The InterLinked Registry must support the optional "urn:dhis2.org:csd:stored-function:csd2dxf" stored query. This is provided in the <a href="https://github.com/openhie/openinfoman-dhis">OpenInfoMan-DHIS2 adapter</a>
+
+      <h2>Allow WebApp to Access the InterLinked Registry<h2>
+      <p>This step only needs to be done once and will allow this web app to access the interlinked registry</p>
+
+      <form id='allowcors'>
+	<label for='url' >URL</label>
+	<p>The base URL of the Inter-Linked Registry  to submit the Find Matching Services [ITI-73] transaction</p>
+	<input type='text' size='50'>http://localhost:8984/CSD/csr/sierra_leone_demo_metadata_as_csd</input>
+	<br/>
+	<input type='submit' value='Allow'/>
+      </form>
+
+      <h2>Load MetaData</h2>
+      <p>Access the InterLinked Registry and Load the MetaData</p>
+      <form id='getdxf'>
+	<label for='url' >URL</label>
+	<p>The base URL of the Inter-Linked Registry  to submit the Find Matching Services [ITI-73] transaction</p>
+	<input type='text' size='50'>http://localhost:8984/CSD/csr/sierra_leone_demo_metadata_as_csd</input>
+	<br/>
+
+	<label for='users' >Users</label>
+	<p>Load Health Workers as Users</p>
+	<select name='users'>
+	  <option value='0'>No</option>
+	  <option value='1'>Yes</option>
+	</select>
+      </form>
+
+    </p>
+  </body>
+</html>
