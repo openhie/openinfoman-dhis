@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<careServicesFunction xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:xforms="http://www.w3.org/2002/xforms"
+  xmlns:hfp="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:csd="urn:ihe:iti:csd:2013" 
+  xmlns="urn:ihe:iti:csd:2013" 
+  urn="urn:dhis.org:transform_to_dxf:v2.19">
+  <description> 
+    Returns DHIS2 DXF Metadata representation of CSD providers, facilties and organizations for import into a DHIS2 instance 
+  </description>
+  <definition ><xi:include parse='text' href='transform_to_dxf.xq'/></definition>
+  <xforms:instance>
+    <careServicesRequest/>
+  </xforms:instance>
+  <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>
+  <csd:extension type='createDXF' urn='urn:openhie.org:openinfoman:adapter:dhis2:action'/>
+</careServicesFunction>
