@@ -461,7 +461,7 @@ let $svs_providers :=
 	<svs:ConceptList xml:lang="en-US" >
 	  {
 	    for $ag in $ags
-	    return <svs:Concept code="{$ag/@id}" displayName="{$ag/@name}" codeSystem="{$dhis_url}/api/userRoles" />
+	    return <svs:Concept code="{$ag/@id}" displayName="{$ag/@name}" codeSystem="{$dhis_url}/api/userAuthorityGroups" />
 	  }
 	</svs:ConceptList>
       </svs:ValueSet>
