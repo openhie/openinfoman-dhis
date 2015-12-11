@@ -1,0 +1,8 @@
+<csd:requestParams xmlns:csd="urn:ihe:iti:csd:2013" >
+  <csd:organization/>
+  <orgUnitGroupSchemes>
+    <orgUnitGroupScheme>1.3.6.1.4.1.21367.200.101</orgUnitGroupScheme>	  
+  </orgUnitGroupSchemes>
+</csd:requestParams>
+
+

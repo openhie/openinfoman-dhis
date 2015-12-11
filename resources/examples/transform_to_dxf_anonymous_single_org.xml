@@ -1,0 +1,6 @@
+<csd:requestParams xmlns:csd="urn:ihe:iti:csd:2013" >
+  <csd:organization entityID='urn:uuid:47DA0D60-6748-37A1-ADF1-EF0058DFD2C5'/>
+  <orgUnitGroupSchemes/>
+</csd:requestParams>
+
+
