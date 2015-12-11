@@ -26,6 +26,28 @@ declare function util:hexdec($hex) {
   return  fold-left($dec, 0, function($a, $b) { $a * 16 + $b }) 
 };
 
+declare function util:get_parent_orgs($all_orgs,$org) {
+  let $porg_id := $org/csd:parent/@entityID
+  let $porg :=
+    if (functx:all-whitespace($porg_id)) 
+    then ()
+    else $all_orgs[@entityID = $porg_id]
+  return 
+    if (not(exists($porg)))
+    then ()
+    else ($porg,util:get_parent_orgs($all_orgs,$porg))
+};
+
+declare function util:get_child_orgs($orgs,$org) {
+  let $org_id := $org/@entityID     
+  let $c_orgs := 
+    if (functx:all-whitespace($org_id))
+    then ()
+    else $orgs[./csd:parent[@entityID = $org_id]]	
+  return 
+    for $c_org in $c_orgs
+    return ($c_org,util:get_child_orgs($orgs,$c_org))
+};
 
 
 declare function util:uuid_generate($name,$namespace) {

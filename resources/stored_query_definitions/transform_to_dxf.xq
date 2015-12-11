@@ -13,24 +13,32 @@ declare variable $careServicesRequest as item() external;
 
 let $doc_name := string($careServicesRequest/@resource)
 let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
+let $req_org_id :=    $careServicesRequest/csd:organization/@entityID 
+let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
+  (:the organziation we want to import to:)
 
-let $facilities := $doc/csd:CSD/csd:facilityDirectory/csd:facility
+
+
 let $svcs := $doc/csd:CSD/csd:serviceDirectory/csd:service
-let $orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
+let $orgs := 
+  if (functx:all-whitespace($req_org_id))
+  then $doc/csd:CSD/csd:organizationDirectory/csd:organization
+  else 
+    let $all_orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
+    let $org := $all_orgs[@entityID = $req_org_id]
+    return 
+      if (not(exists($org)))
+      then ()
+      else  (util:get_parent_orgs($all_orgs,$org),$org,util:get_child_orgs($all_orgs,$org))
+
+let $facilities := 
+  if (functx:all-whitespace($req_org_id))
+  then $doc/csd:CSD/csd:facilityDirectory/csd:facility
+  else  $doc/csd:CSD/csd:facilityDirectory/csd:facility[./csd:organizations/csd:organization = $orgs]
+
 let $provs := $doc/csd:CSD/csd:providerDirectory/csd:provider
 
-
-let $fac_type_ids := ("1.3.6.1.4.1.21367.200.103")
-
-let $org_unit_groups :=   
-  for $fac_type_id in $fac_type_ids	  
-  let $fac_types :=  svs_lsvs:get_single_version_value_set($csd_webconf:db,string($fac_type_id) )	  
-  return
-    for $concept in $fac_types//svs:Concept
-    let $code := string($concept/@code)
-    let $scheme := string($concept/@codeSystem)
-    let $name := string($concept/@displayName)
-    return <dxf:organisationUnitGroup code="{$code}" name="{$name}" codeSystem="{$scheme}"/>
+let $ou_group_schemes := distinct-values(($orgs/csd:codedType/@codingScheme,$facilities/csd:codedType/@codingScheme,$req_ou_group_schemes))
 
 return 
     <dxf:metaData>
@@ -43,9 +51,10 @@ return
 	let $namespace_uuid := util:uuid_generate($dhis_url,$util:namespace_uuid)
 	let $oid := concat('2.25.',util:hexdec(util:uuid_generate('rootoid',$namespace_uuid)))	
 
-	let $name := ($prov/csd:demographic/csd:name/csd:commonName)[1]
-	let $surname := ($prov/csd:demographic/csd:name/csd:surname)[1]
-	let $firstname := ($prov/csd:demographic/csd:name/csd:firstname)[1]
+	let $name := ($prov/csd:demographic/csd:name/csd:commonName)[1]/text()
+	let $surname := ($prov/csd:demographic/csd:name/csd:surname)[1]/text()
+	let $firstname := ($prov/csd:demographic/csd:name/csd:forename)[1]/text()
+	let $username := dxf2csd:extract_uuid_from_entityid(string($prov/@entityID))
 	let $phone := ($prov/csd:contactPoint/csd:codedType[@code="BP" and @codingScheme="urn:ihe:iti:csd:2013:contactPoint"])[1]/text()
 	let $email := ($prov/csd:contactPoint/csd:codedType[@code="EMAIL" and @codingScheme="urn:ihe:iti:csd:2013:contactPoint"])[1]/text()
 	let $ag_oid := concat($oid,'.4')
@@ -56,16 +65,16 @@ return
 	let $uags := 
 	   for $o_id in $prov/csd:codedType[@codingScheme = $ag_oid]
 	   return <dxf:userAuthorityGroup id="{string($o_id/@code)}"/>
-	let $orgs := 
+	let $p_orgs := 
 	  for $org in $prov/csd:organizations/csd:organization
 	  let $ou_uuid := 
-	    $facilities([@entityID = $org/@entityID]/csd:otherID[@assigningAuthorityName = concat($dhis_url,"/api/organisationUnit") and @code="uuid"])[1]/text()
+	    ($facilities[@entityID = $org/@entityID]/csd:otherID[@assigningAuthorityName = concat($dhis_url,"/api/organisationUnit") and @code="uuid"])[1]/text()
 	  return 
 	    if (functx:all-whitespace($ou_uuid)) 
 	    then () 
 	    else  <dxf:organisationUnit uuid="{$ou_uuid}"/>
 
-
+	      
 	return
 	  <dxf:user name="{$name}" >
 	    {if (functx:all-whitespace($dhis_id)) then () else  @id}
@@ -74,16 +83,17 @@ return
 	    {if (functx:all-whitespace($email)) then () else <dxf:email>{$email}</dxf:email>}
 	    {if (functx:all-whitespace($phone)) then () else <dxf:phoneNumber>{$email}</dxf:phoneNumber>}
 	    <dxf:userCredenitals>
+	      <dxf:username>{$username}</dxf:username> 
 	      <dxf:userRoles>{$urs}</dxf:userRoles>
 	      <dxf:userAuthorityGroups>{$uags}</dxf:userAuthorityGroups>
 	    </dxf:userCredenitals>
-	    { () 
-	      (: INSERT  <username>SOMETHING</username> :)
-	    }
-	    {$orgs}
+	    <dxf:organisationUnits>
+	      {$p_orgs}
+	    </dxf:organisationUnits>
 	  </dxf:user>
         }
       </dxf:users>
+
       <dxf:userRoles>
 	{
 	  let $oids := 
@@ -228,9 +238,18 @@ return
 	   }
       </dxf:organisationUnits>
 
-
       <dxf:organisationUnitGroups>
         { 
+	  for $ou_group_scheme in $ou_group_schemes
+	  let $types :=  svs_lsvs:get_single_version_value_set($csd_webconf:db,string($ou_group_scheme) )	  
+
+	  let $org_unit_groups :=   
+  	    for $concept in $types//svs:Concept
+	    let $code := string($concept/@code)
+	    let $scheme := string($concept/@codeSystem)
+	    let $name := string($concept/@displayName)
+	    return <dxf:organisationUnitGroup code="{$code}" name="{$name}" />
+
 	  for $org_unit_group in $org_unit_groups
 	  let $code := string($org_unit_group/@code)
 	  let $scheme := string($org_unit_group/@codeSystem)
@@ -240,38 +259,48 @@ return
 	    <dxf:organisationUnitGroup code="{$code}" name="{$name}" shortName="{$short_name}">
 	      <dxf:organisationUnits>
 		{
-		  for $fac in $facilities[./csd:codedType[@codingScheme = $scheme and @code = $code]]
-		  let $uuid := dxf2csd:extract_uuid_from_entityid($fac/@entityID)
-		  let $fac_name := $fac/csd:primaryName/text()
-		  let $id := string($fac/@entityID)
+		  for $ent in ($facilities,$orgs)[./csd:codedType[@codingScheme = $scheme and @code = $code]]
+		  let $uuid := dxf2csd:extract_uuid_from_entityid($ent/@entityID)
+		  let $ent_name := $ent/csd:primaryName/text()
+		  let $id := dxf2csd:extract_id_from_entityid(string($ent/@entityID)) 
 		  return     
-		     <dxf:organisationUnit uuid="{$uuid}" id="{$id}" name="{$fac_name}" />
+		     <dxf:organisationUnit uuid="{$uuid}" id="{$id}" name="{$ent_name}" />
 		}
 	      </dxf:organisationUnits>
 	    </dxf:organisationUnitGroup>
 	}
       </dxf:organisationUnitGroups>
 
-      { 
-      if (count($org_unit_groups) > 0)
-      then
-        <dxf:organisationUnitGroupSets>
-	  <dxf:organisationUnitGroupSet name='Facility Type'>
-	    <dxf:description>Facility Type</dxf:description>
-	    <dxf:compulsory>true</dxf:compulsory>
-	    <dxf:dataDimension>true</dxf:dataDimension>
-	    <dxf:organisationUnitGroups>
-	      {
-		for $org_unit_group in $org_unit_groups
-		let $code := string($org_unit_group/@code)
-		let $scheme := string($org_unit_group/@codeSystem)
-		let $name := string($org_unit_group/@name)
-		return   <dxf:organisationUnitGroup code="{$code}" name="{$name}" />
-	      }
-	    </dxf:organisationUnitGroups>
-	  </dxf:organisationUnitGroupSet>	
-	</dxf:organisationUnitGroupSets>
-      else () 
-      }
+      <dxf:organisationUnitGroupSets>
+	{
+	  for $ou_group_scheme in $ou_group_schemes
+	  let $types :=  svs_lsvs:get_single_version_value_set($csd_webconf:db,string($ou_group_scheme) )	  
+	  let $name := string($types//svs:ValueSet/@displayName)
+	  return 
+	    if (functx:all-whitespace($name))
+	    then ()
+	    else 
+	      <dxf:organisationUnitGroupSet name="{$name}">
+		<dxf:description>{$name}</dxf:description>
+		<dxf:compulsory>true</dxf:compulsory>
+		<dxf:dataDimension>true</dxf:dataDimension>
+		<dxf:organisationUnitGroups>
+		  {
+		    let $org_unit_groups := 
+  		      for $concept in $types//svs:Concept
+		      let $code := string($concept/@code)
+		      let $scheme := string($concept/@codeSystem)
+		      let $name := string($concept/@displayName)
+		      return <dxf:organisationUnitGroup code="{$code}" name="{$name}" />
+		    for $org_unit_group in $org_unit_groups
+		      let $code := string($org_unit_group/@code)
+		      let $scheme := string($org_unit_group/@codeSystem)
+		      let $name := string($org_unit_group/@name)
+		      return   <dxf:organisationUnitGroup code="{$code}" name="{$name}" />
+		  }
+		</dxf:organisationUnitGroups>
+	      </dxf:organisationUnitGroupSet>	
+	}
+      </dxf:organisationUnitGroupSets> 
 
     </dxf:metaData>
