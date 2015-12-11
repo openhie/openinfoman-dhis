@@ -5,6 +5,8 @@ XQuery Libary for DHIS2 and DXF support using CSD
 
 It makes use of the OpenInfoMan software https://github.com/openhie/openinfoman
 
+It can be used for importing and exporting CSD to DHIS2
+
 Ubuntu Installation
 ===================
 You can easily install on Ubuntu 14.04 and Ubuntu 14.10 using the following commands
