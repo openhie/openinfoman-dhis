@@ -10,7 +10,7 @@
 
     <script type='text/javascript'>
 
-var CSDBaseURL = 'https://localhost/ILR/CSD'
+var CSDBaseURL = window.location.protocol + '//' + window.location.host + '/ILR/CSD'
   
 
 
@@ -133,18 +133,20 @@ $(window).load( function() {
 
       }
       if (dxf) {
+            dxf.click(function(event) {$(this).data('clicked',$(event.target))});
             dxf.submit(function( event ) {
 	        event.preventDefault();
-		var action = dxf.find("input[type=submit]:focus" ).val();
+		//var action = $(dxf.find("input[type=submit][clicked=true]" )).attr("value");
+		var action = $(this).data('clicked').attr('value');
 		switch (action) {
-		case 'Select':
-		    CSDUpdateSelection(dxf);
-		    break;
+//		case 'Select':
+//		    CSDUpdateSelection(dxf);
+//		    break;
 		case 'Load':
 		    CSDLoadSelected(dxf);
 		    break;
 		default:
-		    alert('Unrecognzied Action');		
+		    alert('Unrecognzied Action: ' + action);		
 		}
 		
 		});
@@ -207,7 +209,7 @@ $(window).load( function() {
 	  <select name='org' id='org'>
 	    <option value=''></option>
 	  </select>
-	  <input type='submit' value='Select'/>
+<!--	  <input type='submit' value='Select'/> -->
 	  <br/>
 	  <hr/>
 <!--	  <p>Load Health Workers as Users</p>
