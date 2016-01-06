@@ -1,70 +1,229 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 
-<html>
+<html >
   <head>
     <title>Care Services Discovery - Meta Data Loader</title>
-    <link type="text/css" rel="stylesheet" href="./dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
-    <link type="text/css" rel="stylesheet" media="screen" href="./dhis-web-commons/css/menu.css"/>
+    <base href="../../"/>
+    <link type="text/css" rel="stylesheet" href="../dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
+    <link type="text/css" rel="stylesheet" media="screen" href="../dhis-web-commons/css/menu.css"/>
+    <script type="text/javascript" src="../dhis-web-commons/javascripts/jQuery/jquery.min.js"></script>
+
     <script type='text/javascript'>
-      window.dhis2 = window.dhis2 || {};
-      dhis2.settings = dhis2.settings || {};
-      dhis2.settings.baseUrl = 'dhis';
-    </script>
-    <script type="text/javascript" src="./dhis-web-commons/javascripts/jQuery/jquery.min.js"/>
-    <script type="text/javascript" src="./dhis-web-commons/javascripts/dhis2/dhis2.translate.js"/>
-    <script type="text/javascript" src="./dhis-web-commons/javascripts/dhis2/dhis2.menu.js"/>
-    <script type="text/javascript" src="./dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js"/>
-    <script type='text/javascript'>
-      $( "#allowcors" ).submit(function( event ) {
-        alert( "CORS Handler for .submit() called." );
-	event.preventDefault();
-      });
-      $( "#getdxf" ).submit(function( event ) {
-        alert( "Get DXF for .submit() called." );
-	event.preventDefault();
-      });
+var CSDBaseURL = 'https://localhost/ILR/CSD'
+  
 
-    </script>
-  </head>
 
-  <body style="background-color: black;">
-    
-    <div id="dhisDropDownMenu"></div>div>
+function CSDUpdateSelection(form) {
+    console.log('OK');
+    var doc = form.find('#docs option:selected').val();
+    var url  = CSDBaseURL + '/csr/' + doc + '/careServicesRequest/urn:ihe:iti:csd:2014:stored-function:organization-search';
+    var selected = form.find('#org option:selected')
+    var parentID = selected.val();
+    var parentName = selected.text();
+    var msg ="<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'><csd:parent entityID='" + parentID + "'/></csd:requestParams>";
+    console.log('sending ' + msg);
+    console.log(url);
+    $.ajax({
+	method:'POST',
+	type: 'POST',
+	url:url,
+	data:msg,
+	contentType: 'text/xml',
+	dataType: "xml",
+	cache: false,
+	error: function() { console.log('error on fetch'); alert('Could not load the organisation units'); },
+	success: function(xml) {
+	    console.log('done');
+            var select = form.find('#org');
+	    select.empty();
+	    if (parentID) {
+  	          select.append("<option value='" + parentID +"'>" + parentName + "</option>");	    
+		  }
+	    select.append("<option value=''></option>");
+	    console.log("Received\n" +  (new XMLSerializer()).serializeToString(xml));
+	    $(xml).find("csd\\:organization,organization").each(
+	        function() {
+		    console.log($(this));
+		    var id = $(this).attr('entityID');
+		    var name = $(this).find('csd\\:primaryName').text();
+		    console.log('Adding: ' + id + ' ' + name);
+		    select.append("<option value='" + id + "'>" + name + "</option>");
+		});
+	    console.log('updated dropdown');
+	    return true;
+	 }
+    });
+   
+}
 
-    <h1>CSD Meta Data Loader</h1>
-    <p>
-      This application will query a InterLinked Registry (a <a href="http://wiki.ihe.net/index.php?title=Care_Services_Discovery">Care Services Discover(CSD)<a/>-compliant InfoManager) 
-      to load metadata into your DHIS2 instance.
+
+function CSDLoadSelected(form) {
+    var doc = form.find('#docs option:selected').val();
+    var url  = CSDBaseURL + '/csr/' + doc + '/careServicesRequest/urn:dhis.org:transform_to_dxf:v2.19';
+    var selected = form.find('#org option:selected')
+    var parentID = selected.val();
+    var msg ="<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'><csd:organization entityID='" + parentID + "'/></csd:requestParams>";
+    console.log('SENDING:' + msg);
+    console.log(url);
+    $.ajax({
+	method:'POST',
+	type: 'POST',
+	url:url,
+	data:msg,
+	contentType: 'text/xml',
+	dataType: "xml",
+	cache: false,
+	error: function() { console.log('error on fetch'); alert('Could not load the selected organisation units'); },
+	success: function(xml) {
+	    var xmlstr = (new XMLSerializer()).serializeToString(xml);
+	    console.log("Received\n" +  xmlstr);
+	    $.ajax({
+	        url: '../api/metadata',
+	        method: 'POST',
+	        type: 'POST',
+		data: xmlstr,
+		contentType: 'application/xml',
+		error: function() { console.log('error on fetch'); alert('Could not upload the metadata'); },
+		success: function(xml) {
+  		    console.log("Received\n" +   xml);
+		}
+		
+	    });
+	    }
+        });
+}
       
-      The InterLinked Registry must support the optional "urn:dhis2.org:csd:stored-function:csd2dxf" stored query. This is provided in the <a href="https://github.com/openhie/openinfoman-dhis">OpenInfoMan-DHIS2 adapter</a>
 
-      <h2>Allow WebApp to Access the InterLinked Registry<h2>
-      <p>This step only needs to be done once and will allow this web app to access the interlinked registry</p>
+$(window).load( function() {
+    window.dhis2 = window.dhis2 || {};
+    dhis2.settings = dhis2.settings || {};
+    dhis2.settings.baseUrl = 'dhis';
+    var docs = $('#docs');
+    var dxf = $( "#getdxf" );
+    if (docs) {
+          console.log('getting docs');
+	  $.ajax({
+	      url: CSDBaseURL + '/documents.json',
+	      contentType: 'application/json',
+	      dataType: "text",
+	      cache: false,
+	      error: function() { console.log('error on fetch'); alert('Could not load the documents'); },
+	      success: function(json) {
+		  console.log('got documents' + json);
+		  docs.empty();
+		  var doclist = $.parseJSON(json);
+		  console.log(doclist[0]);
+		  $.each(doclist,
+	              function(key,value) {
+			  console.log(key);
+			  var id = key;
+			  var name = key;
+			  console.log(value);
+			  console.log('Adding: ' + id + ' ' + name);
+			  docs.append("<option value='" + id + "'>" + name + "</option>");
+		});
+		console.log('updated docs dropdown');
+		if (dxf) {
+		   CSDUpdateSelection(dxf);
+		}
+	    return true;
+	 }
+    });
 
-      <form id='allowcors'>
-	<label for='url' >URL</label>
-	<p>The base URL of the Inter-Linked Registry  to submit the Find Matching Services [ITI-73] transaction</p>
-	<input type='text' size='50'>http://localhost:8984/CSD/csr/sierra_leone_demo_metadata_as_csd</input>
-	<br/>
-	<input type='submit' value='Allow'/>
-      </form>
+      }
+      if (dxf) {
+            dxf.submit(function( event ) {
+	        event.preventDefault();
+		var action = dxf.find("input[type=submit]:focus" ).val();
+		switch (action) {
+		case 'Select':
+		    CSDUpdateSelection(dxf);
+		    break;
+		case 'Load':
+		    CSDLoadSelected(dxf);
+		    break;
+		default:
+		    alert('Unrecognzied Action');		
+		}
+		
+		});
+		dxf.find('#docs').change( function() { CSDUpdateSelection(dxf); });
+		dxf.find('#org').change( function() { CSDUpdateSelection(dxf); });
+    }
+});
 
-      <h2>Load MetaData</h2>
-      <p>Access the InterLinked Registry and Load the MetaData</p>
-      <form id='getdxf'>
-	<label for='url' >URL</label>
-	<p>The base URL of the Inter-Linked Registry  to submit the Find Matching Services [ITI-73] transaction</p>
-	<input type='text' size='50'>http://localhost:8984/CSD/csr/sierra_leone_demo_metadata_as_csd</input>
-	<br/>
 
-	<label for='users' >Users</label>
-	<p>Load Health Workers as Users</p>
-	<select name='users'>
-	  <option value='0'>No</option>
-	  <option value='1'>Yes</option>
-	</select>
-      </form>
+    </script>
+    <script type="text/javascript" src="../dhis-web-commons/javascripts/dhis2/dhis2.translate.js"></script>
+    <script type="text/javascript" src="../dhis-web-commons/javascripts/dhis2/dhis2.menu.js"></script>
+    <script type="text/javascript" src="../dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js"></script>
 
-    </p>
+  </head>
+  <body >
+    <div>
+      
+      <div id="header" style="background-color: #276696; min-height:100px">
+	<img id="headerBanner"
+	     src="../api/staticContent/logo_banner"
+	     onclick="window.location.href='../dhis-web-dashboard-integration/index.action'"
+	     style="cursor:pointer"
+	     title="View home page"/>
+	
+	  <span
+	      id="headerText"
+	      onclick="window.location.href='../dhis-web-dashboard-integration/index.action'"
+	      style="cursor:pointer"
+	      title="View home page">
+	    DHIS 2
+	    </span>
+
+	  <div id="dhisDropDownMenu"></div>
+      </div>
+	  
+      <div id='content' style="background-color: whitel;padding-top:2em;">
+	
+	<h1>CSD Meta Data Loader</h1>
+	<p>
+	  This application will query a InterLinked Registry (a <a href="http://wiki.ihe.net/index.php?title=Care_Services_Discovery">Care Services Discover(CSD)</a>-compliant InfoManager) 
+	  to load metadata into your DHIS2 instance.
+	  
+	  The InterLinked Registry must support the optional "urn:dhis2.org:csd:stored-function:csd2dxf" stored query. This is provided in the <a href="https://github.com/openhie/openinfoman-dhis">OpenInfoMan-DHIS2 adapter</a>
+	</p>
+
+	<h2>Load MetaData</h2>
+	<p>Access the InterLinked Registry and Load the MetaData</p>
+	<form id='getdxf' >
+          <p>The CSD document on the InterLinked Registry on which to submit the Find Matching Services [ITI-73] transaction</p>
+    	  <label for='docs' >Document</label>
+	  <select name='docs' id='docs'>
+	    <option value=''>Select a Document</option>
+	  </select>
+
+
+
+	  <br/>
+         <p>Select the part of the organisation unit hierarchy to load</p>
+	  <select name='org' id='org'>
+	    <option value=''></option>
+	  </select>
+	  <input type='submit' value='Select'/>
+	  <br/>
+	  <hr/>
+<!--	  <p>Load Health Workers as Users</p>
+	  <label for='users' >Users</label>
+	  <select name='users' id='users'>
+	    <option value='0'>No</option>
+	    <option value='1'>Yes</option>
+	  </select>
+	  <br/>
+-->
+          <p>Load the selected organisation unit into DHIS2</p>
+	  <input type='submit' value='Load'/>
+	</form>
+
+      </div>
+    </div>
+
+
   </body>
 </html>
