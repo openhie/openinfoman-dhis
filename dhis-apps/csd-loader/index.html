@@ -13,6 +13,12 @@
 var CSDBaseURL = window.location.protocol + '//' + window.location.host + '/ILR/CSD'
   
 
+function CSDUpdateStatus(text) {
+   var status =$('#status');
+   status.empty();
+   status.text(text);
+}
+
 
 function CSDUpdateSelection(form) {
     console.log('OK');
@@ -59,6 +65,7 @@ function CSDUpdateSelection(form) {
 
 
 function CSDLoadSelected(form) {
+    CSDUpdateStatus('Beginning Data Load');
     var doc = form.find('#docs option:selected').val();
     var url  = CSDBaseURL + '/csr/' + doc + '/careServicesRequest/urn:dhis.org:transform_to_dxf:v2.19';
     var selected = form.find('#org option:selected')
@@ -66,6 +73,7 @@ function CSDLoadSelected(form) {
     var msg ="<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'><csd:organization entityID='" + parentID + "'/></csd:requestParams>";
     console.log('SENDING:' + msg);
     console.log(url);
+    CSDUpdateStatus('Requesting Data From ILR');
     $.ajax({
 	method:'POST',
 	type: 'POST',
@@ -74,19 +82,22 @@ function CSDLoadSelected(form) {
 	contentType: 'text/xml',
 	dataType: "xml",
 	cache: false,
-	error: function() { console.log('error on fetch'); alert('Could not load the selected organisation units'); },
+	error: function() { console.log('error on fetch'); alert('Could not load the selected organisation units');     CSDUpdateStatus('Request For Data From ILR Failed');},
 	success: function(xml) {
+	    CSDUpdateStatus('Request For Data From ILR Succeeded');
 	    var xmlstr = (new XMLSerializer()).serializeToString(xml);
 	    console.log("Received\n" +  xmlstr);
+	    CSDUpdateStatus('Sending Data For Import To DHIS2');
 	    $.ajax({
 	        url: '../api/metadata',
 	        method: 'POST',
 	        type: 'POST',
 		data: xmlstr,
 		contentType: 'application/xml',
-		error: function() { console.log('error on fetch'); alert('Could not upload the metadata'); },
+		error: function() { console.log('error on fetch'); alert('Could not upload the metadata'); CSDUpdateStatus('Data Import On DHIS2 Failed');},
 		success: function(xml) {
   		    console.log("Received\n" +   xml);
+		    CSDUpdateStatus('Data Import On DHIS2 Initiated');
 		}
 		
 	    });
@@ -222,6 +233,7 @@ $(window).load( function() {
 -->
           <p>Load the selected organisation unit into DHIS2</p>
 	  <input type='submit' value='Load'/>
+	  <div id='status'/>
 	</form>
 
       </div>
