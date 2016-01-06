@@ -1,3 +1,15 @@
+openinfoman-dhis (1.0.40~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.40
+    -ba48bcb fixed typos in last commit
+    --https://github.com/openhie/openinfoman-dhis/commmit/ba48bcb
+    -1014a4f added status updates on loading DXF from ILR
+    --https://github.com/openhie/openinfoman-dhis/commmit/1014a4f
+    -73a1913 in extraction of DHIS2, used the entityID attribute if it
+    --https://github.com/openhie/openinfoman-dhis/commmit/73a1913
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 15:32:29 -0500
+
 openinfoman-dhis (1.0.39~vivid) vivid; urgency=medium
 
   * Release Version 1.0.39
