@@ -20,7 +20,7 @@
 	<b>orgUnitGroupSchemes</b> 
 	0..1 orgUnitGroupSchemes element used to specify IDs of SVS terminologies for Org Unit Groups.  
 
-	This is mainly used for loading hiearchies that do not come DHIS2.  For DHIS2, 
+	This is mainly used for loading hiearchies that do not come for DHIS2.  For DHIS2, 
 	note that the @codingScheme attribute of csd:otherID elements will also be queried for org unit groups.
 	<ul>
 	  <li>

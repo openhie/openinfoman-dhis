@@ -168,7 +168,15 @@ return
 	    then () (: no parent :)
 	    else if (not(functx:all-whitespace($porg_dhis_uuid)))
 	    then <dxf:parent id="{$porg_dhis_uuid}"/>
-	    else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($porg_id))}"/>
+  	    else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($porg_id))}"/>
+	  let $avs :=
+	    <dxf:attributeValues>
+	      <dxf:attributeValue>
+		<dxf:attribute name="entityID"/>
+		<dxf:value>{$uuid}</dxf:value>
+	      </dxf:attributeValue>
+	    </dxf:attributeValues>
+		    
 	  return 
 	    if (functx:all-whitespace($uuid))
 	    then ()
@@ -182,6 +190,8 @@ return
 	      created="{$created}"
 	      >
 	    {$parent}
+	    {$avs}
+	    <dxf:openingDate>1970-01-01</dxf:openingDate> 
 	  </organisationUnit>
 	}
         {
@@ -219,6 +229,14 @@ return
 	      else if (not(functx:all-whitespace($org_dhis_uuid)))
 	      then <dxf:parent id="{$org_dhis_uuid}"/>
 	      else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($org_id))}"/>
+	    let $avs :=
+	      <dxf:attributeValues>
+		<dxf:attributeValue>
+		  <dxf:attribute name="entityID"/>
+		  <dxf:value>{$uuid}</dxf:value>
+		</dxf:attributeValue>
+	      </dxf:attributeValues>
+	
 	   return 
 	     if (functx:all-whitespace($uuid) )
 	     then ()
@@ -233,6 +251,7 @@ return
 		 created="{$created}"
 		 >
 		 {$parent}
+		 {$avs}
 		 <dxf:openingDate>1970-01-01</dxf:openingDate> 
 	       </dxf:organisationUnit>
 	   }
