@@ -69,14 +69,14 @@ let $entities:=
   let $pid:=string($orgUnit/dxf:parent/@id)
   let $porg := ($orgUnits[@id=$pid])[1]
   let $puuid := $porg/@uuid
-  let $p_enitity_uuid :=(($porg/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
+  let $p_entity_uuid :=(($porg/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
   let $lm := util:fixup_date($orgUnit/@lastUpdated)
   let $created := util:fixup_date($orgUnit/@created)
   let $groups := $orgGroups[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]]
   let $group_codes := $groups/@code
 
   (:if there is an existing CSD UUID / entityID in DHIS2 we should keep it to referencer the org unit :)
-  let $enitity_uuid :=(($orgUnit/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
+  let $entity_uuid :=(($orgUnit/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
   let $facEntityID := concat("urn:uuid:",util:uuid_generate(concat('facility:',$id),$namespace_uuid))
   let $orgEntityID :=
     if (not(functx:all-whitespace($entity_uuid)))
@@ -260,10 +260,10 @@ let $providers :=
           for $torg in $torgs 
 	  let $tid :=  $torg/@id
 	  let $torg1 := ($orgUnits[@id=$tid])[1]
-	  let $enitity_uuid :=(($torg1/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
+	  let $entity_uuid :=(($torg1/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
     	  let $orgEntityID :=
 	     if (not(functx:all-whitespace($entity_uuid)))
-	     then $entity_id
+	     then $entity_uuid
 	     else concat("urn:uuid:",util:uuid_generate(concat('organization:',string($torg/@id)),$namespace_uuid))
           where  (exists($entities[@entityID = $orgEntityID]))
 	  return <csd:organization entityID="{$orgEntityID}"/>
