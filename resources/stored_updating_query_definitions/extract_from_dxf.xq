@@ -63,19 +63,33 @@ let $entities:=
   let $level := xs:integer($orgUnit/@level)
   let $id := $orgUnit/@id
   let $uuid := string($orgUnit/@uuid)
+
   let $displayName:=string($orgUnit/@name)
   let $org_code:=string($orgUnit/@code)
   let $pid:=string($orgUnit/dxf:parent/@id)
-  let $puuid := $orgUnits[@id=$pid]/@uuid
+  let $porg := ($orgUnits[@id=$pid])[1]
+  let $puuid := $porg/@uuid
+  let $p_enitity_uuid :=(($porg/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
   let $lm := util:fixup_date($orgUnit/@lastUpdated)
   let $created := util:fixup_date($orgUnit/@created)
   let $groups := $orgGroups[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]]
   let $group_codes := $groups/@code
+
+  (:if there is an existing CSD UUID / entityID in DHIS2 we should keep it to referencer the org unit :)
+  let $enitity_uuid :=(($orgUnit/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
   let $facEntityID := concat("urn:uuid:",util:uuid_generate(concat('facility:',$id),$namespace_uuid))
-  let $orgEntityID := concat("urn:uuid:",util:uuid_generate(concat('organization:',$id),$namespace_uuid))
+  let $orgEntityID :=
+    if (not(functx:all-whitespace($entity_uuid)))
+    then $entity_uuid
+    else  concat("urn:uuid:",util:uuid_generate(concat('organization:',$id),$namespace_uuid))
+
+
   let $parentEntityID := 
     if (not(functx:all-whitespace($pid))) 
-    then concat("urn:uuid:",util:uuid_generate(concat('organization:',$pid),$namespace_uuid))
+    then 
+      if (not(functx:all-whitespace($p_entity_uuid))) 
+      then $p_entity_uuid
+      else concat("urn:uuid:",util:uuid_generate(concat('organization:',$pid),$namespace_uuid))
     else $top_orgEntityID 
 
   (:first we extract all org units matching our facility conditions :)
@@ -244,7 +258,13 @@ let $providers :=
 	let $torgs := $user/dxf:organisationUnits/dxf:organisationUnit
 	let $orgs := 
           for $torg in $torgs 
-    	  let $orgEntityID := concat("urn:uuid:",util:uuid_generate(concat('organization:',string($torg/@id)),$namespace_uuid))
+	  let $tid :=  $torg/@id
+	  let $torg1 := ($orgUnits[@id=$tid])[1]
+	  let $enitity_uuid :=(($torg1/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
+    	  let $orgEntityID :=
+	     if (not(functx:all-whitespace($entity_uuid)))
+	     then $entity_id
+	     else concat("urn:uuid:",util:uuid_generate(concat('organization:',string($torg/@id)),$namespace_uuid))
           where  (exists($entities[@entityID = $orgEntityID]))
 	  return <csd:organization entityID="{$orgEntityID}"/>
 	  
