@@ -3,11 +3,11 @@
     "version": "0.1",
     "name": "InterLinked Registry Interface",
     "description": "Load metadata from an InterLinked Registry (e.g. CSD InfoManager)",
-    "launch_path": "/index.html",
+    "launch_path": "index.html",
     "icons": {
-        "16": "/img/icons/mortar-16.png",
-        "48": "/img/icons/mortar-48.png",
-        "128": "/img/icons/mortar-128.png"
+        "16": "./img/icons/oim_logo_16p.png",
+        "48": "./img/icons/oim_logo_48p.png",
+        "128": "./img/icons/oim_logo_128p.png"
     },
     "developer": {
         "name": "Carl Leitner",
