@@ -1,3 +1,25 @@
+openinfoman-dhis (1.0.35~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.35
+    -1205730 updates to the CSD Loader dhis2 app
+    --https://github.com/openhie/openinfoman-dhis/commmit/1205730
+    -6dc6e8e added entityID as an orgUnit attribute in the csd->dxf tra
+    --https://github.com/openhie/openinfoman-dhis/commmit/6dc6e8e
+    -a2b1829 updated readme
+    --https://github.com/openhie/openinfoman-dhis/commmit/a2b1829
+    -e84db69 fixed some issues in transform to DXF
+    --https://github.com/openhie/openinfoman-dhis/commmit/e84db69
+    -6eeff32 added example requests
+    --https://github.com/openhie/openinfoman-dhis/commmit/6eeff32
+    -9911676 Added logic in csd->dhis transform to try to presreve dhis
+    --https://github.com/openhie/openinfoman-dhis/commmit/9911676
+    -c22c731 started to add healthworker dhis2 to user support
+    --https://github.com/openhie/openinfoman-dhis/commmit/c22c731
+    -d660010 Added scaffolding for DHIS2 app
+    --https://github.com/openhie/openinfoman-dhis/commmit/d660010
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 08:02:29 -0500
+
 openinfoman-dhis (1.0.34~vivid) vivid; urgency=medium
 
   * Release Version 1.0.34
