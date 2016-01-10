@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.43~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.43
+    -e163dc0 fixed up css and status for dhis2 webapp
+    --https://github.com/openhie/openinfoman-dhis/commmit/e163dc0
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 10 Jan 2016 12:49:38 -0500
+
 openinfoman-dhis (1.0.42~vivid) vivid; urgency=medium
 
   * Release Version 1.0.42
