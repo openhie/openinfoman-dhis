@@ -17,17 +17,8 @@
 	underneath the specified organization. Will also include all the parent organization units.  
       </li>
       <li>
-	<b>orgUnitGroupSchemes</b> 
-	0..1 orgUnitGroupSchemes element used to specify IDs of SVS terminologies for Org Unit Groups.  
-
-	This is mainly used for loading hiearchies that do not come for DHIS2.  For DHIS2, 
-	note that the @codingScheme attribute of csd:otherID elements will also be queried for org unit groups.
-	<ul>
-	  <li>
-	    <b>orgUnitGroupScheme</b>
-	    0..* orgUnitGroup scheme elements.  Text content of the element is the ID of an available SVS used for org unit groups. 
-	  </li>
-	</ul>
+	<b>processUsers</b>
+	0..1 processUsers  element has integer attribute @value.  Defaults to 1 which means we process provides as DHIS2 users.
       </li>
     </ul>
   </csd:description>
@@ -35,7 +26,7 @@
   <xforms:instance>
     <csd:careServicesRequest>
       <csd:organization/>
-      <orgUnitGroupSchemes/>
+      <processUsers value="false"/>
     </csd:careServicesRequest>
   </xforms:instance>
   <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>

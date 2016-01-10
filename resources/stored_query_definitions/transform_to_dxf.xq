@@ -38,8 +38,15 @@ let $facilities :=
 
 let $provs := $doc/csd:CSD/csd:providerDirectory/csd:provider
 
-let $ou_group_schemes := distinct-values(($orgs/csd:codedType/@codingScheme,$facilities/csd:codedType/@codingScheme,$req_ou_group_schemes))
 
+
+let $ou_oids := 
+  for $dhis_url in distinct-values(($orgs/csd:record/@sourceDirectory,$facilities/csd:record/@sourceDirectory))
+  let $namespace_uuid := util:uuid_generate($dhis_url,$util:namespace_uuid)
+  let $oid := concat('2.25.',util:hexdec(util:uuid_generate('rootoid',$namespace_uuid)))	
+  return $oid
+
+    
 return 
     <dxf:metaData>
       <dxf:users>
@@ -140,6 +147,7 @@ return
 		  </dxf:userAuthorityGroup>
 	}
       </dxf:userAuthorityGroups>
+
 
 
 
@@ -257,8 +265,13 @@ return
 	   }
       </dxf:organisationUnits>
 
-      <dxf:organisationUnitGroups>
-        { 
+      <dxf:organisationUnitGroups>    
+        {
+	  let $ou_group_schemes := distinct-values((
+	    $req_ou_group_schemes,
+	    for $oid in $ou_oids return  concat($oid,'.3')
+	      ))
+	    
 	  for $ou_group_scheme in $ou_group_schemes
 	  let $types :=  svs_lsvs:get_single_version_value_set($csd_webconf:db,string($ou_group_scheme) )	  
 
@@ -290,36 +303,23 @@ return
 	}
       </dxf:organisationUnitGroups>
 
-      <dxf:organisationUnitGroupSets>
+
+      <dxf:organisationUnitLevels>
 	{
-	  for $ou_group_scheme in $ou_group_schemes
-	  let $types :=  svs_lsvs:get_single_version_value_set($csd_webconf:db,string($ou_group_scheme) )	  
-	  let $name := string($types//svs:ValueSet/@displayName)
-	  return 
-	    if (functx:all-whitespace($name))
-	    then ()
-	    else 
-	      <dxf:organisationUnitGroupSet name="{$name}">
-		<dxf:description>{$name}</dxf:description>
-		<dxf:compulsory>true</dxf:compulsory>
-		<dxf:dataDimension>true</dxf:dataDimension>
-		<dxf:organisationUnitGroups>
-		  {
-		    let $org_unit_groups := 
-  		      for $concept in $types//svs:Concept
-		      let $code := string($concept/@code)
-		      let $scheme := string($concept/@codeSystem)
-		      let $name := string($concept/@displayName)
-		      return <dxf:organisationUnitGroup code="{$code}" name="{$name}" />
-		    for $org_unit_group in $org_unit_groups
-		      let $code := string($org_unit_group/@code)
-		      let $scheme := string($org_unit_group/@codeSystem)
-		      let $name := string($org_unit_group/@name)
-		      return   <dxf:organisationUnitGroup code="{$code}" name="{$name}" />
-		  }
-		</dxf:organisationUnitGroups>
-	      </dxf:organisationUnitGroupSet>	
+	  
+	  return for $oid in $ou_oids
+            let $level_oid := concat($oid,'.2')
+	    let $svs := svs_lsvs:get_single_version_value_set($csd_webconf:db,$level_oid)
+	    return
+	      if (not(exists($svs)))
+	      then ()
+              else 
+		for $val in $svs//svs:concept
+		return 
+		  <dxf:organisationUnitLevel name="{$val/@displayName}" id="{$val/@code}"/>
+
 	}
-      </dxf:organisationUnitGroupSets> 
+       
+      </dxf:organisationUnitLevels>
 
     </dxf:metaData>

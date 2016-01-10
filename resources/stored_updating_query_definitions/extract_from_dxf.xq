@@ -36,7 +36,8 @@ let $orgGroups := $dxf/dxf:metaData/dxf:organisationUnitGroups/dxf:organisationU
 let $userRoles := $dxf/dxf:metaData/dxf:userRoles
 let $dataSets := $dxf/dxf:metaData/dxf:dataSets
 let $dataElements := $dxf/dxf:metaData/dxf:dataElements
-
+let $catCombos := $dxf/dxf:metaData/dxf:categoryCombos
+  
 let $doc_name := string($careServicesRequest/@resource)
 let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
 let $org_dir := $doc/csd:CSD/csd:organizationDirectory
@@ -67,30 +68,60 @@ let $entities:=
   let $displayName:=string($orgUnit/@name)
   let $org_code:=string($orgUnit/@code)
   let $pid:=string($orgUnit/dxf:parent/@id)
-  let $porg := ($orgUnits[@id=$pid])[1]
-  let $puuid := $porg/@uuid
-  let $p_entity_uuid :=(($porg/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
+
   let $lm := util:fixup_date($orgUnit/@lastUpdated)
   let $created := util:fixup_date($orgUnit/@created)
   let $groups := $orgGroups[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]]
   let $group_codes := $groups/@code
 
   (:if there is an existing CSD UUID / entityID in DHIS2 we should keep it to referencer the org unit :)
-  let $entity_uuid :=(($orgUnit/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
+  let $entity_uuid :=((($orgUnit/dxf:attributeValues/dxf:attributeValue[./dxf:attribute[@name='entityID']])[1])/dxf:value[1])/text()
   let $facEntityID := concat("urn:uuid:",util:uuid_generate(concat('facility:',$id),$namespace_uuid))
   let $orgEntityID :=
     if (not(functx:all-whitespace($entity_uuid)))
-    then $entity_uuid
+    then concat("urn:uuid:",$entity_uuid)
     else  concat("urn:uuid:",util:uuid_generate(concat('organization:',$id),$namespace_uuid))
 
 
-  let $parentEntityID := 
-    if (not(functx:all-whitespace($pid))) 
-    then 
-      if (not(functx:all-whitespace($p_entity_uuid))) 
-      then $p_entity_uuid
-      else concat("urn:uuid:",util:uuid_generate(concat('organization:',$pid),$namespace_uuid))
-    else $top_orgEntityID 
+          
+  (:the parent org may be:
+     1) in the dxf document being imported (highest precedence)
+     2) in the destination csd document
+     3) nowhere 
+
+    in the case of 1) we want the parent's csd entity id to match the entity id of the parent org unit being imported
+       case 1) happens if $porg is found
+    in the case of 2) we want to use the parent id of the 
+       in case is if $porg is not found but there is a csd:organization with the correct entity if in the dest. doc
+    in the case of 3) we want to put it under our global root element for the import
+    :)
+    
+  let $porg := ($orgUnits[@id=$pid])[1]
+  let $parentEntityID :=     
+    if (exists($porg))
+    then  
+      let $p_entity_uuid :=((($porg/dxf:attributeValues/dxf:attributeValue[./dxf:attribute[@name='entityID']])[1])/dxf:value[1])/text()
+      return
+        if (not(functx:all-whitespace($pid)))
+        then 
+          if (not(functx:all-whitespace($p_entity_uuid))) 
+          then concat("urn:uuid:",$p_entity_uuid)
+          else concat("urn:uuid:",util:uuid_generate(concat('organization:',$pid),$namespace_uuid))
+        else $top_orgEntityID
+    else
+      let $peorg := ($org_dir/csd:organization[./csd:otherID[@code='id' and ./text() = $pid]])[1]
+      return
+	if (exists($peorg))
+        then $peorg/@entityID
+      else $top_orgEntityID
+
+(:   let $puuid :=
+     if (exists($porg))
+     then  $porg/@uuid
+     else if (exists($peorg))
+     then  $peorg/@entityID
+     else false
+:)	  
 
   (:first we extract all org units matching our facility conditions :)
   let $fac_srvcs :=
@@ -127,22 +158,7 @@ let $entities:=
 	}
 	<csd:primaryName>{$displayName}</csd:primaryName>
 	{util:get_geocode($doc,$orgUnit)}
-	{ 
-	  let $fac_orgs := 
-	    (
-	      if (not(functx:all-whitespace($puuid))) 
-	      then <csd:organization entityID="{$parentEntityID}"/>
-	      else ()
-	      ,
-	      if (count($fac_srvcs) > 0 )
-	      then <csd:organization entityID="{$top_orgEntityID}">{$fac_srvcs}</csd:organization>
-	      else (<noservices/>)
-	    )
-	   return 
-	     if (count($fac_orgs) > 0)
-             then <csd:organizations>{$fac_orgs}</csd:organizations>
-	     else () 
-	}
+	<csd:organizations><csd:organization entityID="{$orgEntityID}"/></csd:organizations>
 	<csd:record created="{$created}" updated="{$lm}" status="Active" sourceDirectory="{$dhis_url}"/>
       </csd:facility>
     else ()
@@ -151,10 +167,10 @@ let $entities:=
 
     NOTE: this means that each organisation unit which matches as a facility will have two CSD 
           entities created a facility and an organization.  These two entities will have distinct
-          UUIDs
+          UUIDs.  
    :)
   let $org_entity :=
-    <csd:organization entityID="{$orgEntityID}">
+  <csd:organization entityID="{$orgEntityID}">
       <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="id">{string($id)}</csd:otherID>
       {
 	if (not(functx:all-whitespace($org_code)))
@@ -260,10 +276,11 @@ let $providers :=
           for $torg in $torgs 
 	  let $tid :=  $torg/@id
 	  let $torg1 := ($orgUnits[@id=$tid])[1]
-	  let $entity_uuid :=(($torg1/dxf:attributeValues/dxf:attributeValue[@name='entityID']/dxf:value)[1])/text()
+	  let $entity_uuid :=((($torg1/dxf:attributeValues/dxf:attributeValue[./dxf:attribute[@name='entityID']])[1])/dxf:value[1])/text()
+
     	  let $orgEntityID :=
 	     if (not(functx:all-whitespace($entity_uuid)))
-	     then $entity_uuid
+	     then concat("urn:uuid:" , $entity_uuid)
 	     else concat("urn:uuid:",util:uuid_generate(concat('organization:',string($torg/@id)),$namespace_uuid))
           where  (exists($entities[@entityID = $orgEntityID]))
 	  return <csd:organization entityID="{$orgEntityID}"/>
@@ -308,7 +325,7 @@ let $providers :=
 
 (: Create CSD Services for DHIS2 Data Elements :) 
 
-let $catCombos := $dxf/dxf:metaData/dxf:categoryCombos
+
 let $srvcs := 
   if (not($do_srvcs))
   then ()
@@ -457,6 +474,7 @@ let $svs_groups :=
   </svs:ValueSet>
 
 
+
 let $svs_providers := 
   if (not($do_hws))
   then ()
@@ -528,6 +546,8 @@ return (
         else (replace node $existing_srvc with $entity)
 
     else (insert node $entity into /)
+    
+
   ,
   for $svs_doc in $svs_docs return svs_lsvs:insert($csd_webconf:db,$svs_doc) 
 

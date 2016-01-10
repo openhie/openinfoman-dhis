@@ -1,8 +1,7 @@
 
-
 var CSDLoader = function(form) {
     this.form = form;
-    this.status = $(window).find( "#status" );
+    this.status = $(window).find( ".status" );
     this.BaseURL = window.location.protocol + '//' + window.location.host + '/ILR/CSD';
     this.xmlSerializer = new XMLSerializer();
     this.BindActions();
@@ -46,6 +45,9 @@ CSDLoader.prototype.BindActions = function() {
 	case 'Import':
 	    this.ImportSelected();
 	    break;
+	case 'Export':
+	    this.Export();
+	    break;
 	default:
 	    this.Alert('Unrecognzied Action: ' + action);		
 	}
@@ -84,6 +86,7 @@ CSDLoader.prototype.LoadDocs = function() {
 	success: $.proxy(function(json) {
 	    this.Log('got documents' + json);
 	    docs.empty();
+	    docs.append("<option vaue=''>Select A Document</option>");
 	    var doclist = $.parseJSON(json);
 	    this.Log(doclist[0]);
 	    $.each(doclist,
@@ -136,7 +139,7 @@ CSDLoader.prototype.UpdateSelection = function() {
 	        function() {
 		    logger(this);
 		    var id = $(this).attr('entityID');
-		    var name = $(this).find('csd\\:primaryName').text();
+		    var name = $(this).find('csd\\:primaryName,primaryName').text();
 		    logger('Adding: ' + id + ' ' + name);
 		    select.append("<option value='" + id + "'>" + name + "</option>");
 		});
@@ -148,8 +151,97 @@ CSDLoader.prototype.UpdateSelection = function() {
 };
 
 
-CSDLoader.prototype.ImportSelected = function() {
-    this.Alert('Exporting');
+CSDLoader.prototype.Export = function() {
+    var url  = '../../metadata';
+    var hosturl = window.location.protocol + '//' + window.location.host + '/dhis'; //SHOLD NOT BE HARDCODED
+    var doUsers = this.form.find('select[name=users] option:selected').val() == '1' ? true : false;
+    var groupCodes = '';
+    $.each(this.form.find('input[name=group_codes]').val().split(","),
+	function(key,value) {
+	   groupCodes += "<groupCode>" + value + "</groupCode>";
+	});
+    var levels = '';
+    this.form.find('input.level:checked').each( $.proxy(
+      function(key,value) {
+	   levels += "<level>" + value.value + "</level>";
+      },this));
+    this.Log("URL=" + url);
+    $.ajax({
+	url:url,
+	method: 'GET',
+	type: 'GET',
+	context: this,
+	data :
+ 	  {
+	   assumeTrue:false,
+	   categoryOptions:true,
+	   optionSets:true,
+	   dataElementGroupSets:true,
+	   userRoles: doUsers,
+	   organisationUnits:true,
+	   userGroups: doUsers,
+	   organisationUnitGroups:true,
+	   organisationUnitLevels:true,
+	   categoryOptionGroupSets:true,
+	   categoryCombos:true,
+	   organisationUnitGroupSets:true,
+	   options:true,
+	   categoryOptionCombos:true,
+	   dataSets:true,
+	   dataElementGroups:true,
+	   dataElements:true,
+	   categoryOptionGroups:true,
+	   categories:true,
+	   users:doUsers	  	   
+	  },
+	dataType: 'text',
+	error: $.proxy(function(xhr,status,error) {
+	    
+	    this.Alert('Could not upload the metadata');
+	    this.Log( + status + "/" + error);
+	    this.UpdateStatus('Data Import On DHIS2 Failed');
+	    },this),
+	success: $.proxy(function(xml) {
+	    this.Log("Received\n" +   xml);
+	    xml  = xml.replace(/\<(\?xml|(\!DOCTYPE[^\>\[]+(\[[^\]]+)?))+[^>]+\>/g, '');
+	    this.UpdateStatus('Data Import To ILR Initiating');
+	    
+	    var doc = this.form.find('select[name=docs] option:selected').val();
+	    var url  = this.BaseURL + '/csr/' + doc + '/careServicesRequest/update/urn:dhis.org:extract_from_dxf:v2.19';
+    
+	    var msg =
+		  "<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>\n"
+	    	+ "   <dxf>" + xml +"</dxf>\n"
+		+ "   <groupCodes/>\n"
+		+ "   <levels>" + levels + "</levels>\n"
+		+ "   <URL>"+ hosturl +"</URL>\n"
+		+ "   <oid/>\n"
+		+ "   <usersAreHealthWorkers>" + (doUsers ? '1' : '0') + "</usersAreHealthWorkers>\n"
+		+ "   <dataelementsAreServices/>\n"
+		+ " </csd:requestParams>\n";
+	    this.UpdateStatus('Publishing Data To ILR');
+	    this.Log("Sending to " + url + "\n" + msg);
+	    $.ajax({
+		method:'POST',
+		type: 'POST',
+		url:url,
+		data:msg,
+		contentType: 'text/xml',
+		dataType: "xml",
+		context: this,
+		cache: false,
+		error: $.proxy(function(xhr,status,error) {
+		    this.Alert('Failed To Send Data To ILR');
+		    this.Log( + status + "/" + error);
+		},this),
+		success: $.proxy(function(xml) {
+		    this.UpdateStatus('Sent Data For Import To ILR');
+		    
+		},this)
+	    });
+ 	},this)
+    });
+
 };
 
 CSDLoader.prototype.ImportSelected = function() {
@@ -158,7 +250,12 @@ CSDLoader.prototype.ImportSelected = function() {
     var url  = this.BaseURL + '/csr/' + doc + '/careServicesRequest/urn:dhis.org:transform_to_dxf:v2.19';
     var selected = this.form.find('select[name=org] option:selected')
     var parentID = selected.val();
-    var msg ="<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'><csd:organization entityID='" + parentID + "'/></csd:requestParams>";
+    var doUsers = this.form.find('select[name=users] option:selected').val() == '1' ? true : false;
+    var msg =
+      "<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>\n"
+      +" <csd:organization entityID='" + parentID + "'/>\n"
+      +" <processUsers value='" + (doUsers ? 'true' : 'false') + "'/>\n"
+      "</csd:requestParams>";
     this.UpdateStatus('Requesting Data From ILR');
     this.Log('SENDING to ' + url + "\n" + msg);
     $.ajax({
@@ -178,7 +275,7 @@ CSDLoader.prototype.ImportSelected = function() {
 	    this.UpdateStatus('Sending Data For Import To DHIS2');
 	    this.Log("Received\n" +  this.xmlSerializer.serializeToString(xml));
 	    $.ajax({
-	        url: '../api/metadata',
+	        url: '../../../api/metadata',
 	        method: 'POST',
 	        type: 'POST',
 		context: this,
