@@ -1,3 +1,13 @@
+openinfoman-dhis (1.0.42~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.42
+    -b004c60 improvements to DHIS2 web app - now does export and import
+    --https://github.com/openhie/openinfoman-dhis/commmit/b004c60
+    -2067b1e improvements to DHIS2 web app - now does export and import
+    --https://github.com/openhie/openinfoman-dhis/commmit/2067b1e
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 10 Jan 2016 12:13:57 -0500
+
 openinfoman-dhis (1.0.41~vivid) vivid; urgency=medium
 
   * Release Version 1.0.41
