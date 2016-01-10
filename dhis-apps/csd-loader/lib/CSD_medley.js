@@ -1,7 +1,7 @@
 
 var CSDLoader = function(form) {
     this.form = form;
-    this.status = $(window).find( ".status" );
+    this.status = this.form.find( ".csdstatus" );
     this.BaseURL = window.location.protocol + '//' + window.location.host + '/ILR/CSD';
     this.xmlSerializer = new XMLSerializer();
     this.BindActions();

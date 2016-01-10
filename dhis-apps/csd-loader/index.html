@@ -7,6 +7,7 @@
     <link type="text/css" rel="stylesheet" href="../../../dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
     <link type="text/css" rel="stylesheet" media="screen" href="../../../dhis-web-commons/css/menu.css"/>
     <link type="text/css" rel="stylesheet" media="screen" href="../../../dhis-web-commons/javascripts/jQuery/ui/css/redmond/jquery-ui.css"/>
+    <link type="text/css" rel="stylesheet" media="screen,print" href="../../../dhis-web-commons/css/light_blue/light_blue.css">
     <script type="text/javascript" src="../../../dhis-web-commons/javascripts/jQuery/jquery.min.js"></script>
     <script type="text/javascript" src="../../../dhis-web-commons/javascripts/jQuery/ui/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../../../dhis-web-commons/javascripts/jQuery/ui/jquery.blockUI.js"></script>
@@ -33,9 +34,9 @@ $(function() {
 
   </head>
   <body >
-    <div>
+
       
-      <div id="header" style="background-color: #276696; min-height:100px">
+      <div id="header" style="background-color: #276696; ">
 	<img id="headerBanner"
 	     src="../../../api/staticContent/logo_banner"
 	     onclick="window.location.href='../../../dhis-web-dashboard-integration/index.action'"
@@ -53,7 +54,7 @@ $(function() {
 	  <div id="dhisDropDownMenu"></div>
       </div>
 	  
-      <div id='content' style="background-color: whitel;padding-top:2em;">
+      <div id='content' style="background-color: white;padding:2em;">
 	<p>
 	  This application will query a InterLinked Registry
 	  (a <a href="http://wiki.ihe.net/index.php?title=Care_Services_Discovery">Care Services Discover(CSD)</a>-compliant InfoManager) 
@@ -109,7 +110,7 @@ $(function() {
 	      
               <p>Export into the InterLinked Registry</p>
 	      <input type='submit' value='Export'/>
-	      <p class='csdstatus'/>
+	      <p class='csdstatus' style='background-color: #eee; border: 1px solid #bbb; border-radius: 3px;	opacity: 0.85;    padding: 6px;'/>
 	    </form>
 
 	  </div>
@@ -147,7 +148,7 @@ $(function() {
               <br/>
               <p>Load the selected organisation unit into DHIS2</p>
 	      <input type='submit' value='Import'/>
-	      <p class='status'/>
+	      <p class='csdstatus' style='background-color: #eee; border: 1px solid #bbb; border-radius: 3px;	opacity: 0.85;    padding: 6px;'/>
 	    </form>
 
 	  </div>
