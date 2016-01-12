@@ -255,7 +255,7 @@ CSDLoader.prototype.ImportSelected = function() {
       "<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>\n"
       +" <csd:organization entityID='" + parentID + "'/>\n"
       +" <processUsers value='" + (doUsers ? 'true' : 'false') + "'/>\n"
-      "</csd:requestParams>";
+      +"</csd:requestParams>";
     this.UpdateStatus('Requesting Data From ILR');
     this.Log('SENDING to ' + url + "\n" + msg);
     $.ajax({
