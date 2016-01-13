@@ -307,7 +307,7 @@ return
       <dxf:organisationUnitLevels>
 	{
 	  
-	  return for $oid in $ou_oids
+	  for $oid in $ou_oids
             let $level_oid := concat($oid,'.2')
 	    let $svs := svs_lsvs:get_single_version_value_set($csd_webconf:db,$level_oid)
 	    return
