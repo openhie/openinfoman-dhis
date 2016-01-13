@@ -1,3 +1,17 @@
+openinfoman-dhis (1.0.44~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.44
+    -8367fc2 fixed typo in transform to dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/8367fc2
+    -c7e8ae2 added in a errant +
+    --https://github.com/openhie/openinfoman-dhis/commmit/c7e8ae2
+    -9afff0b Update README
+    --https://github.com/openhie/openinfoman-dhis/commmit/9afff0b
+    -215697d Update README
+    --https://github.com/openhie/openinfoman-dhis/commmit/215697d
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 13 Jan 2016 13:15:19 -0500
+
 openinfoman-dhis (1.0.43~trusty) trusty; urgency=medium
 
   * Release Version 1.0.43
