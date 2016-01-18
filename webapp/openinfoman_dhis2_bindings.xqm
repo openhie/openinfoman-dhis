@@ -2,6 +2,7 @@ module namespace page = 'http://basex.org/modules/web-page';
 
 (:Import other namespaces.  :)
 import module namespace csd_webconf =  "https://github.com/openhie/openinfoman/csd_webconf";
+import module namespace csd_webui =  "https://github.com/openhie/openinfoman/csd_webui";
 import module namespace csr_proc = "https://github.com/openhie/openinfoman/csr_proc";
 import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm";
 import module namespace csd_mcs = "https://github.com/openhie/openinfoman/csd_mcs";
@@ -51,7 +52,7 @@ declare
 	   <span>
              <h3>Generate DHIS2 DXF Document</h3>
 	     {
-	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/createDXF")
+	       let $url := csd_webui:generateURL( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/createDXF")
 	       return <a href="{$url}">Get DXF</a>
 	     }
 	   </span>
@@ -65,7 +66,7 @@ declare
 	     {
 	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
 	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
-	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/upload")
+	       let $url := csd_webui:generateURL( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/upload")
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
 		   <label for='dxf' >DHIS2 Metadata DXF 2.0 File</label>
@@ -94,7 +95,7 @@ declare
 	     {
 	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
 	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
-	       let $url := concat($csd_webconf:baseurl, "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/simple_upload")
+	       let $url := csd_webui:generateURL( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/simple_upload")
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
 		   <h3>Data Source</h3>
@@ -188,7 +189,7 @@ declare
     let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
     let $assName := "dhis.org:orgid"
     let $requestParams := 
-      <csd:requestParams function="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
+      <csd:requestParams function="{$search_name}" resource="{$doc_name}" base_url="{csd_webui:generateURL()}">
         <assigningAuthorityName>{$assName}</assigningAuthorityName>
       </csd:requestParams>
 
@@ -203,7 +204,7 @@ declare updating
   function page:update_doc($search_name,$doc_name,$dxf,$oid) 
 {
   if (not(page:is_dhis($search_name)) ) then
-    db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD/bad</restxq:redirect>)
+    csd_webui:redirect_out('CSD/bad')
   else 
     let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
     let $d_oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)
@@ -215,7 +216,7 @@ declare updating
 
     let $careServicesRequest := 
       <csd:careServicesRequest>
-       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
+       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{csd_webui:generateURL()}">
          <csd:requestParams >
            <dxf>{$content}</dxf>
            <oid>{$s_oid}</oid>
@@ -225,7 +226,7 @@ declare updating
     return 
        (
         csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest)
-        ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)
+        ,csd_webui:redirect_out('CSD')
        )
 
 };
@@ -254,7 +255,7 @@ declare updating
 		       )
 {
   if (not(page:is_dhis($search_name)) ) then
-    db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD/bad</restxq:redirect>)
+    csd_webui:redirect('CSD/bad')
   else 
     let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
     let $name :=  map:keys($dxf)[1]    
@@ -279,7 +280,7 @@ declare updating
     let $group_codes_exploded := for $g in tokenize($group_codes,',') return <group_code>{$g}</group_code>
     let $careServicesRequest := 
       <csd:careServicesRequest>
-       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
+       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{csd_webui:generateURL()}">
          <csd:requestParams >
            <dxf>{$content}</dxf>
 	   <groupCodes>{$group_codes_exploded}</groupCodes>
@@ -295,7 +296,7 @@ declare updating
     return 
        (
         csr_proc:process_updating_CSR_results($csd_webconf:db, $careServicesRequest)  
-(:        ,db:output(<restxq:redirect>{$csd_webconf:baseurl}CSD</restxq:redirect>)  :)
+(:        ,csd_webui:redirect_out('CSD')  :)
        )
 
 };
