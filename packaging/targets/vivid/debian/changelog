@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.46~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.46
+    -a779a96 fixup wrapper
+    --https://github.com/openhie/openinfoman-dhis/commmit/a779a96
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 18:47:11 -0500
+
 openinfoman-dhis (1.0.45~vivid) vivid; urgency=medium
 
   * Release Version 1.0.45
