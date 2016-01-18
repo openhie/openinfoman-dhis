@@ -1,3 +1,13 @@
+openinfoman-dhis (1.0.45~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.45
+    -22ba9d6 expiremental cleanup and packaging for web UI and config
+    --https://github.com/openhie/openinfoman-dhis/commmit/22ba9d6
+    -dca6935 optimization on extract from dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/dca6935
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 16:36:08 -0500
+
 openinfoman-dhis (1.0.44~vivid) vivid; urgency=medium
 
   * Release Version 1.0.44
