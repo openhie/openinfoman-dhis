@@ -58,6 +58,10 @@ let $top_level_org :=
     </csd:organization>
 
 
+(: cache some node calculations :)
+let $org_otherids := $org_dir/csd:organization/csd:otherID[@code='id']
+let $dset_orgunits := $dataSets/dxf:dataSet/dxf:organisationUnits/dxf:organisationUnit
+let $orggroups_by_ou := $orgGroups/dxf:organisationUnits/dxf:organisationUnit
 
 let $entities:= 
   for $orgUnit in $orgUnits
@@ -71,7 +75,8 @@ let $entities:=
 
   let $lm := util:fixup_date($orgUnit/@lastUpdated)
   let $created := util:fixup_date($orgUnit/@created)
-  let $groups := $orgGroups[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]]
+  let $groups := $orggroups_by_ou[@id = $id]/../..  (:clause should expect to match more than one. go to grandparent orgUnitGroup's :)
+(:  let $groups := $orgGroups[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]] :)
   let $group_codes := $groups/@code
 
   (:if there is an existing CSD UUID / entityID in DHIS2 we should keep it to referencer the org unit :)
@@ -109,7 +114,8 @@ let $entities:=
           else concat("urn:uuid:",util:uuid_generate(concat('organization:',$pid),$namespace_uuid))
         else $top_orgEntityID
     else
-      let $peorg := ($org_dir/csd:organization[./csd:otherID[@code='id' and ./text() = $pid]])[1]
+      let $peorg := ($org_otherids[./text() = $pid])[1]/..  (: get the parent csd:organization element :)
+(:      let $peorg := ($org_dir/csd:organization[./csd:otherID[@code='id' and ./text() = $pid]])[1] :)
       return
 	if (exists($peorg))
         then $peorg/@entityID
@@ -123,13 +129,38 @@ let $entities:=
      else false
 :)	  
 
+  let $mainname := <csd:primaryName>{$displayName}</csd:primaryName>
+
+  (:set up local identifiers:)
+  let $other_ids := (
+    <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="id">{string($id)}</csd:otherID>
+    ,
+    if (not(functx:all-whitespace($org_code)))
+    then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="code">{string($org_code)}</csd:otherID>
+    else ()
+    ,
+    if (not(functx:all-whitespace($uuid)))
+    then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="uuid">{string($uuid)}</csd:otherID>
+    else ()
+    )
+
+  (:set up codes:)
+  $level_code := <csd:codedType code="{$level}" codingScheme="urn:{$dhis_url}/api/organisationUnitLevel"/>
+  $group_codes :=
+    for $group_code in $group_codes
+    return <csd:codedType codingScheme="urn:{$dhis_url}/api/organisationUnitGroup" code="{$group_code}" />
+
+  let $geo_data:= util:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
+  let $name := 
+
   (:first we extract all org units matching our facility conditions :)
   let $fac_srvcs :=
     if (not($do_srvcs))
     then ()
     else 
-      let $des :=  
-        for $dset in $dataSets/dxf:dataSet[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]]
+      let $des :=
+        for $dset in ($dset_orgunits[@id = $id])[1]/../..   (: go up to grand-parent dxf:dataSet :)
+(:        for $dset in $dataSets/dxf:dataSet[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]] :)
 	return $dataElements/dxf:dataElement[@id = $dset/dxf:dataElements/dxf:dataElement/@id]
       return 
         for $de in  $des
@@ -140,24 +171,11 @@ let $entities:=
     if (($group_codes = $facility_group_codes) or ( $level = $facility_levels)) 
     then
       <csd:facility entityID="{$facEntityID}">
-        <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="id">{string($id)}</csd:otherID>
-	{
-	  if (not(functx:all-whitespace($org_code)))
-	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="code">{string($org_code)}</csd:otherID>
-	  else ()
-	}
-	{
-	  if (not(functx:all-whitespace($uuid)))
-	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="uuid">{string($uuid)}</csd:otherID>
-	  else ()
-	}
-
-	{
-	  for $group_code in $group_codes
-	  return <csd:codedType codingScheme="urn:{$dhis_url}/api/organisationUnitGroup" code="{$group_code}" />
-	}
-	<csd:primaryName>{$displayName}</csd:primaryName>
-	{util:get_geocode($doc,$orgUnit)}
+	{$other_ids}
+	{$level_code}
+	{$group_codes}
+	{$mainname}
+	{$geo_data}
 	<csd:organizations><csd:organization entityID="{$orgEntityID}"/></csd:organizations>
 	<csd:record created="{$created}" updated="{$lm}" status="Active" sourceDirectory="{$dhis_url}"/>
       </csd:facility>
@@ -171,24 +189,11 @@ let $entities:=
    :)
   let $org_entity :=
   <csd:organization entityID="{$orgEntityID}">
-      <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="id">{string($id)}</csd:otherID>
-      {
-	if (not(functx:all-whitespace($org_code)))
-	then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="code">{string($org_code)}</csd:otherID>
-        else ()
-      }
-      {
-	if (not(functx:all-whitespace($uuid)))
-	then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="uuid">{string($uuid)}</csd:otherID>
-	else ()
-      }
-      <csd:codedType code="{$level}" codingScheme="urn:{$dhis_url}/api/organisationUnitLevel"/>
-      {
-	for $group_code in $group_codes
-	return <csd:codedType codingScheme="urn:{$dhis_url}/api/organisationUnitGroup" code="{$group_code}" />
-      }
-      <csd:primaryName>{$displayName}</csd:primaryName>
-      {util:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
+      {$other_ids}
+      {$level_code}
+      {$group_codes}
+      {$mainname}
+      {$geo_data}
       <csd:organizations>
 	<csd:organization entityID="{$parentEntityID}"/>
       </csd:organizations>
@@ -282,7 +287,7 @@ let $providers :=
 	     if (not(functx:all-whitespace($entity_uuid)))
 	     then concat("urn:uuid:" , $entity_uuid)
 	     else concat("urn:uuid:",util:uuid_generate(concat('organization:',string($torg/@id)),$namespace_uuid))
-          where  (exists($entities[@entityID = $orgEntityID]))
+          where  (exists($entities[@entityID = $orgEntityID]) or exists( $org_dir/csd:organization[@entityID = $orgEntityID]))
 	  return <csd:organization entityID="{$orgEntityID}"/>
 	  
 	return 
@@ -311,7 +316,7 @@ let $providers :=
 		  let $de_id := $de/@id
 		  let $srvc_entity_id := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
 	          return <csd:service entityID="{$srvc_entity_id}"/>
-          where  (exists($entities[@entityID = $facEntityID]))
+	  where  (exists($entities[@entityID = $facEntityID]) or exists( $org_dir/csd:facility[@entityID = $facEntityID]))
 	  return <csd:facility entityID="{$facEntityID}">{$fac_srvcs}</csd:facility>
 	  
 	return 
