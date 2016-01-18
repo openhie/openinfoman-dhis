@@ -173,7 +173,7 @@ declare
 	  else ()
 	}
       </div>
-      return csd_webconf:wrapper($contents)
+      return csd_webui:wrapper($contents)
 };
 
 
