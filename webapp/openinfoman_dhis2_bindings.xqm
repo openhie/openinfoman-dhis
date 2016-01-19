@@ -255,7 +255,7 @@ declare updating
 		       )
 {
   if (not(page:is_dhis($search_name)) ) then
-    csd_webui:redirect('CSD/bad')
+    csd_webui:redirect_out('CSD/bad')
   else 
     let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
     let $name :=  map:keys($dxf)[1]    
