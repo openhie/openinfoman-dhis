@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.51~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.51
+    -7ffdfa5 fixup typo in extract from dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/7ffdfa5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 20:27:40 -0500
+
 openinfoman-dhis (1.0.50~trusty) trusty; urgency=medium
 
   * Release Version 1.0.50
