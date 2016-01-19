@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.53~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.53
+    -94499a5 fixup entity for import csd:organization
+    --https://github.com/openhie/openinfoman-dhis/commmit/94499a5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 20:40:25 -0500
+
 openinfoman-dhis (1.0.52~vivid) vivid; urgency=medium
 
   * Release Version 1.0.52
