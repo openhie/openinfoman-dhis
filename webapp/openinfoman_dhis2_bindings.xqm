@@ -52,7 +52,7 @@ declare
 	   <span>
              <h3>Generate DHIS2 DXF Document</h3>
 	     {
-	       let $url := csd_webui:generateURL( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/createDXF")
+	       let $url := csd_webui:generateURL(( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/createDXF"))
 	       return <a href="{$url}">Get DXF</a>
 	     }
 	   </span>
@@ -66,7 +66,7 @@ declare
 	     {
 	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
 	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
-	       let $url := csd_webui:generateURL( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/upload")
+	       let $url := csd_webui:generateURL(( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/upload"))
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
 		   <label for='dxf' >DHIS2 Metadata DXF 2.0 File</label>
@@ -95,7 +95,7 @@ declare
 	     {
 	       let $function := csr_proc:get_updating_function_definition($csd_webconf:db,$search_name)
 	       let $oid := string($function/csd:extension[@urn='urn:openhie.org:openinfoman:adapter:dhis2:action:uploadDXF:oid']/@type)		 
-	       let $url := csd_webui:generateURL( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/simple_upload")
+	       let $url := csd_webui:generateURL(( "CSD/csr/" , $doc_name , "/careServicesRequest/",$search_name, "/adapter/dhis2/simple_upload"))
 	       return 
 	         <form action="{$url}" method="POST" enctype="multipart/form-data">
 		   <h3>Data Source</h3>
