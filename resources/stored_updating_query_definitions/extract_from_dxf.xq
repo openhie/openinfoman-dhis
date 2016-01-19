@@ -85,6 +85,8 @@ let $entities:=
   let $orgEntityID :=
     if (not(functx:all-whitespace($entity_uuid)))
     then concat("urn:uuid:",$entity_uuid)
+    else if (not(functx:all-whitespace($uuid)))
+    then concat("urn:uuid:",$uuid)  
     else  concat("urn:uuid:",util:uuid_generate(concat('organization:',$id),$namespace_uuid))
 
 
