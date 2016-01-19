@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.49~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.49
+    -6e85385 fixed updating binding
+    --https://github.com/openhie/openinfoman-dhis/commmit/6e85385
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 19:58:33 -0500
+
 openinfoman-dhis (1.0.48~trusty) trusty; urgency=medium
 
   * Release Version 1.0.48
