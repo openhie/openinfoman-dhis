@@ -145,13 +145,15 @@ let $entities:=
     )
 
   (:set up codes:)
-  $level_code := <csd:codedType code="{$level}" codingScheme="urn:{$dhis_url}/api/organisationUnitLevel"/>
-  $group_codes :=
+  let $level_code := <csd:codedType code="{$level}" codingScheme="urn:{$dhis_url}/api/organisationUnitLevel"/>
+  let $group_cts :=
     for $group_code in $group_codes
     return <csd:codedType codingScheme="urn:{$dhis_url}/api/organisationUnitGroup" code="{$group_code}" />
 
-  let $geo_data:= util:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)}
-  let $name := 
+  let $geo_data := util:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)
+  let $name := <csd:primaryName>{string($orgUnit/@name)}</csd:primaryName>
+  let $record :=  <csd:record created="{$created}" updated="{$lm}" status="Active" sourceDirectory="{$dhis_url}"/>
+    
 
   (:first we extract all org units matching our facility conditions :)
   let $fac_srvcs :=
@@ -173,11 +175,11 @@ let $entities:=
       <csd:facility entityID="{$facEntityID}">
 	{$other_ids}
 	{$level_code}
-	{$group_codes}
+	{$group_cts}
 	{$mainname}
 	{$geo_data}
 	<csd:organizations><csd:organization entityID="{$orgEntityID}"/></csd:organizations>
-	<csd:record created="{$created}" updated="{$lm}" status="Active" sourceDirectory="{$dhis_url}"/>
+	{$record}
       </csd:facility>
     else ()
 
@@ -191,13 +193,13 @@ let $entities:=
   <csd:organization entityID="{$orgEntityID}">
       {$other_ids}
       {$level_code}
-      {$group_codes}
+      {$group_cts}
       {$mainname}
       {$geo_data}
       <csd:organizations>
 	<csd:organization entityID="{$parentEntityID}"/>
       </csd:organizations>
-      <csd:record created="{$created}" updated="{$lm}" status="Active" sourceDirectory="{$dhis_url}"/>
+      {$record}
     </csd:organization>
   return ($org_entity,$fac_entity)
 
