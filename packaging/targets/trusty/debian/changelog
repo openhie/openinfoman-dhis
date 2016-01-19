@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.48~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.48
+    -ed6ad53 fixup generate URL
+    --https://github.com/openhie/openinfoman-dhis/commmit/ed6ad53
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 19:20:49 -0500
+
 openinfoman-dhis (1.0.47~trusty) trusty; urgency=medium
 
   * Release Version 1.0.47
