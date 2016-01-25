@@ -135,22 +135,22 @@ let $entities:=
 
   (:set up local identifiers:)
   let $other_ids := (
-    <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="id">{string($id)}</csd:otherID>
+    <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnits" code="id">{string($id)}</csd:otherID>
     ,
     if (not(functx:all-whitespace($org_code)))
-    then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="code">{string($org_code)}</csd:otherID>
+    then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnits" code="code">{string($org_code)}</csd:otherID>
     else ()
     ,
     if (not(functx:all-whitespace($uuid)))
-    then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnit" code="uuid">{string($uuid)}</csd:otherID>
+    then <csd:otherID assigningAuthorityName="{$dhis_url}/api/organisationUnits" code="uuid">{string($uuid)}</csd:otherID>
     else ()
     )
 
   (:set up codes:)
-  let $level_code := <csd:codedType code="{$level}" codingScheme="urn:{$dhis_url}/api/organisationUnitLevel"/>
+  let $level_code := <csd:codedType code="{$level}" codingScheme="urn:{$dhis_url}/api/organisationUnitLevels"/>
   let $group_cts :=
     for $group_code in $group_codes
-    return <csd:codedType codingScheme="urn:{$dhis_url}/api/organisationUnitGroup" code="{$group_code}" />
+    return <csd:codedType codingScheme="urn:{$dhis_url}/api/organisationUnitGroups" code="{$group_code}" />
 
   let $geo_data := util:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)
   let $name := <csd:primaryName>{string($orgUnit/@name)}</csd:primaryName>
@@ -231,15 +231,15 @@ let $providers :=
 
     return 
     <csd:provider entityID="{$entityID}">
-      <csd:otherID assigningAuthorityName="{$dhis_url}/api/User" code="id">{$id}</csd:otherID>
+      <csd:otherID assigningAuthorityName="{$dhis_url}/api/users" code="id">{$id}</csd:otherID>
       {
 	if (not(functx:all-whitespace($code)))
-	then <csd:otherID assigningAuthorityName="{$dhis_url}/api/user" code="code">{$code}</csd:otherID>
+	then <csd:otherID assigningAuthorityName="{$dhis_url}/api/users" code="code">{$code}</csd:otherID>
         else ()
       }
       {
 	if (not(functx:all-whitespace($uuid)))
-	then <csd:otherID assigningAuthorityName="{$dhis_url}/api/user" code="uuid">{$uuid}</csd:otherID>
+	then <csd:otherID assigningAuthorityName="{$dhis_url}/api/users" code="uuid">{$uuid}</csd:otherID>
 	else ()
       }
       {
@@ -376,9 +376,9 @@ let $srvcs :=
     return 
       <csd:service entityID="{$entityID}">
 	<csd:primaryName>{$name}</csd:primaryName>
-	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="id">{$de_id}</csd:otherID>
+	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElements" code="id">{$de_id}</csd:otherID>
 	{ if (not(functx:all-whitespace($code)))
-	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElement" code="code">{$code}</csd:otherID>
+	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElements" code="code">{$code}</csd:otherID>
 	  else ()
 	}
 	{
@@ -463,7 +463,7 @@ let $svs_levels :=
     <svs:ConceptList xml:lang="en-US" >
       {
 	for $level in $levels
-	return <svs:Concept code="{$level/@level}" displayName="{$level/@name}" codeSystem="{$dhis_url}/api/organisationUnitLevel" />
+	return <svs:Concept code="{$level/@level}" displayName="{$level/@name}" codeSystem="{$dhis_url}/api/organisationUnitLevels" />
       }
     </svs:ConceptList>
   </svs:ValueSet>
@@ -477,7 +477,7 @@ let $svs_groups :=
     <svs:ConceptList xml:lang="en-US" >
       {
 	for $group in $orgGroups
-	return <svs:Concept code="{$group/@code}" displayName="{$group/@name}" codeSystem="{$dhis_url}/api/organisationUnitGroup" />
+	return <svs:Concept code="{$group/@code}" displayName="{$group/@name}" codeSystem="{$dhis_url}/api/organisationUnitGroups" />
       }
     </svs:ConceptList>
   </svs:ValueSet>
