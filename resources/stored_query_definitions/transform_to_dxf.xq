@@ -54,7 +54,7 @@ return
 	for $prov in $provs
 
 	let $dhis_url := string(($prov/csd:record/@sourceDirectory)[1])
-	let $dhis_id :=  ($prov/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/User") and @code="id"])[1]/text()	  
+	let $dhis_id :=  ($prov/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/users") and @code="id"])[1]/text()	  
 	let $namespace_uuid := util:uuid_generate($dhis_url,$util:namespace_uuid)
 	let $oid := concat('2.25.',util:hexdec(util:uuid_generate('rootoid',$namespace_uuid)))	
 
@@ -75,7 +75,7 @@ return
 	let $p_orgs := 
 	  for $org in $prov/csd:organizations/csd:organization
 	  let $ou_uuid := 
-	    ($facilities[@entityID = $org/@entityID]/csd:otherID[@assigningAuthorityName = concat($dhis_url,"/api/organisationUnit") and @code="uuid"])[1]/text()
+	    ($facilities[@entityID = $org/@entityID]/csd:otherID[@assigningAuthorityName = concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
 	  return 
 	    if (functx:all-whitespace($ou_uuid)) 
 	    then () 
@@ -156,7 +156,7 @@ return
         {	 
 	  for $org in dxf2csd:ensure_properly_ordered_orgs($orgs) 
 	  let $dhis_url := string($org/csd:record/@sourceDirectory)
-	  let $dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnit") and @code="uuid"])[1]
+	  let $dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	  let $level := dxf2csd:get_level($doc,$org)
 	  let $name := $org/csd:primaryName/text()
 
@@ -170,7 +170,7 @@ return
 	  let $lm := dxf2csd:fixup_date($org/csd:record/@updated)
 
 	  let $porg_id := $org/csd:parent/@entityID
-	  let $porg_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnit") and @code="uuid"])[1]
+	  let $porg_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	  let $parent :=
 	    if (functx:all-whitespace($porg_id))
 	    then () (: no parent :)
@@ -206,12 +206,12 @@ return
 	  for $fac in $facilities
 	  (: remove the facilities that have already been created from a DHIS2 org unit:)
 	  let $dhis_url := string($fac/csd:record/@sourceDirectory)
-	  let $dhis_uuid := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnit") and @code="uuid"])[1]
-	  let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnit") and @code="id"])[1]
+	  let $dhis_uuid := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
+	  let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
 	  let $org := 
 	    if (functx:all-whitespace($dhis_uuid))
 	    then ()
-	    else ($orgs[./csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnit") and @code="uuid" and ./text() = $dhis_uuid]])[1]
+	    else ($orgs[./csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid" and ./text() = $dhis_uuid]])[1]
 	  where not(exists($org))
 	  return 
   	    let $level := dxf2csd:get_level($doc,$fac)
@@ -230,7 +230,7 @@ return
 	    (: in CSD we can have multiple "parents" but not so DXF.  We just choose the first one    :)
 	    let $org_id := ($orgs[@entityID = ($fac/csd:organizations/csd:organization)[1]/@entityID ])[1]
 	    let $org := $orgs[@entity_id = $org_id]
-	    let $org_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnit") and @code="uuid"])[1]
+	    let $org_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	    let $parent := 
 	      if (functx:all-whitespace($org_id))
 	      then ()  (: no parent :)
