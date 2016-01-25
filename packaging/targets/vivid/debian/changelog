@@ -1,3 +1,13 @@
+openinfoman-dhis (1.0.54~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.54
+    -86fc412 Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/86fc412
+    -07e3c9c fixed issue with plurality in DHIS2 api endpoints
+    --https://github.com/openhie/openinfoman-dhis/commmit/07e3c9c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 25 Jan 2016 12:31:05 -0500
+
 openinfoman-dhis (1.0.53~vivid) vivid; urgency=medium
 
   * Release Version 1.0.53
