@@ -2,7 +2,7 @@
 
 <html >
   <head>
-    <title>Care Services Discovery - Meta Data Loader</title>
+    <title>mACM Alert Reporter</title>
 <!--    <base href=""/> -->
     <link type="text/css" rel="stylesheet" href="../../../dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
     <link type="text/css" rel="stylesheet" media="screen" href="../../../dhis-web-commons/css/menu.css"/>
@@ -24,7 +24,7 @@
 var mACMReporter = function(form) {
        this.form = form;
        this.status = this.form.find( ".status" );
-       this.BaseURL = window.location.protocol + '//' + window.location.host + '/mACM';
+       this.BaseURL = window.location.protocol + '//' + window.location.host + '/mACM/fhir';
        this.BindActions();
 };
 
@@ -67,7 +67,7 @@ mACMReporter.prototype.BindActions = function() {
 	default:
 	    this.Alert('Unrecognzied Action: ' + action);		
 	}		
-    },this)),
+    },this));
 };
 
 mACMReporter.prototype.SendMessage = function() {
@@ -76,25 +76,25 @@ mACMReporter.prototype.SendMessage = function() {
     var subject = this.form.find('input[name=subject]').val();
 
     var payload = this.CreatePayload(message,recipient,subject);
-    var url  = this.BaseURL;
+    var url  = this.BaseURL + '/Communication';
     this.Log("Sending to URL=" + url);
-    this.Log("Sending payload" + payload);
+    this.Log("Sending payload" + JSON.stringify(payload));
     $.ajax({
-	method:'POST',
 	type: 'POST',
 	url:url,
 	data:payload,
-	contentType: 'application/json'
 	dataType: "json",
 	context: this,
 	cache: false,
-	error: function() {
+	contentType: 'application/json',
+	error: function(json) {
 	    this.Alert('Could not send alert');
 	    this.UpdateStatus('Request to send alert failed');
+	    this.Log("Received\n" +  JSON.stringify(json));
 	},
 	success: function(json) {
 	    this.UpdateStatus('Sent alert');
-	    this.Log("Received\n" +  json);
+	    this.Log("Received\n" +  JSON.stringify(json));
 	}
     });
 };
