@@ -86,7 +86,7 @@ mACMReporter.prototype.SendMessage = function() {
 	dataType: "json",
 	context: this,
 	cache: false,
-	contentType: 'application/json',
+	contentType: 'application/json+fhir',
 	error: function(json) {
 	    this.Alert('Could not send alert');
 	    this.UpdateStatus('Request to send alert failed');
