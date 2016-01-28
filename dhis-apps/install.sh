@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CWD=$(pwd)
-DIRS=("csd-loader" )
+DIRS=("csd-loader" "macm-reporter")
 for DIR in ${DIRS[@]}
 do
     echo "Packaging $DIR"
