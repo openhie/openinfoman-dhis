@@ -1,0 +1,14 @@
+nginx
+-----
+This assumes nginx (or other transparent proxy) has been installed to redirect https://localhost/ILR requests to a CSD InfoManager
+
+The following can be added to /etc/nginx/sites-available/dhis to accomplish this
+
+  #pass on mCAM requests to emNutt on localhost
+  location /mACM {
+    rewrite    ^/mACM/(.*) /$1 break;
+    proxy_pass  http://localhost:3000/;
+    proxy_redirect off;
+    proxy_set_header   Host $host;
+  }
+		     

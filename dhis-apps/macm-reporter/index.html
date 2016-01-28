@@ -82,8 +82,8 @@ mACMReporter.prototype.SendMessage = function() {
     $.ajax({
 	type: 'POST',
 	url:url,
-	data:payload,
-	dataType: "json",
+	data: JSON.stringify(payload),
+	dataType: 'json',
 	context: this,
 	cache: false,
 	contentType: 'application/json+fhir',
