@@ -1,0 +1,24 @@
+
+{
+    "version": "1.1",
+    "name": "mACM Alert Reporter",
+    "description": "Report an Alert or Care Reminder to a mACM Compliant Alert Aggregator",
+    "launch_path": "index.html",
+    "icons": {
+        "16": "./img/icons/alert_16.png",
+        "48": "./img/icons/alert_48.png",
+        "128": "./img/icons/alert_128.png"
+    },
+    "developer": {
+        "name": "Carl Leitner",
+        "url": "http://github.com/openhie/openinfoman-dhis"
+    },
+    "default_locale": "en",
+    "activities": {
+        "dhis": {
+            "href": "*"
+        }
+    }
+    
+}
+

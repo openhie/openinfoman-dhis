@@ -1,0 +1,60 @@
+{
+    "resourceType": "Communication",
+    "category": {
+        "coding": [
+        {
+            "system": "1.3.6.1.4.1.19376.1.2.5.1",
+            "code": "alert"
+        }
+        ],
+            "text": "Alert"
+    },
+    "recipient": [
+    {
+        "reference": "Practitioner/21"
+    }
+    ],
+    "payload": [
+    {
+        "contentString": "TRACHOMA OUTBREAK IN MULANJE DISTRICT.  14 NEW CASES REPORTED."
+    },
+    {
+        "contentAttachment": {
+            "language" : "en",
+            "title" : "TRACHOMA OUTBREAK IN MULANJE DISTRICT.  14 NEW CASES REPORTED.",
+            "contentType": "text/plain"
+        }
+    }
+    ],
+        "extension" :[ 
+        {
+            "url" : "Communication.period",
+            "valuePeriod" : {
+                "start" : "2016-01-25T00:00:00.000Z",
+                "end" : "2016-02-01T00:00:00.000Z"
+            }
+        },
+        {
+            "url" : "Communication.priority",
+            "valueCodeableConcept" : {
+                "coding" : [ 
+                {
+                    "code" : "PH",
+                    "system" : "1.3.6.1.4.1.19376.1.2.5.2"
+                } 
+                ]
+            }
+        },
+        {
+            "url" : "Communication.characteristic",
+            "valueCodeableConcept" : {
+                "coding" : [ 
+                {
+                    "code" : "present",
+                    "system" : "1.3.6.1.4.1.19376.1.2.5.3.1"
+                } 
+                ]
+            }
+        }
+    ]
+}
