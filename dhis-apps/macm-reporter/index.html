@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+
+<html >
+  <head>
+    <title>mACM Alert Reporter</title>
+<!--    <base href=""/> -->
+    <link type="text/css" rel="stylesheet" href="../../../dhis-web-commons/font-awesome/css/font-awesome.min.css"/>
+    <link type="text/css" rel="stylesheet" media="screen" href="../../../dhis-web-commons/css/menu.css"/>
+    <link type="text/css" rel="stylesheet" media="screen" href="../../../dhis-web-commons/javascripts/jQuery/ui/css/redmond/jquery-ui.css"/>
+    <link type="text/css" rel="stylesheet" media="screen,print" href="../../../dhis-web-commons/css/light_blue/light_blue.css">
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/jQuery/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/jQuery/ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/jQuery/ui/jquery.blockUI.js"></script>
+
+      
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.translate.js"></script>
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.menu.js"></script>
+    <script type="text/javascript" src="../../../dhis-web-commons/javascripts/dhis2/dhis2.menu.ui.js"></script>
+
+
+
+<script type='text/javascript'>
+
+var mACMReporter = function(form) {
+       this.form = form;
+       this.status = this.form.find( ".status" );
+       this.BaseURL = window.location.protocol + '//' + window.location.host + '/mACM/fhir';
+       this.BindActions();
+};
+
+
+mACMReporter.prototype.Log = function(text) {
+    console.log(text);
+};
+
+mACMReporter.prototype.UpdateStatus = function(text) {
+    this.Log(text);
+    if (!this.status) {
+	return;
+    }
+    this.status.empty();
+    this.status.text(text);    
+};
+
+mACMReporter.prototype.Alert = function(text) {
+    this.Log(text);
+    alert(text);
+};
+
+mACMReporter.prototype.BindActions = function() {
+    if (!this.form) {
+	return;
+    }
+
+    this.form.click(  $.proxy(function(event) {
+	//save the orgin of every click within this form so we can recover submission button
+	$(this).data('clicked',$(event.target))
+    },this)),
+    
+    this.form.submit( $.proxy(function( event ) {
+	event.preventDefault();
+	var action = $(this).data('clicked').attr('value');
+	switch (action) {
+	case 'Send':
+	    this.SendMessage();
+	    break;
+	default:
+	    this.Alert('Unrecognzied Action: ' + action);		
+	}		
+    },this));
+};
+
+mACMReporter.prototype.SendMessage = function() {
+    var message = this.form.find('input[name=message]').val();
+    var recipient = this.form.find('input[name=recipient]').val();
+    var subject = this.form.find('input[name=subject]').val();
+
+    var payload = this.CreatePayload(message,recipient,subject);
+    var url  = this.BaseURL + '/Communication';
+    this.Log("Sending to URL=" + url);
+    this.Log("Sending payload" + JSON.stringify(payload));
+    $.ajax({
+	type: 'POST',
+	url:url,
+	data: JSON.stringify(payload),
+	dataType: 'json',
+	context: this,
+	cache: false,
+	contentType: 'application/json+fhir',
+	error: function(json) {
+	    this.Alert('Could not send alert');
+	    this.UpdateStatus('Request to send alert failed');
+	    this.Log("Received\n" +  JSON.stringify(json));
+	},
+	success: function(json) {
+	    this.UpdateStatus('Sent alert');
+	    this.Log("Received\n" +  JSON.stringify(json));
+	}
+    });
+};
+
+mACMReporter.prototype.CreatePayload = function(message,recipient,subject)  {
+    var payload = 
+    {
+	"resourceType": "Communication",
+	"category": {
+	    "coding": [ {
+		    "system": "1.3.6.1.4.1.19376.1.2.5.1",
+		    "code": "alert"
+		} ],
+            "text": "Alert"
+	},
+	"recipient": [ { "reference": recipient }],
+	"payload": [ 
+	    { "contentString": message },
+	    {
+		"contentAttachment": {
+		    "language" : "en",
+		    "title" : message, 
+		    "contentType": "text/plain"
+		}
+	    }
+	],
+	"extension" :[ 
+	    {
+		"url" : "Communication.priority",
+		"valueCodeableConcept" : {
+		    "coding" : [{ 
+			    "code" : "PM",
+			    "system" : "1.3.6.1.4.1.19376.1.2.5.2"
+		    }]
+		}
+	    },
+	    {
+		"url" : "Communication.characteristic",
+		"valueCodeableConcept" : {
+		    "coding" : [ 
+			{
+			    "code" : "N",
+			    "system" : "1.3.6.1.4.1.19376.1.2.5.3.1"
+			} ]
+		}
+	    }
+	]
+    };
+
+    if (subject) {
+	payload['subject'] = {  "reference": subject }
+    }
+    return payload;
+
+};
+
+
+$(function() {
+    window.dhis2 = window.dhis2 || {};
+    dhis2.settings = dhis2.settings || {};
+    dhis2.settings.baseUrl = 'dhis'; 
+
+
+
+    new mACMReporter($("#macm_send" ));
+
+    $("#tabs").tabs(); //{active: false});
+});
+</script>
+
+  </head>
+  <body >
+
+      
+      <div id="header" style="background-color: #276696; ">
+	<img id="headerBanner"
+	     src="../../../api/staticContent/logo_banner"
+	     onclick="window.location.href='../../../dhis-web-dashboard-integration/index.action'"
+	     style="cursor:pointer"
+	     title="View home page"/>
+	
+	  <span
+	      id="headerText"
+	      onclick="window.location.href='../../../dhis-web-dashboard-integration/index.action'"
+	      style="cursor:pointer"
+	      title="View home page">
+	    DHIS 2
+	    </span>
+
+	  <div id="dhisDropDownMenu"></div>
+      </div>
+	  
+      <div id='content' style="background-color: white;padding:2em;">
+	<p>
+	  This application will submit an alert to a (Mobile Alert Communication Management) mACM compliant Alert Aggreagtor, such as <a href="http://github.com/openhie/emNutt">emNutt</a>
+	</p>
+
+	<div id='tabs'>
+	  <ul>
+	    <li><a href="#tabs-2">Submit Alert</a></li>
+	    <li><a href="#tabs-1">Get Alert Status</a></li>
+	  </ul>
+	  <div id="tabs-2">
+	    <h1>Submit Alert</h1>
+
+	    <form id='macm_send' >
+              <p>The message to be sent</p>
+    	      <label for='message' >Message</label>
+	      <input type='text' name='message' />
+	      <br/>
+
+              <p>The ID of the message recipient</p>
+    	      <label for='recipient' >Recipient</label>
+	      <input type='text' name='recipient' />
+	      <br/>
+
+              <p>The ID of the subject of care (optional)</p>
+    	      <label for='subject' >Subject</label>
+	      <input type='text' name='subject' />
+	      <br/>
+
+
+	      <input type='submit' value='Send'/>
+	      <p class='status' style='background-color: #eee; border: 1px solid #bbb; border-radius: 3px;	opacity: 0.85;    padding: 6px;'/>
+	    </form>
+
+	  </div>
+	  <div id="tabs-1">
+	    <h1>Query for Alert Status</h1>
+	    <p>This is not done, but can be used to see the dissemination status of an alert</p>
+	  </div>
+	</div>
+		
+		
+      </div>
+    </div>
+
+
+  </body>
+</html>
