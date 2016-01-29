@@ -1,3 +1,23 @@
+openinfoman-dhis (1.0.56~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.56
+    -d5e8dcb Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/d5e8dcb
+    -21bf05b have a working mACM reporter
+    --https://github.com/openhie/openinfoman-dhis/commmit/21bf05b
+    -f402fac updated macm report content tpye
+    --https://github.com/openhie/openinfoman-dhis/commmit/f402fac
+    -2dfba02 macm report posts successuly
+    --https://github.com/openhie/openinfoman-dhis/commmit/2dfba02
+    -7188e33 added macm-reporter to app packaging
+    --https://github.com/openhie/openinfoman-dhis/commmit/7188e33
+    -49926f2 intial (buggy) commit of a simple macm reporter webapp
+    --https://github.com/openhie/openinfoman-dhis/commmit/49926f2
+    -f4c6f3f fixup where getting username/code
+    --https://github.com/openhie/openinfoman-dhis/commmit/f4c6f3f
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 29 Jan 2016 12:55:03 -0500
+
 openinfoman-dhis (1.0.55~trusty) trusty; urgency=medium
 
   * Release Version 1.0.55
