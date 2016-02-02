@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.57~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.57
+    -80fdc9c added --no-check-certificate in packaging wget request
+    --https://github.com/openhie/openinfoman-dhis/commmit/80fdc9c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 02 Feb 2016 18:17:04 +0000
+
 openinfoman-dhis (1.0.56~trusty) trusty; urgency=medium
 
   * Release Version 1.0.56
