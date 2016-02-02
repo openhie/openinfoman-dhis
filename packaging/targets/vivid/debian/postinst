@@ -18,5 +18,5 @@ do
 done
 
 chown -R $USERNAME:$USERNAME $OI
-$WGET http://localhost:8984/CSD/storedFunctions/reload -O  /dev/null || true
+$WGET --no-check-certificate http://localhost:8984/CSD/storedFunctions/reload -O  /dev/null || true
 
