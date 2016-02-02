@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.58~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.58
+    -081e7f5 fixed cut paste issue with parent org
+    --https://github.com/openhie/openinfoman-dhis/commmit/081e7f5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 02 Feb 2016 18:29:07 +0000
+
 openinfoman-dhis (1.0.57~trusty) trusty; urgency=medium
 
   * Release Version 1.0.57
