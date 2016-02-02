@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.59~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.59
+    -877e0d1 fixed issue with parent id
+    --https://github.com/openhie/openinfoman-dhis/commmit/877e0d1
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 02 Feb 2016 20:28:51 +0000
+
 openinfoman-dhis (1.0.58~trusty) trusty; urgency=medium
 
   * Release Version 1.0.58
