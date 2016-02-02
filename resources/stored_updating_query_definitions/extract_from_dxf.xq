@@ -198,9 +198,7 @@ let $entities:=
       {$group_cts}
       {$mainname}
       {$geo_data}
-      <csd:organizations>
-	<csd:organization entityID="{$parentEntityID}"/>
-      </csd:organizations>
+      <csd:parent  entityID="{$parentEntityID}"/>
       {$record}
     </csd:organization>
   return ($org_entity,$fac_entity)
