@@ -187,7 +187,7 @@ return
 	    if (functx:all-whitespace($porg_id))
 	    then () (: no parent :)
 	    else if (not(functx:all-whitespace($porg_dhis_uuid)))
-	    then <dxf:parent id="{$porg_dhis_uuid}"/>
+	    then <dxf:parent uuid="{$porg_dhis_uuid}"/>
   	    else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($porg_id))}"/>
 	  let $avs :=
 	    <dxf:attributeValues>
