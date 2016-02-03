@@ -158,7 +158,7 @@ return
 	  let $dhis_url := string($org/csd:record/@sourceDirectory)
 	  let $dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
 
-	  let $level_code := string(($org/csd:codedType[@codingScheme=concat($dhis_url,"/api/organisationUnitLevels")])[1]/@code)
+	  let $level_code := string(($org/csd:codedType[@codingScheme=concat("urn:" ,$dhis_url,"/api/organisationUnitLevels")])[1]/@code)
 	  let $level := 
 	    if (not(functx:all-whitespace($level_code)))
 	    then $level_code
