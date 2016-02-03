@@ -35,7 +35,7 @@ declare function util:get_parent_orgs($all_orgs,$org) {
   return 
     if (not(exists($porg)))
     then ()
-    else ($porg,util:get_parent_orgs($all_orgs,$porg))
+    else (util:get_parent_orgs($all_orgs,$porg),$porg)
 };
 
 declare function util:get_child_orgs($orgs,$org) {
