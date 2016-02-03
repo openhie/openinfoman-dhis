@@ -22,14 +22,14 @@ let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSch
 let $svcs := $doc/csd:CSD/csd:serviceDirectory/csd:service
 let $orgs := 
   if (functx:all-whitespace($req_org_id))
-  then $doc/csd:CSD/csd:organizationDirectory/csd:organization
+  then dxf2csd:ensure_properly_ordered_orgs($doc/csd:CSD/csd:organizationDirectory/csd:organization)
   else 
     let $all_orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
     let $org := $all_orgs[@entityID = $req_org_id]
     return 
       if (not(exists($org)))
       then ()
-      else  (util:get_parent_orgs($all_orgs,$org),$org,util:get_child_orgs($all_orgs,$org))
+      else  (util:get_parent_orgs($all_orgs,$org),$org,util:get_child_orgs($all_orgs,$org))  (: this comes back properly ordered for DHIS2 import :)
 
 let $facilities := 
   if (functx:all-whitespace($req_org_id))
@@ -154,10 +154,16 @@ return
 
       <dxf:organisationUnits>
         {	 
-	  for $org in dxf2csd:ensure_properly_ordered_orgs($orgs) 
+	  for $org in $orgs
 	  let $dhis_url := string($org/csd:record/@sourceDirectory)
-	  let $dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
-	  let $level := dxf2csd:get_level($doc,$org)
+	  let $dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
+
+	  let $level_code := string(($org/csd:codedType[@codingScheme=concat($dhis_url,"/api/organisationUnitLevels")])[1]/@code)
+	  let $level := 
+	    if (not(functx:all-whitespace($level_code)))
+	    then $level_code
+	    else dxf2csd:get_level($doc,$org)
+
 	  let $name := $org/csd:primaryName/text()
 
 	  let $uuid := 
@@ -165,12 +171,18 @@ return
 	    then dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
 	    else string($dhis_uuid)
 
-	  let $id := dxf2csd:extract_id_from_entityid(string($org/@entityID)) 
+	  let $id_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]/text()
+	  let $id :=
+	    if (not(functx:all-whitespace($id_code)))
+	    then $id_code
+	    else dxf2csd:extract_id_from_entityid(string($org/@entityID)) 
+
 	  let $created := dxf2csd:fixup_date($org/csd:record/@created)
 	  let $lm := dxf2csd:fixup_date($org/csd:record/@updated)
 
 	  let $porg_id := $org/csd:parent/@entityID
-	  let $porg_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
+	  let $porg := $orgs[@entityID = $porg_id]
+	  let $porg_dhis_uuid := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	  let $parent :=
 	    if (functx:all-whitespace($porg_id))
 	    then () (: no parent :)
