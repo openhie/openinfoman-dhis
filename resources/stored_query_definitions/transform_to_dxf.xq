@@ -7,7 +7,7 @@ import module namespace functx = "http://www.functx.com";
 
 declare namespace svs = "urn:ihe:iti:svs:2008";
 declare namespace csd = "urn:ihe:iti:csd:2013";
-declare namespace dxf = "http://dhis2.org/csd/dxf/2.0";
+declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 
 declare variable $careServicesRequest as item() external; 
 
