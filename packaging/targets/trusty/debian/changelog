@@ -1,3 +1,19 @@
+openinfoman-dhis (1.0.60~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.60
+    -27c2596 fixup dxf namespace for csd->dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/27c2596
+    -6ff439e fix dxf:parent/@uuid on csd->dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/6ff439e
+    -70eaa8d getting parent orgs keeps them in DXF order
+    --https://github.com/openhie/openinfoman-dhis/commmit/70eaa8d
+    -3d94f62 fix for looking up org unit level when doing csd ->dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/3d94f62
+    -191016c speedups for csd->dxf and fixing of levels
+    --https://github.com/openhie/openinfoman-dhis/commmit/191016c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 03 Feb 2016 05:04:57 +0000
+
 openinfoman-dhis (1.0.59~trusty) trusty; urgency=medium
 
   * Release Version 1.0.59
