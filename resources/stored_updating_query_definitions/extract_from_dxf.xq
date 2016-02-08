@@ -48,15 +48,6 @@ let $srvc_dir := $doc/csd:CSD/csd:serviceDirectory
 let $now := current-dateTime()
 
 
-(:First we create CSD facility and organization entities from the DHIS2 Org Unit Hierarchy :)
-let $top_orgEntityID := concat("urn:uuid:",util:uuid_generate('organization:root',$namespace_uuid))
-let $top_level_org := 
-    <csd:organization entityID="{$top_orgEntityID}">
-      <csd:codedType codingScheme="urn:{$dhis_url}" code="ROOTNODE" />  
-      <csd:primaryName>Root organization for {$dhis_url}</csd:primaryName>
-      <csd:record created="{$now}" updated="{$now}" status="Active" sourceDirectory="{$dhis_url}"/>
-    </csd:organization>
-
 
 (: cache some node calculations :)
 let $org_otherids := $org_dir/csd:organization/csd:otherID[@code='id']
@@ -122,7 +113,7 @@ let $entities:=
       return
 	if (exists($peorg))
         then $peorg/@entityID
-      else $top_orgEntityID
+        else ()
 
 (:   let $puuid :=
      if (exists($porg))
@@ -521,7 +512,7 @@ let $svs_docs := ($svs_levels,$svs_groups,$svs_providers,$svs_srvcs)
 (:Insert everything we generated into the database :)
 
 return (
-  for $entity in ($top_level_org, $entities,$providers, $srvcs)
+  for $entity in ( $entities,$providers, $srvcs)
   let $id := $entity/@entityID
   return 
     if (local-name($entity) = 'facility')
