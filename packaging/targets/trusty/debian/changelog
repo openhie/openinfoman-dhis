@@ -1,3 +1,23 @@
+openinfoman-dhis (1.0.61~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.61
+    -4e21f11 csd-loader app uses checkboxes for selecting group codes
+    --https://github.com/openhie/openinfoman-dhis/commmit/4e21f11
+    -28786ca csd-loader pulls base URL from manifest.   moved js functi
+    --https://github.com/openhie/openinfoman-dhis/commmit/28786ca
+    -a331c90 added external dhis2 url to script
+    --https://github.com/openhie/openinfoman-dhis/commmit/a331c90
+    -690527f added script to publish to ILR
+    --https://github.com/openhie/openinfoman-dhis/commmit/690527f
+    -88250de CSD Loader app now handles LastExported time
+    --https://github.com/openhie/openinfoman-dhis/commmit/88250de
+    -466e3f4 CSD loader stored last mod time - beta
+    --https://github.com/openhie/openinfoman-dhis/commmit/466e3f4
+    -22c59f9 removed fake top-level org
+    --https://github.com/openhie/openinfoman-dhis/commmit/22c59f9
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 10 Feb 2016 18:49:17 +0000
+
 openinfoman-dhis (1.0.60~trusty) trusty; urgency=medium
 
   * Release Version 1.0.60
