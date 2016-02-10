@@ -1,10 +1,15 @@
 #!/bin/bash
 
+########################################################################
+# Configuration Options
+########################################################################
+
 ILR_URL='http://localhost:8984/CSD'           #URL for OpenInfoMan / ILR
 ILR_USER=false
 ILR_PASS=false
 ILR_DOC='test3'                               #Name of CSD document we are publish to
 DHIS2_URL='https://localhost/dhis2'           #URL to access DHIS2
+DHIS2_EXT_URL=$DHIS2_URL                      #the externally accessible hostname of the DHIS2 instance
 DHIS2_USER="admin"  
 DHIS2_PASS="district"
 DOUSERS=false                                 #Process DHIS2 Userss are Health workers
@@ -132,7 +137,7 @@ CSR="<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>
   <dxf>$DXF</dxf>
   <groupCodes>$GROUPCODES</groupCodes>
   <levels>$LEVELS</levels>
-  <URL>$DHIS2_URL</URL>
+  <URL>$DHIS2_EXT_URL</URL>
   <usersAreHealthWorkers>$UVAL</usersAreHealthWorkers>
   <dataelementsAreServices>$SVAL</dataelementsAreServices>
 </csd:requestParams>"
