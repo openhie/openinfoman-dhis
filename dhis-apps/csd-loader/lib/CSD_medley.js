@@ -97,6 +97,36 @@ CSDLoader.prototype.GetKeys = function() {
 
 };
 
+
+CSDLoader.prototype.SetupGroups = function(elem) {
+    this.Log('getting groups')
+    var options = {
+	url: this.BaseURL + '/api/organisationUnitGroups',
+	method: 'GET',
+	type: 'GET',
+	dataType: "json",
+	data: {'paged':'false'},
+	context: this,
+	cache: false,
+	error: $.proxy(function() {
+	    this.Log('could not fetch groups');
+	},this),
+	success: $.proxy(function(json) {
+	    //extract time from	<metaData xmlns="http://dhis2.org/schema/dxf/2.0" created="2015-09-25T12:25:52.636+0000">
+	    this.Log("Got groups " + JSON.stringify(json));
+	    $.each(json['organisationUnitGroups'], $.proxy(function(i,group) {
+		if (group['code']) {
+		    var html = '<p><input class="groupcode" type="checkbox" value="' + group['code'] + '"/>' + group['name'] + '</p>';
+		    this.Log('Adding ' + html);
+		    elem.append(html);
+		}
+	    },this));
+	},this)
+    };
+    $.ajax(options);
+    return true;
+};
+
 CSDLoader.prototype.SetLastModified = function(time) {
     var method =  ($.inArray('LastExported',this.GetKeys()) >= 0)  ?  'PUT' : 'POST';
     this.Log('setting export to ' + time + ' using ' + method);
@@ -156,6 +186,11 @@ CSDLoader.prototype.BindActions = function() {
     },this));
 
     var lm  = this.form.find('input[name=lastmodified]');
+    var groupElem = this.form.find('.groupcodes');
+    if (groupElem) {
+	this.SetupGroups(groupElem);
+    }
+
     if (lm) {
 	var lmt = this.FetchLastModified();
 	this.Log('Last Exported ' + lmt);
@@ -303,10 +338,11 @@ CSDLoader.prototype.Export = function() {
     this.UpdateStatus('Beginning Export');
     var doUsers = this.form.find('select[name=users] option:selected').val() == '1' ? true : false;
     var groupCodes = '';
-    $.each(this.form.find('input[name=group_codes]').val().split(","),
-	function(key,value) {
-	   groupCodes += "<groupCode>" + value + "</groupCode>";
-	});
+    $.each(this.form.find('input.groupcode:checked'), function(i,e) {
+	groupCodes += "<groupCode>" + $(e).val() + "</groupCode>";
+    });
+    this.Log('GC=' + groupCodes);
+
     var levels = '';
     var dhis2time = this.GetServerTime();
     this.form.find('input.level:checked').each( $.proxy(
@@ -369,8 +405,8 @@ CSDLoader.prototype.Export = function() {
     
 	    var msg =
 		  "<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>\n"
-	    	+ "   <dxf>" + xml +"</dxf>\n"
-		+ "   <groupCodes/>\n"
+	    	+ "   <dxf>\n" + xml +"\n</dxf>\n"
+		+ "   <groupCodes>" + groupCodes + "</groupCodes>\n"
 		+ "   <levels>" + levels + "</levels>\n"
 		+ "   <URL>"+ this.BaseURL +"</URL>\n"
 		+ "   <oid/>\n"
