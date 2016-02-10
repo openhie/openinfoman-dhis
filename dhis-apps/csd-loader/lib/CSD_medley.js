@@ -1,8 +1,10 @@
-
 var CSDLoader = function(form) {
     this.form = form;
     this.status = this.form.find( ".csdstatus" );
-    this.BaseURL = window.location.protocol + '//' + window.location.host + '/ILR/CSD';
+    this.BaseURL = window.location.href.substring(0, window.location.href.indexOf('/api/apps/csd-loader'));
+    this.Log('BaseURL=' + this.BaseURL);
+    this.BaseILRURL = this.BaseURL.substring(0,this.BaseURL.lastIndexOf('/'))+ '/ILR/CSD';   
+    this.Log('Base ILR URL=' + this.BaseILRURL);
     this.xmlSerializer = new XMLSerializer();
     this.BindActions();
 };
@@ -20,9 +22,127 @@ CSDLoader.prototype.UpdateStatus = function(text) {
     this.status.text(text);    
 };
 
+CSDLoader.prototype.SetStatusAsLoading = function(isloading) {
+    if (!this.status) {
+	return;
+    }
+    if (isloading) {
+	this.status.css('background-size', '16px 11px');
+	this.status.css('background-repeat', 'no-repeat');
+	this.status.css('background-image', 'url(../images/ajax-loader-bar.gif)');
+	this.status.css('background-position', 'right center');
+    } else {
+	this.status.css('background-image', '');
+    }
+};
+
 CSDLoader.prototype.Alert = function(text) {
-    this.Log(text);
+    this.UpdateStatus(text);
     alert(text);
+};
+
+CSDLoader.prototype.GetServerTime = function () {
+    this.Log('getting time from ' + this.BaseURL + '/api/metadata');
+    var time = false;
+    var options = {
+	url: this.BaseURL + '/api/metadata',
+	method: 'GET',
+	type: 'GET',
+	dataType: "xml",
+	async: false,
+	context: this,
+	cache: false,
+	data :
+ 	  {
+	   assumeTrue:false
+	  },
+
+	error: $.proxy(function(xml) {
+	    this.Log('could not fetch time');
+	},this),
+	success: $.proxy(function(xml) {
+	    //extract time from	<metaData xmlns="http://dhis2.org/schema/dxf/2.0" created="2015-09-25T12:25:52.636+0000">
+	    time = $(xml).find('metaData').attr('created');
+	},this)
+    };
+    $.ajax(options);
+    this.Log('metadata time = ' + time);
+    return time;
+
+};
+
+
+CSDLoader.prototype.GetKeys = function() {
+    this.Log('getting keys')
+    var keys  = [];
+    var options = {
+	url: this.BaseURL + '/api/dataStore/CSD-Loader',
+	method: 'GET',
+	type: 'GET',
+	dataType: "json",
+	async: false,
+	context: this,
+	cache: false,
+	error: $.proxy(function() {
+	    this.Log('could not fetch last modified time');
+	},this),
+	success: $.proxy(function(json) {
+	    //extract time from	<metaData xmlns="http://dhis2.org/schema/dxf/2.0" created="2015-09-25T12:25:52.636+0000">
+	    keys = json;
+	},this)
+    };
+    $.ajax(options);
+    this.Log("Got Keys:" + keys.join());
+    return keys;
+
+};
+
+CSDLoader.prototype.SetLastModified = function(time) {
+    var method =  ($.inArray('LastExported',this.GetKeys()) >= 0)  ?  'PUT' : 'POST';
+    this.Log('setting export to ' + time + ' using ' + method);
+    var options = {
+	url: this.BaseURL + '/api/dataStore/CSD-Loader/LastExported',
+	method: method,
+	contentType: 'application/json',
+	type: method,
+	dataType: "text",
+	data : JSON.stringify({value : time}),
+	context: this,
+	cache: false,
+	error: $.proxy(function() {
+	    this.Log('could not set last modified time');
+	},this),
+	success: $.proxy(function(json) {
+	    this.Log('set last modified time to ' + time);
+	},this)
+    };
+    $.ajax(options);
+    return time;
+};
+
+
+CSDLoader.prototype.FetchLastModified = function() {
+    this.Log('getting last modfified');
+    var time = false;
+    var options = {
+	url: this.BaseURL + '/api/dataStore/CSD-Loader/LastExported',
+	method: 'GET',
+	type: 'GET',
+	dataType: "json",
+	async: false,
+	context: this,
+	cache: false,
+	error: $.proxy(function() {
+	    this.Log('could not fetch last modified time');
+	},this),
+	success: $.proxy(function(json) {
+	    //extract time from	<metaData xmlns="http://dhis2.org/schema/dxf/2.0" created="2015-09-25T12:25:52.636+0000">
+	    time = json['value'];
+	},this)
+    };
+    $.ajax(options);
+    this.Log('last modified time = ' + time);
+    return time;
 };
 
 CSDLoader.prototype.BindActions = function() {
@@ -33,7 +153,36 @@ CSDLoader.prototype.BindActions = function() {
     this.form.click(  $.proxy(function(event) {
 	//save the orgin of every click within this form so we can recover submission button
 	$(this).data('clicked',$(event.target))
-    },this)),
+    },this));
+
+    var lm  = this.form.find('input[name=lastmodified]');
+    if (lm) {
+	var lmt = this.FetchLastModified();
+	this.Log('Last Exported ' + lmt);
+	var options = {
+	    format:'c',
+	    startDate:'+2016/01/01'
+	    };
+	if (lmt) {
+	    options['value']=new Date(lmt);
+	}
+	this.Log(JSON.stringify(options));
+	lm.datetimepicker(options);
+    }
+    var alldata = this.form.find('select[name=alldata]');
+    var lmc = this.form.find('.lastmodifiedcontainer');    
+    if (alldata && lmc) {
+	alldata.val('1');
+	lmc.hide();
+	alldata.change(function() {
+	    if (alldata.val() == 0) {
+		lmc.show();
+	    } else{
+		lmc.hide();
+	    }
+	});
+    }
+
     
     this.form.submit( $.proxy(function( event ) {
 	event.preventDefault();
@@ -52,7 +201,7 @@ CSDLoader.prototype.BindActions = function() {
 	    this.Alert('Unrecognzied Action: ' + action);		
 	}
 		
-    },this)),
+    },this));
 
 
     this.form.find('select[name=docs]').change( $.proxy( function() {
@@ -62,7 +211,7 @@ CSDLoader.prototype.BindActions = function() {
     this.form.find('select[name=org]').change( $.proxy( function() {
 	this.UpdateSelection();
     },this));
-    }
+};
 
 
 
@@ -74,14 +223,14 @@ CSDLoader.prototype.LoadDocs = function() {
     }
     this.Log('getting docs');
     $.ajax({
-	url: this.BaseURL + '/documents.json',
+	url: this.BaseILRURL + '/documents.json',
 	contentType: 'application/json',
 	dataType: "text",
 	cache: false,
 	context: this,
 	error: $.proxy(function() {
 	    this.Log('error on fetch');
-	    this.Alert('Could not load the documents');
+	    this.UpdateStatus('Could not load the CSD documents.  You need to ensure the InterLinked Registry is running at ' + this.BaseILRURL);
 	},this),
 	success: $.proxy(function(json) {
 	    this.Log('got documents' + json);
@@ -102,9 +251,8 @@ CSDLoader.prototype.LoadDocs = function() {
 };
 	  
 CSDLoader.prototype.UpdateSelection = function() { 
-    this.Log('OK');
     var doc = this.form.find('select[name=docs] option:selected').val();
-    var url  = this.BaseURL + '/csr/' + doc + '/careServicesRequest/urn:ihe:iti:csd:2014:stored-function:organization-search';
+    var url  = this.BaseILRURL + '/csr/' + doc + '/careServicesRequest/urn:ihe:iti:csd:2014:stored-function:organization-search';
     var selected = this.form.find('select[name=org] option:selected')
     var parentID = selected.val();
     var parentName = selected.text();
@@ -152,8 +300,7 @@ CSDLoader.prototype.UpdateSelection = function() {
 
 
 CSDLoader.prototype.Export = function() {
-    var url  = '../../metadata';
-    var hosturl = window.location.protocol + '//' + window.location.host + '/dhis'; //SHOLD NOT BE HARDCODED
+    this.UpdateStatus('Beginning Export');
     var doUsers = this.form.find('select[name=users] option:selected').val() == '1' ? true : false;
     var groupCodes = '';
     $.each(this.form.find('input[name=group_codes]').val().split(","),
@@ -161,18 +308,14 @@ CSDLoader.prototype.Export = function() {
 	   groupCodes += "<groupCode>" + value + "</groupCode>";
 	});
     var levels = '';
+    var dhis2time = this.GetServerTime();
     this.form.find('input.level:checked').each( $.proxy(
       function(key,value) {
 	   levels += "<level>" + value.value + "</level>";
       },this));
-    this.Log("URL=" + url);
-    $.ajax({
-	url:url,
-	method: 'GET',
-	type: 'GET',
-	context: this,
-	data :
- 	  {
+    var lmt = this.form.find('input[name=lastmodified]').val();
+    var doall = this.form.find('select[name=alldata] option:selected').val();
+    var data = 	  {
 	   assumeTrue:false,
 	   categoryOptions:true,
 	   optionSets:true,
@@ -193,28 +336,43 @@ CSDLoader.prototype.Export = function() {
 	   categoryOptionGroups:true,
 	   categories:true,
 	   users:doUsers	  	   
-	  },
+	  };
+    console.log('Do all ' + doall);
+    if (lmt && doall != 1) {
+	data['lastUpdated'] = $.datepicker.formatDate('yy-mm-dd', new Date(lmt));
+	
+    }
+
+    this.Log('Sending to DHIS2: ' + JSON.stringify(data));
+
+    this.SetStatusAsLoading(true);
+    $.ajax({
+	url: this.BaseURL + '/api/metadata',
+	method: 'GET',
+	type: 'GET',
+	context: this,
+	data : data,
 	dataType: 'text',
-	error: $.proxy(function(xhr,status,error) {
-	    
+	error: $.proxy(function(xhr,status,error) {	    
 	    this.Alert('Could not upload the metadata');
-	    this.Log( + status + "/" + error);
-	    this.UpdateStatus('Data Import On DHIS2 Failed');
+	    this.SetStatusAsLoading(false);
+	    this.Log( status + "/" + error);
+	    this.UpdateStatus('Data Export From DHIS2 Failed');
 	    },this),
 	success: $.proxy(function(xml) {
 	    this.Log("Received\n" +   xml);
 	    xml  = xml.replace(/\<(\?xml|(\!DOCTYPE[^\>\[]+(\[[^\]]+)?))+[^>]+\>/g, '');
 	    this.UpdateStatus('Data Import To ILR Initiating');
-	    
+	    this.SetStatusAsLoading(true);
 	    var doc = this.form.find('select[name=docs] option:selected').val();
-	    var url  = this.BaseURL + '/csr/' + doc + '/careServicesRequest/update/urn:dhis.org:extract_from_dxf:v2.19';
+	    var url  = this.BaseILRURL + '/csr/' + doc + '/careServicesRequest/update/urn:dhis.org:extract_from_dxf:v2.19';
     
 	    var msg =
 		  "<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>\n"
 	    	+ "   <dxf>" + xml +"</dxf>\n"
 		+ "   <groupCodes/>\n"
 		+ "   <levels>" + levels + "</levels>\n"
-		+ "   <URL>"+ hosturl +"</URL>\n"
+		+ "   <URL>"+ this.BaseURL +"</URL>\n"
 		+ "   <oid/>\n"
 		+ "   <usersAreHealthWorkers>" + (doUsers ? '1' : '0') + "</usersAreHealthWorkers>\n"
 		+ "   <dataelementsAreServices/>\n"
@@ -233,10 +391,13 @@ CSDLoader.prototype.Export = function() {
 		error: $.proxy(function(xhr,status,error) {
 		    this.Alert('Failed To Send Data To ILR');
 		    this.Log( + status + "/" + error);
+		    this.SetStatusAsLoading(false);
 		},this),
 		success: $.proxy(function(xml) {
 		    this.UpdateStatus('Sent Data For Import To ILR');
-		    
+		    this.Log('Setting last modified time to ' + dhis2time);
+		    this.SetLastModified(dhis2time);		    
+		    this.SetStatusAsLoading(false);
 		},this)
 	    });
  	},this)
@@ -247,7 +408,7 @@ CSDLoader.prototype.Export = function() {
 CSDLoader.prototype.ImportSelected = function() {
     this.UpdateStatus('Beginning Data Import');
     var doc = this.form.find('select[name=docs] option:selected').val();
-    var url  = this.BaseURL + '/csr/' + doc + '/careServicesRequest/urn:dhis.org:transform_to_dxf:v2.19';
+    var url  = this.BaseILRURL + '/csr/' + doc + '/careServicesRequest/urn:dhis.org:transform_to_dxf:v2.19';
     var selected = this.form.find('select[name=org] option:selected')
     var parentID = selected.val();
     var doUsers = this.form.find('select[name=users] option:selected').val() == '1' ? true : false;
@@ -275,7 +436,7 @@ CSDLoader.prototype.ImportSelected = function() {
 	    this.UpdateStatus('Sending Data For Import To DHIS2');
 	    this.Log("Received\n" +  this.xmlSerializer.serializeToString(xml));
 	    $.ajax({
-	        url: '../../../api/metadata',
+	        url: this.BaseURL + '/api/metadata',
 	        method: 'POST',
 	        type: 'POST',
 		context: this,
@@ -293,3 +454,4 @@ CSDLoader.prototype.ImportSelected = function() {
 	    }
         });
 };
+
