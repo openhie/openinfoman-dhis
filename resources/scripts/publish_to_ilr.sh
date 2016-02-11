@@ -22,7 +22,7 @@ GROUPCODES=('FACILITY' 'COMMUNITY' 'COUNTRY') #Groups codes.  Example: GROUPS=(C
 
 ########################################################################
 # Dependencies:
-#  sudo apt-get install libxml2-utils 
+#  sudo apt-get install libxml2-utils jhson
 # 
 #
 #    DO NOT EDIT BELOW HERE    
