@@ -1,24 +1,7 @@
 #!/bin/bash
 
-########################################################################
-# Configuration Options
-########################################################################
-
-ILR_URL='http://localhost:8984/CSD'           #URL for OpenInfoMan / ILR
-ILR_USER=false
-ILR_PASS=false
-ILR_DOC='test3'                               #Name of CSD document we are publish to
-DHIS2_URL='https://localhost/dhis2'           #URL to access DHIS2
-DHIS2_EXT_URL=$DHIS2_URL                      #the externally accessible hostname of the DHIS2 instance
-DHIS2_USER="admin"  
-DHIS2_PASS="district"
-DOUSERS=false                                 #Process DHIS2 Userss are Health workers
-DOSERVICES=true                               #Process DHIS2 Data Elements as services
-IGNORECERTS=true                              #Ignore cert checks
-LEVELS=( )                                    #levels of a facility.  Example: LEVELS=(3 4 5)
-GROUPCODES=('FACILITY' 'COMMUNITY' 'COUNTRY') #Groups codes.  Example: GROUPS=(COMMUNITY FACILITY COUNTRY)
-
-
+#configuration options in publish_to_ilr.cfg or in another file specified with the -c option
+CONFIG=publish_to_ilr.cfg
 
 ########################################################################
 # Dependencies:
@@ -39,6 +22,8 @@ JSHON=/usr/bin/jshon
 #    Actual work is below      
 #########################################################################
 
+
+
 #setup DHIS2 and ILR authorization
 DHIS2_AUTH="-u $DHIS2_USER:$DHIS2_PASS"
 if [ "$IGNORECERTS" = true ]; then
@@ -50,12 +35,71 @@ if [ "$IGNORECERTS" = true ]; then
     ILR_AUTH=" -k $ILR_AUTH"
 fi
 
+#help test
+show_help() {
+cat <<EOF
+Usage: ${0##*/} [-hfr]
+Publish DHIS2 metadata to the ILR
+    -h          Display this help and exit
+    -r          Reset the last exported time
+    -f          Publish the full DHIS2 metadata (ignore the last exported time)
+    -c          Configuration file for DHIS2 publication options.  Defaults to $CONFIG
+EOF
+
+}
+
+
+#reset the time
+reset_time() {
+    source_config
+    echo "Resetting time"
+    echo $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_URL/api/dataStore/CSD-Loader/LastExported
+    $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs 200
+}
+
+
+source_config() {
+    echo "Loading configuration options from $CONFIG"
+    source $CONFIG
+}
+
+
+#Read in some run time arguments
+
+FULL=false
+
+OPTIND=1 
+while getopts  "hrfc:" OPT; do
+    case "$OPT" in
+        c)  CONFIG=$OPTARG
+	    ;;
+	f)  FULL=true	    
+	    ;;
+    esac
+done
+
+OPTIND=1 
+while getopts  "hrfc:" OPT; do
+    case "$OPT" in
+	h)  show_help
+	    exit 0
+	    ;;
+	r)  reset_time
+	    exit 0
+	    ;;
+    esac
+done
+
+
 
 #check if LastExported key is in CSD-Loader namespace for DHIS2 data store
 echo "Checking CSD-Loader data stored contents"
 HASKEY=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader | $GREP -sc LastExported || true`
 
-if [ "$HASKEY" = "1" ]; then
+
+if [ "$FULL" = true ]; then
+    LASTUPDATE=false
+elif [ "$HASKEY" = "1" ]; then
     LASTUPDATE=`$CURL -sv  $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $JSHON -e value`
     #strip any beginning / ending quotes
     LASTUPDATE="${LASTUPDATE%\"}"
