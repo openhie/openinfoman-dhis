@@ -5,7 +5,7 @@ CONFIG=publish_to_ilr.cfg
 
 ########################################################################
 # Dependencies:
-#  sudo apt-get install libxml2-utils 
+#  sudo apt-get install libxml2-utils jhson
 # 
 #
 #    DO NOT EDIT BELOW HERE    
