@@ -12,7 +12,8 @@ CONFIG=publish_to_ilr.cfg
 #
 # set some external programs
 ########################################################################
-set -e
+#set -e
+set -x
 CURL=/usr/bin/curl
 PRINTF=/usr/bin/printf
 XMLLINT=/usr/bin/xmllint
@@ -21,19 +22,6 @@ JSHON=/usr/bin/jshon
 #########################################################################
 #    Actual work is below      
 #########################################################################
-
-
-
-#setup DHIS2 and ILR authorization
-DHIS2_AUTH="-u $DHIS2_USER:$DHIS2_PASS"
-if [ "$IGNORECERTS" = true ]; then
-    DHIS2_AUTH=" -k $DHIS2_AUTH"
-fi
-
-ILR_AUTH="-u $ILR_USER:$ILR_PASS"
-if [ "$IGNORECERTS" = true ]; then
-    ILR_AUTH=" -k $ILR_AUTH"
-fi
 
 #help test
 show_help() {
@@ -52,8 +40,7 @@ EOF
 #reset the time
 reset_time() {
     source_config
-    echo "Resetting time"
-    echo $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_URL/api/dataStore/CSD-Loader/LastExported
+    echo "Resetting time on $DHIS2_URL"
     $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs 200
 }
 
@@ -61,6 +48,17 @@ reset_time() {
 source_config() {
     echo "Loading configuration options from $CONFIG"
     source $CONFIG
+    #setup DHIS2 and ILR authorization
+    DHIS2_AUTH="-u '$DHIS2_USER':'$DHIS2_PASS'"
+    if [ "$IGNORECERTS" = true ]; then
+	DHIS2_AUTH=" -k $DHIS2_AUTH"
+    fi
+
+    ILR_AUTH="-u $ILR_USER:$ILR_PASS"
+    if [ "$IGNORECERTS" = true ]; then
+	ILR_AUTH=" -k $ILR_AUTH"
+    fi
+
 }
 
 
@@ -101,6 +99,7 @@ HASKEY=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/data
 if [ "$FULL" = true ]; then
     LASTUPDATE=false
 elif [ "$HASKEY" = "1" ]; then
+    echo "Getting last export time from $DHIS2_URL"
     LASTUPDATE=`$CURL -sv  $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $JSHON -e value`
     #strip any beginning / ending quotes
     LASTUPDATE="${LASTUPDATE%\"}"
@@ -166,10 +165,10 @@ fi
 
 
 #extract data from DHIS2
-echo "Extracting DXF from DHIS2"
+echo "Extracting DXF from DHIS2 at $DHIS2_URL"
 DXF=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/xml' $DHIS2_URL/api/metadata?$VAR `
 EXPORTED=`echo $DXF | $XMLLINT  --xpath 'string((/*[local-name()="metaData"])[1]/@created)' -`
-
+echo $DXF
 
 DXF=`echo $DXF | $XMLLINT --c14n -`
 
@@ -200,7 +199,8 @@ else
     METHOD="POST"
 fi
 
+echo "Publishing to ILR at $ILR_AUTH"
 PAYLOAD="{ \"value\" : \"$EXPORTED\"}"
 echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs 200
-
+echo "Successfully published to ILR"
 exit 0
