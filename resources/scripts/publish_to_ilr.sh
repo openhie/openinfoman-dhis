@@ -13,7 +13,7 @@ CONFIG=publish_to_ilr.cfg
 # set some external programs
 ########################################################################
 set -e
-#set -x
+
 CURL=/usr/bin/curl
 PRINTF=/usr/bin/printf
 XMLLINT=/usr/bin/xmllint
@@ -97,6 +97,7 @@ HASKEY=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/data
 
 
 if [ "$FULL" = true ]; then
+    echo "Doing full publish"
     LASTUPDATE=false
 elif [ "$HASKEY" = "1" ]; then
     echo "Getting last export time from $DHIS2_URL"
@@ -110,6 +111,7 @@ elif [ "$HASKEY" = "1" ]; then
     #convert to yyyy-mm-dd format (dropping time as it is ignored by DHIS2)
     LASTUPDATE=$(date --date="$LASTUPDATE" +%F)
 else
+    echo "Doing full publish"
     LASTUPDATE=false
 fi
 
@@ -129,7 +131,7 @@ else
     SFLAG="false"
     SVAL="0"
 fi
-UPDATES='&lastUpdated=2016-02-09'
+
 
 VAR=(
     'assumeTrue=false'
@@ -168,7 +170,7 @@ fi
 echo "Extracting DXF from DHIS2 at $DHIS2_URL"
 DXF=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/xml' $DHIS2_URL/api/metadata?$VAR `
 EXPORTED=`echo $DXF | $XMLLINT  --xpath 'string((/*[local-name()="metaData"])[1]/@created)' -`
-echo $DXF
+
 
 DXF=`echo $DXF | $XMLLINT --c14n -`
 
@@ -199,7 +201,7 @@ else
     METHOD="POST"
 fi
 
-echo "Publishing to ILR at $ILR_AUTH"
+echo "Publishing to ILR at $ILR_URL"
 PAYLOAD="{ \"value\" : \"$EXPORTED\"}"
 echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs 200
 echo "Successfully published to ILR"
