@@ -38,12 +38,12 @@ fi
 #help test
 show_help() {
 cat <<EOF
-Usage: ${0##*/} [-hfr]
+Usage: ${0##*/} [-hfr -c <FILE> ]
 Publish DHIS2 metadata to the ILR
     -h          Display this help and exit
     -r          Reset the last exported time
     -f          Publish the full DHIS2 metadata (ignore the last exported time)
-    -c          Configuration file for DHIS2 publication options.  Defaults to $CONFIG
+    -c <FILE>   Specify configuration file for DHIS2 publication options.  Defaults to $CONFIG
 EOF
 
 }
