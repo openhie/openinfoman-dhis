@@ -90,7 +90,8 @@ while getopts  "hrfc:" OPT; do
     esac
 done
 
-
+#perform default action
+source_config
 
 #check if LastExported key is in CSD-Loader namespace for DHIS2 data store
 echo "Checking CSD-Loader data stored contents"
