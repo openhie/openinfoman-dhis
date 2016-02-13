@@ -26,11 +26,13 @@ JSHON=/usr/bin/jshon
 #help test
 show_help() {
 cat <<EOF
-Usage: ${0##*/} [-hfr -c <FILE> ]
+Usage: ${0##*/} [-vhfrd -c <FILE> ]
 Publish DHIS2 metadata to the ILR
     -h          Display this help and exit
     -r          Reset the last exported time
     -f          Publish the full DHIS2 metadata (ignore the last exported time)
+    -d          Debug mode
+    -e          Empty the CSD document before publishing
     -c <FILE>   Specify configuration file for DHIS2 publication options.  Defaults to $CONFIG
 EOF
 
@@ -41,7 +43,7 @@ EOF
 reset_time() {
     source_config
     echo "Resetting time on $DHIS2_URL"
-    $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs 200
+    $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_AUTH  $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs '200\|404'
 }
 
 
@@ -54,7 +56,11 @@ source_config() {
 	DHIS2_AUTH=" -k $DHIS2_AUTH"
     fi
 
-    ILR_AUTH="-u $ILR_USER:$ILR_PASS"
+    if [ "$ILR_USER" = false ]; then
+	ILR_AUTH=""
+    else
+	ILR_AUTH="-u $ILR_USER:$ILR_PASS"
+    fi
     if [ "$IGNORECERTS" = true ]; then
 	ILR_AUTH=" -k $ILR_AUTH"
     fi
@@ -65,19 +71,25 @@ source_config() {
 #Read in some run time arguments
 
 FULL=false
+EMPTY=false
 
+OPTS="edhrfc:"
 OPTIND=1 
-while getopts  "hrfc:" OPT; do
+while getopts  "$OPTS" OPT; do
     case "$OPT" in
         c)  CONFIG=$OPTARG
 	    ;;
 	f)  FULL=true	    
 	    ;;
+	d)  set -x
+	    ;;
+	e)  EMPTY=true
+	    ;;
     esac
 done
 
 OPTIND=1 
-while getopts  "hrfc:" OPT; do
+while getopts "$OPTS" OPT; do
     case "$OPT" in
 	h)  show_help
 	    exit 0
@@ -98,7 +110,12 @@ HASKEY=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/data
 
 #create destitation document (if it doesn't exist)
 echo "Creating $ILR_DOC on ILR at $ILR_URL (if it doesn't exist)"
-$CURL -sv -o /dev/null -w "%{http_code}"  -X POST $ILR_AUTH $ILR_URL/createDirectory?directory=$ILR_DOC | $GREP -qcs 200
+$CURL -sv -o /dev/null -w "%{http_code}"  -X POST $ILR_AUTH $ILR_URL/createDirectory\?directory=$ILR_DOC | $GREP -qcs '200\|302'
+
+if [ "$EMPTY" = true ]; then
+    $CURL -sv -o /dev/null -w "%{http_code}" $ILR_AUTH $ILR_URL/emptyDirectory/$ILR_DOC | $GREP -qcs '200\|302'
+    reset_time
+fi
 
 #setup request variables to extract  DXF from DHIS2
 if [ "$FULL" = true ]; then
@@ -173,7 +190,7 @@ fi
 
 #extract data from DHIS2
 echo "Extracting DXF from DHIS2 at $DHIS2_URL"
-DXF=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/xml' $DHIS2_URL/api/metadata?$VAR `
+DXF=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/xml' "$DHIS2_URL/api/metadata?${VAR:1}"  `
 EXPORTED=`echo $DXF | $XMLLINT  --xpath 'string((/*[local-name()="metaData"])[1]/@created)' -`
 
 
@@ -211,6 +228,6 @@ fi
 
 echo "Publishing to ILR in $ILR_DOC at $ILR_URL"
 PAYLOAD="{ \"value\" : \"$EXPORTED\"}"
-echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs 200
+echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs '200\|201'
 echo "Successfully published to ILR"
 exit 0
