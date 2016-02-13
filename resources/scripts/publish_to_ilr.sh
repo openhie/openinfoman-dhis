@@ -96,6 +96,11 @@ echo "Checking CSD-Loader data stored contents"
 HASKEY=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader | $GREP -sc LastExported || true`
 
 
+#create destitation document (if it doesn't exist)
+echo "Creating $ILR_DOC on ILR at $ILR_URL (if it doesn't exist)"
+$CURL -sv -o /dev/null -w "%{http_code}"  -X POST $ILR_AUTH $ILR_URL/createDirectory?directory=$ILR_DOC | $GREP -qcs 200
+
+#setup request variables to extract  DXF from DHIS2
 if [ "$FULL" = true ]; then
     echo "Doing full publish"
     LASTUPDATE=false
@@ -116,7 +121,6 @@ else
 fi
 
 
-#generate request to extract metadata from DHSI2
 if [ "$DOSUERS" = true ]; then
     UFLAG="true"
     UVAL="1"
@@ -166,6 +170,7 @@ else
 fi
 
 
+
 #extract data from DHIS2
 echo "Extracting DXF from DHIS2 at $DHIS2_URL"
 DXF=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/xml' $DHIS2_URL/api/metadata?$VAR `
@@ -201,7 +206,10 @@ else
     METHOD="POST"
 fi
 
-echo "Publishing to ILR at $ILR_URL"
+
+
+
+echo "Publishing to ILR in $ILR_DOC at $ILR_URL"
 PAYLOAD="{ \"value\" : \"$EXPORTED\"}"
 echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs 200
 echo "Successfully published to ILR"
