@@ -51,7 +51,6 @@ let $now := current-dateTime()
 
 (: cache some node calculations :)
 let $org_otherids := $org_dir/csd:organization/csd:otherID[@code='id']
-let $dset_orgunits := $dataSets/dxf:dataSet/dxf:organisationUnits/dxf:organisationUnit
 let $orggroups_by_ou := $orgGroups/dxf:organisationUnits/dxf:organisationUnit
 
 let $entities:= 
@@ -79,7 +78,6 @@ let $entities:=
     else if (not(functx:all-whitespace($uuid)))
     then concat("urn:uuid:",$uuid)  
     else  concat("urn:uuid:",util:uuid_generate(concat('organization:',$id),$namespace_uuid))
-
 
           
   (:the parent org may be:
@@ -154,14 +152,18 @@ let $entities:=
     if (not($do_srvcs))
     then ()
     else 
+      (: get data sets that are associated to this org unit :)
       let $des :=
-        for $dset in ($dset_orgunits[@id = $id])[1]/../..   (: go up to grand-parent dxf:dataSet :)
-(:        for $dset in $dataSets/dxf:dataSet[./dxf:organisationUnits/dxf:organisationUnit[@id = $id]] :)
+        for $dset in $dataSets/dxf:dataSet[dxf:organisationUnits/dxf:organisationUnit/@id = $id]
 	return $dataElements/dxf:dataElement[@id = $dset/dxf:dataElements/dxf:dataElement/@id]
       return 
         for $de in  $des
 	let $de_id := $de/@id
-	let $srvc_entity_id := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+	let $de_uuid := $de/@uuid
+	let $srvc_entity_id := 
+	  if (not(functx:all-whitespace($de_uuid)))
+	  then concat("urn:uuid:",$de_uuid)
+	  else concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
 	return <csd:service entityID="{$srvc_entity_id}"/>
   let $fac_entity :=
     if (($group_codes = $facility_group_codes) or ( $level = $facility_levels)) 
@@ -172,7 +174,7 @@ let $entities:=
 	{$group_cts}
 	{$mainname}
 	{$geo_data}
-	<csd:organizations><csd:organization entityID="{$orgEntityID}"/></csd:organizations>
+	<csd:organizations><csd:organization entityID="{$orgEntityID}">{$fac_srvcs}</csd:organization></csd:organizations>
 	{$record}
       </csd:facility>
     else ()
@@ -219,8 +221,17 @@ let $providers :=
     let $urs := $user/dxf:userCredentials/dxf:userRoles/dxf:userRole
     let $ags := $user/dxf:userCredentials/dxf:userAuthorityGroups/dxf:userAuthorityGroup
 
+
+    let $entity_uuid :=((($user/dxf:attributeValues/dxf:attributeValue[./dxf:attribute[@name='entityID']])[1])/dxf:value[1])/text()
+    let $provEntityID :=
+      if (not(functx:all-whitespace($entity_uuid)))
+      then concat("urn:uuid:",$entity_uuid)
+      else if (not(functx:all-whitespace($uuid)))
+      then concat("urn:uuid:",$uuid)  
+      else  concat("urn:uuid:",util:uuid_generate(concat('provider:',$id),$namespace_uuid))
+
     return 
-    <csd:provider entityID="{$entityID}">
+    <csd:provider entityID="{$provEntityID}">
       <csd:otherID assigningAuthorityName="{$dhis_url}/api/users" code="id">{$id}</csd:otherID>
       {
 	if (not(functx:all-whitespace($code)))
@@ -308,7 +319,11 @@ let $providers :=
 		let $ds_orgunit := $ds/dxf:organisationUnits/dxf:organisationUnit[@id = $tfac_id]
 		for $de in  $ds_orgunit/../../dxf:dataElements/dxf:dataElement
 		  let $de_id := $de/@id
-		  let $srvc_entity_id := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+		  let $de_uuid := $de/@uuid
+		  let $srvc_entity_id := 
+		    if (not(functx:all-whitespace($de_uuid)))
+		    then concat("urn:uuid:",$de_uuid)
+		    else concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
 	          return <csd:service entityID="{$srvc_entity_id}"/>
 	  where  (exists($entities[@entityID = $facEntityID]) or exists( $org_dir/csd:facility[@entityID = $facEntityID]))
 	  return <csd:facility entityID="{$facEntityID}">{$fac_srvcs}</csd:facility>
@@ -333,11 +348,21 @@ let $srvcs :=
     let $de_id := string($de/@id)
     let $name := string($de/@name)
     let $code := string($de/@code)
-    let $entityID := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+(:    let $entityID := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid)) :)
     let $cat_id := $de/dxf:categoryCombo/@id
     let $cc :=  ($catCombos/dxf:categoryCombo[@id = $cat_id])[1]
     let $created := util:fixup_date($de/@created)
     let $lm := util:fixup_date($de/@lastUpdated)
+
+    let $uuid := string($de/@uuid)
+    let $entity_uuid :=((($de/dxf:attributeValues/dxf:attributeValue[./dxf:attribute[@name='entityID']])[1])/dxf:value[1])/text()
+    let $srvcEntityID :=
+      if (not(functx:all-whitespace($entity_uuid)))
+      then concat("urn:uuid:",$entity_uuid)
+      else if (not(functx:all-whitespace($uuid)))
+      then concat("urn:uuid:",$uuid)  
+      else  concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+ 
 
 (:
     let $cc_id := $cc/@id
@@ -364,13 +389,19 @@ let $srvcs :=
       return <adx:disaggregator id="{$doid}" name="{$attr_name}">{$attr_display}</adx:disaggregator>
 
     return 
-      <csd:service entityID="{$entityID}">
+      <csd:service entityID="{$srvcEntityID}">
 	<csd:primaryName>{$name}</csd:primaryName>
 	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElements" code="id">{$de_id}</csd:otherID>
+	{     
+	  if (not(functx:all-whitespace($uuid)))
+	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElements" code="uuid">{string($uuid)}</csd:otherID>
+	  else ()
+	}
 	{ if (not(functx:all-whitespace($code)))
 	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataElements" code="code">{$code}</csd:otherID>
 	  else ()
 	}
+
 	{
 	  if (count($disaggregatorSet) = 0) 
 	  then ()
