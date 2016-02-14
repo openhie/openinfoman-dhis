@@ -15,6 +15,7 @@ sudo apt-get install libxml2-utils jhson
 
 Usage
 -----
+<pre>
 Usage: publish_to_ilr.sh [-vhfrd -c <FILE> ]
 Publish DHIS2 metadata to the ILR
     -h          Display this help and exit
@@ -24,3 +25,4 @@ Publish DHIS2 metadata to the ILR
     -e          Empty the CSD document before publishing
     -c <FILE>   Specify configuration file for DHIS2 publication options.  Defaults to publish_to_ilr.cfg
 
+</pre>
