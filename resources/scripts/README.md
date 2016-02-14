@@ -1,5 +1,7 @@
 This script can be used to publish DHIS2 Metadata form the command line to the InterLinkedRegistry (OpenInfoMan).
 
+This can be used to schedule publication via  a cron job.
+
 Configuration
 -------------
 Configuration options for accessing the ILR and DHIS2 can be specifed in a condiguration file.  
