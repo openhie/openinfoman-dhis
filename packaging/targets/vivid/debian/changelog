@@ -1,3 +1,23 @@
+openinfoman-dhis (1.0.63~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.63
+    -2157469 Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/2157469
+    -724554a updated publishing script so you can empty the document.
+    --https://github.com/openhie/openinfoman-dhis/commmit/724554a
+    -ed35d6c publish script creates doc if not present.  also added con
+    --https://github.com/openhie/openinfoman-dhis/commmit/ed35d6c
+    -5aa5f73 fixup for script timestamp handling
+    --https://github.com/openhie/openinfoman-dhis/commmit/5aa5f73
+    -71a6896 fixup for script password handling
+    --https://github.com/openhie/openinfoman-dhis/commmit/71a6896
+    -93fb9ca fixup for script password handling
+    --https://github.com/openhie/openinfoman-dhis/commmit/93fb9ca
+    -f600ea7 Update publish_to_ilr.sh
+    --https://github.com/openhie/openinfoman-dhis/commmit/f600ea7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 14 Feb 2016 06:45:01 +0000
+
 openinfoman-dhis (1.0.62~vivid) vivid; urgency=medium
 
   * Release Version 1.0.62
