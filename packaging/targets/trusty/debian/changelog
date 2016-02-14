@@ -1,3 +1,17 @@
+openinfoman-dhis (1.0.62~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.62
+    -7024cd9 updated help for publish script
+    --https://github.com/openhie/openinfoman-dhis/commmit/7024cd9
+    -b0d6681 Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/b0d6681
+    -44c7832 pulled out configuration options from publish script.  add
+    --https://github.com/openhie/openinfoman-dhis/commmit/44c7832
+    -7c06f7c Update publish_to_ilr.sh
+    --https://github.com/openhie/openinfoman-dhis/commmit/7c06f7c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 14 Feb 2016 06:44:03 +0000
+
 openinfoman-dhis (1.0.61~trusty) trusty; urgency=medium
 
   * Release Version 1.0.61
