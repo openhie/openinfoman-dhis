@@ -23,6 +23,6 @@ Publish DHIS2 metadata to the ILR
     -f          Publish the full DHIS2 metadata (ignore the last exported time)
     -d          Debug mode
     -e          Empty the CSD document before publishing
-    -c <FILE>   Specify configuration file for DHIS2 publication options.  Defaults to publish_to_ilr.cfg
+    -c &lt;FILE&gt;   Specify configuration file for DHIS2 publication options.  Defaults to publish_to_ilr.cfg
 
 </pre>
