@@ -142,7 +142,11 @@ let $entities:=
     for $group_code in $group_codes
     return <csd:codedType codingScheme="urn:{$dhis_url}/api/organisationUnitGroups" code="{$group_code}" />
 
-  let $geo_data := util:get_geocode($doc,$orgUnit) (:Should put in a CP to point geo codes for orgs as service delivery area :)
+  let $geo_data :=
+     (
+       util:get_geocode($orgUnit)
+       ,util:get_shape($orgUnit)
+     )
   let $name := <csd:primaryName>{string($orgUnit/@name)}</csd:primaryName>
   let $record :=  <csd:record created="{$created}" updated="{$lm}" status="Active" sourceDirectory="{$dhis_url}"/>
     
@@ -185,6 +189,8 @@ let $entities:=
           entities created a facility and an organization.  These two entities will have distinct
           UUIDs.  
    :)
+     (:Should put in a CP to point geo codes for orgs as service delivery area :)
+
   let $org_entity :=
   <csd:organization entityID="{$orgEntityID}">
       {$other_ids}
