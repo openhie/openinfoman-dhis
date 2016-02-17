@@ -1,3 +1,13 @@
+openinfoman-dhis (1.0.65~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.65
+    -a3ed5c3 Merge pull request #2 from yatesr/spell
+    --https://github.com/openhie/openinfoman-dhis/commmit/a3ed5c3
+    -2a8d45f fix spelling of jshon
+    --https://github.com/openhie/openinfoman-dhis/commmit/2a8d45f
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 17 Feb 2016 18:19:52 +0000
+
 openinfoman-dhis (1.0.64~vivid) vivid; urgency=medium
 
   * Release Version 1.0.64
