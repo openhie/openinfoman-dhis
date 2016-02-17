@@ -13,7 +13,7 @@ Two example condiguration files are provided by:
 
 Dependencies
 ------------
-sudo apt-get install libxml2-utils jhson
+sudo apt-get install libxml2-utils jshon
 
 Usage
 -----
