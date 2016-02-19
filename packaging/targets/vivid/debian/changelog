@@ -1,3 +1,15 @@
+openinfoman-dhis (1.0.66~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.66
+    -abd18c4 Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/abd18c4
+    -418da3c Merge branch 'master' of http://github.com/openhie/openinf
+    --https://github.com/openhie/openinfoman-dhis/commmit/418da3c
+    -69ce187 committing forgotten file for geocodes
+    --https://github.com/openhie/openinfoman-dhis/commmit/69ce187
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 19 Feb 2016 19:17:26 +0000
+
 openinfoman-dhis (1.0.65~vivid) vivid; urgency=medium
 
   * Release Version 1.0.65
