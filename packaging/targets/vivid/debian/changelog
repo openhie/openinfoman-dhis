@@ -1,3 +1,23 @@
+openinfoman-dhis (1.0.64~vivid) vivid; urgency=medium
+
+  * Release Version 1.0.64
+    -1e8fc09 updated sierra leone demo data to include GML
+    --https://github.com/openhie/openinfoman-dhis/commmit/1e8fc09
+    -8a67e5f ../../repo/util.xqm
+    --https://github.com/openhie/openinfoman-dhis/commmit/8a67e5f
+    -932e184 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/932e184
+    -a67a844 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/a67a844
+    -4268152 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/4268152
+    -c9fda0e Update and rename README.MD to README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/c9fda0e
+    -b4a5cd2 Create README.MD
+    --https://github.com/openhie/openinfoman-dhis/commmit/b4a5cd2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 15 Feb 2016 04:08:11 +0000
+
 openinfoman-dhis (1.0.63~vivid) vivid; urgency=medium
 
   * Release Version 1.0.63
