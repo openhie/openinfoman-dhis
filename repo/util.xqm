@@ -2,6 +2,7 @@ module namespace util = "https://github.com/openhie/openinfoman-dhis/util";
 
 declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 declare namespace csd = "urn:ihe:iti:csd:2013";
+declare namespace gml = "http://www.opengis.net/gml";
 import module namespace functx = "http://www.functx.com";
 
 declare variable $util:namespace_uuid := "10df44d2-55f4-11e4-af21-705681a860b7";
@@ -78,20 +79,73 @@ declare function util:fixup_date($date) {
 };
 
 
-declare  function util:get_geocode($doc,$orgUnit) {
+declare  function util:get_geocode($orgUnit) {
   let $ft := $orgUnit/dxf:featureType/text()
   let $coord := $orgUnit/dxf:coordinates/text()
   let $lat := substring-after(substring-before($coord,','),'[')
   let $long := substring-after(substring-before($coord,']'),',')
     
   return 
-    if ($ft = 'Point' and $lat and $long) 
+    if ($ft = 'POINT' and not(functx:all-whitespace($lat)) and not(functx:all-whitespace($long) ))
     then
       <csd:geocode>
         <csd:latitude>{$lat}</csd:latitude>
         <csd:longitude>{$long}</csd:longitude>
       </csd:geocode>
     else ()
+};
+
+declare  function util:get_shape($orgUnit) {
+  let $ft := $orgUnit/dxf:featureType/text()
+  let $coords := $orgUnit/dxf:coordinates/text()
+  return 
+    if ( $ft = 'MULTI_POLYGON' )
+    then 
+      <csd:extension urn="urn:http://www.opengis.net/gml" type="MultiPolygon">
+        <gml:MultiPolygon srsName="EPSG:4326">
+          <gml:polygonMember>	
+	    {
+	      for $poly_coord in  tokenize($coords,'\]\],\[\[')
+	      return 
+
+	        <gml:Polygon >
+		  <gml:outerBoundaryIs>
+		    <gml:LinearRing>
+		      <gml:coordinates>
+		        {
+			  let $coords := 
+			    for $c in  tokenize($poly_coord,'\],\[')
+			    return functx:trim(translate($c,'[]',''))
+			  return string-join($coords,' ')
+			}
+		      </gml:coordinates>
+		    </gml:LinearRing>
+		  </gml:outerBoundaryIs>
+      		</gml:Polygon>
+	    }
+	  </gml:polygonMember>
+	</gml:MultiPolygon>
+      </csd:extension>
+    else  if ($ft = 'POLYGON') 
+    then
+      <csd:extension urn="urn:http://www.opengis.net/gml" type="Polygon">
+	<gml:Polygon >
+	  <gml:outerBoundaryIs>
+	    <gml:LinearRing>
+	      <gml:coordinates>
+		{
+		  let $coords := 
+		    for $c in  tokenize($coords,'\],\[')
+		    return functx:trim(translate($c,'[]',''))
+		  return string-join($coords,' ')
+		}
+	      </gml:coordinates>
+	    </gml:LinearRing>
+	  </gml:outerBoundaryIs>
+      	</gml:Polygon>
+      </csd:extension>
+    else ()
+
 };
 
 
