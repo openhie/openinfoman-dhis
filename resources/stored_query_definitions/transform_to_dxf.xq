@@ -157,7 +157,8 @@ return
 	  for $org in $orgs
 	  let $dhis_url := string($org/csd:record/@sourceDirectory)
 	  let $dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
-
+          let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
+	   
 	  let $level_code := string(($org/csd:codedType[@codingScheme=concat("urn:" ,$dhis_url,"/api/organisationUnitLevels")])[1]/@code)
 	  let $level := 
 	    if (not(functx:all-whitespace($level_code)))
@@ -209,6 +210,13 @@ return
 	      lastUpdated="{$lm}"
 	      created="{$created}"
 	      >
+            { 
+              if (functx:all-whitespace($dhis_code))
+	      then ()
+              else attribute code {$dhis_code}
+            }
+
+
 	    {$parent}
 	    {$avs}
 	    <dxf:openingDate>1970-01-01</dxf:openingDate> 
