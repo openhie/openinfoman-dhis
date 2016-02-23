@@ -1,3 +1,11 @@
+openinfoman-dhis (1.0.67~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.67
+    -7743030 fixed issue with creating directory/document in publishing
+    --http://github.com/openhie/openinfoman-dhis/commmit/7743030
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 23 Feb 2016 14:52:44 +0000
+
 openinfoman-dhis (1.0.66~trusty) trusty; urgency=medium
 
   * Release Version 1.0.66
