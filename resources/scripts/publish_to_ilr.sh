@@ -110,7 +110,8 @@ HASKEY=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/data
 
 #create destitation document (if it doesn't exist)
 echo "Creating $ILR_DOC on ILR at $ILR_URL (if it doesn't exist)"
-$CURL -sv -o /dev/null -w "%{http_code}"  -X POST $ILR_AUTH $ILR_URL/createDirectory\?directory=$ILR_DOC | $GREP -qcs '200\|302'
+$CURL -sv -o /dev/null -w "%{http_code}" -d "directory=$ILR_DOC"  -X POST $ILR_AUTH $ILR_URL/createDirectory | $GREP -qcs '200\|302'
+
 
 if [ "$EMPTY" = true ]; then
     $CURL -sv -o /dev/null -w "%{http_code}" $ILR_AUTH $ILR_URL/emptyDirectory/$ILR_DOC | $GREP -qcs '200\|302'
