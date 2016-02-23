@@ -171,6 +171,8 @@ return
 	    then dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
 	    else string($dhis_uuid)
 
+	  let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
+
 	  let $id_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]/text()
 	  let $id :=
 	    if (not(functx:all-whitespace($id_code)))
@@ -209,6 +211,12 @@ return
 	      lastUpdated="{$lm}"
 	      created="{$created}"
 	      >
+	    { 
+	     if (functx:all-whitespace($dhis_code))
+	     then ()
+	     else attribute code {$dhis_code}
+	    }
+
 	    {$parent}
 	    {$avs}
 	    <dxf:openingDate>1970-01-01</dxf:openingDate> 
