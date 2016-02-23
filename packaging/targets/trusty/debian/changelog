@@ -1,3 +1,13 @@
+openinfoman-dhis (1.0.68~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.68
+    -b6df639 added @code in CSD->DXF for facs
+    --http://github.com/openhie/openinfoman-dhis/commmit/b6df639
+    -894bb36 added @code in CSD->DXF
+    --http://github.com/openhie/openinfoman-dhis/commmit/894bb36
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 23 Feb 2016 16:22:25 +0000
+
 openinfoman-dhis (1.0.67~trusty) trusty; urgency=medium
 
   * Release Version 1.0.67
