@@ -228,6 +228,7 @@ return
 	  let $dhis_url := string($fac/csd:record/@sourceDirectory)
 	  let $dhis_uuid := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	  let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
+          let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
 	  let $org := 
 	    if (functx:all-whitespace($dhis_uuid))
 	    then ()
@@ -278,6 +279,12 @@ return
 		 lastUpdated="{$lm}"
 		 created="{$created}"
 		 >
+		 { 
+		   if (functx:all-whitespace($dhis_code))
+		   then ()
+		   else attribute code {$dhis_code}
+		 }
+
 		 {$parent}
 		 {$avs}
 		 <dxf:openingDate>1970-01-01</dxf:openingDate> 
