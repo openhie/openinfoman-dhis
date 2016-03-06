@@ -54,7 +54,7 @@ declare function util:get_child_orgs($orgs,$org) {
 declare function util:uuid_generate($name,$namespace) {
   (: adapted from http://www.ietf.org/rfc/rfc4122.txt and https://gist.github.com/dahnielson/508447 :)
   let $bits := util:uuid_tobits(functx:chars(translate($namespace,'-','' )))
-  let $s_bits := serialize($bits,map{'method':'raw'})
+  let $s_bits := serialize($bits)
   let $hash := serialize(xs:hexBinary(hash:md5(concat($s_bits,  $name))))
 
   let $uuid :=
