@@ -1,3 +1,11 @@
+openinfoman-dhis (1.1.3~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.3
+    -2581e12 upgraded to do async processing
+    --http://github.com/openhie/openinfoman-dhis/commmit/2581e12
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 06 Mar 2016 22:00:45 +0000
+
 openinfoman-dhis (1.1.2~trusty) trusty; urgency=medium
 
   * Release Version 1.1.2
