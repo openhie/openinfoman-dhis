@@ -1,3 +1,11 @@
+openinfoman-dhis (1.1.5~vivid) vivid; urgency=medium
+
+  * Release Version 1.1.5
+    -76e9126 fixed issue with dateTimes for service elements which were
+    --http://github.com/openhie/openinfoman-dhis/commmit/76e9126
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 16 Mar 2016 15:34:22 +0000
+
 openinfoman-dhis (1.1.4~vivid) vivid; urgency=medium
 
   * Release Version 1.1.4
