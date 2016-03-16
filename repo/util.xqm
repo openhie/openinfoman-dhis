@@ -74,8 +74,21 @@ declare function util:uuid_generate($name,$namespace) {
 
 
 
-declare function util:fixup_date($date) {
-  replace(substring(string($date),1,19),'\+(\d{2})(\d{2})','+$1:$2')
+declare function local:fixup_date($date) {
+  let $d := string($date)
+  let $i := functx:index-of-match-first($d,'[+\-][\d:]+$')
+  return
+    if ($i)
+    then
+       let $tz := substring($d,$i)
+       return  concat (
+         substring($d,1,$i  - 1)
+         ,
+         if (matches($tz,'[+\-]\d{2}:\d{2}'))
+         then $tz
+         else ()
+         )
+    else $d
 };
 
 
