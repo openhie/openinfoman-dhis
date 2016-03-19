@@ -431,8 +431,8 @@ let $process_dataelements := function($de) {
 	}
 
 	<csd:record 
-          created="{util:fixup-date($de/@created)}" 
-          updated="{util:fixup-date($de/@lastUpdated)}" 
+          created="{util:fixup_date($de/@created)}" 
+          updated="{util:fixup_date($de/@lastUpdated)}" 
           status="Active" 
 	  sourceDirectory="{$dhis_url}"/>        
       </csd:service>
