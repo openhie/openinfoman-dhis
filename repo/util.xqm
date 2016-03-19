@@ -74,7 +74,7 @@ declare function util:uuid_generate($name,$namespace) {
 
 
 
-declare function local:fixup_date($date) {
+declare function util:fixup_date($date) {
   let $d := string($date)
   let $i := functx:index-of-match-first($d,'[+\-][\d:]+$')
   return
