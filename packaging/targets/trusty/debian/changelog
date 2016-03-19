@@ -1,3 +1,9 @@
+openinfoman-dhis (1.1.11~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.11
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 19 Mar 2016 14:04:36 +0000
+
 openinfoman-dhis (1.1.10~trusty) trusty; urgency=medium
 
   * Release Version 1.1.10
