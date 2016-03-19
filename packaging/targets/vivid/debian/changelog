@@ -1,3 +1,19 @@
+openinfoman-dhis (1.1.8~vivid) vivid; urgency=medium
+
+  * Release Version 1.1.8
+    -f540bd7 fixed namespace issue with util:fixup_date()
+    --http://github.com/openhie/openinfoman-dhis/commmit/f540bd7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 19 Mar 2016 13:13:03 +0000
+
+openinfoman-dhis (1.1.8~vivid) vivid; urgency=medium
+
+  * Release Version 1.1.8
+    -f540bd7 fixed namespace issue with util:fixup_date()
+    --http://github.com/openhie/openinfoman-dhis/commmit/f540bd7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 19 Mar 2016 13:12:28 +0000
+
 openinfoman-dhis (1.1.7~vivid) vivid; urgency=medium
 
   * Release Version 1.1.7
