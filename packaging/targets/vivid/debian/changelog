@@ -1,3 +1,11 @@
+openinfoman-dhis (1.1.10~vivid) vivid; urgency=medium
+
+  * Release Version 1.1.10
+    -ea809c1 Fixed typo
+    --http://github.com/openhie/openinfoman-dhis/commmit/ea809c1
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 19 Mar 2016 13:18:09 +0000
+
 openinfoman-dhis (1.1.9~vivid) vivid; urgency=medium
 
   * Release Version 1.1.9
