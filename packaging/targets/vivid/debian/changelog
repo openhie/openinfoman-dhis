@@ -1,3 +1,13 @@
+openinfoman-dhis (1.1.9~vivid) vivid; urgency=medium
+
+  * Release Version 1.1.9
+    -f5755a2 Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/f5755a2
+    -9fa062a "Release Version 1.1.8"
+    --http://github.com/openhie/openinfoman-dhis/commmit/9fa062a
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 19 Mar 2016 13:15:12 +0000
+
 openinfoman-dhis (1.1.8~vivid) vivid; urgency=medium
 
   * Release Version 1.1.8
