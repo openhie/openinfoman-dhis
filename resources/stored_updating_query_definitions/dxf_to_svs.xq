@@ -24,7 +24,7 @@ return (
       }
     </svs:ConceptList>
   </svs:ValueSet>
-  return svs_lsvs:insert($csd_webconf:db,$svs)
+  return svs_lsvs:insert($svs)
   ,
   let $list_name := "DHIS2 User Role List"
   let $id := dxf2csd:oid_hwtype($careServicesRequest/oid/text())
@@ -37,6 +37,6 @@ return (
       }
     </svs:ConceptList>
   </svs:ValueSet>
-  return svs_lsvs:insert($csd_webconf:db,$svs)
+  return svs_lsvs:insert($svs)
 )
 

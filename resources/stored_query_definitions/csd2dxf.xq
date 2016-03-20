@@ -10,7 +10,7 @@ declare namespace dxf = "http://dhis2.org/csd/dxf/2.0";
 declare variable $careServicesRequest as item() external; 
 
 let $doc_name := string($careServicesRequest/@resource)
-let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
+let $doc := csd_dm:open_document($doc_name)
 
 let $facilities := $doc/csd:CSD/csd:facilityDirectory/csd:facility
 let $svcs := $doc/csd:CSD/csd:serviceDirectory/csd:service
@@ -21,7 +21,7 @@ let $fac_type_ids := ("1.3.6.1.4.1.21367.200.103")
 
 let $org_unit_groups :=   
   for $fac_type_id in $fac_type_ids	  
-  let $fac_types :=  svs_lsvs:get_single_version_value_set($csd_webconf:db,string($fac_type_id) )	  
+  let $fac_types :=  svs_lsvs:get_single_version_value_set(string($fac_type_id) )	  
   return
     for $concept in $fac_types//svs:Concept
     let $code := string($concept/@code)

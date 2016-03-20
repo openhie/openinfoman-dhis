@@ -8,6 +8,6 @@ declare variable $careServicesRequest as item() external;
 
 let $csd := dxf2csd:extract-directory($careServicesRequest/dxf,$careServicesRequest/oid)
 let $doc_name := string($careServicesRequest/@resource)
-let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
-return  csd_dm:add($csd_webconf:db,$csd,$doc_name)
+let $doc := csd_dm:open_document($doc_name)
+return  csd_dm:add($csd,$doc_name)
 
