@@ -1,10 +1,10 @@
 openinfoman-dhis (1.0.67~vivid) vivid; urgency=medium
 
   * Release Version 1.0.67
-    -58b60a7 added @code to dxf export
-    --https://github.com/openhie/openinfoman-dhis/commmit/58b60a7
+    -7743030 fixed issue with creating directory/document in publishing
+    --http://github.com/openhie/openinfoman-dhis/commmit/7743030
 
- -- Carl Leitner <litlfred@ibiblio.org>  Tue, 23 Feb 2016 16:05:57 +0000
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 23 Feb 2016 14:52:44 +0000
 
 openinfoman-dhis (1.0.66~vivid) vivid; urgency=medium
 
