@@ -1,3 +1,17 @@
+openinfoman-dhis (1.2.1~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.1
+    -13903de merge
+    --https://github.com/openhie/openinfoman-dhis/commmit/13903de
+    -547a925 merge
+    --https://github.com/openhie/openinfoman-dhis/commmit/547a925
+    -7b33dfb "Release Version 1.0.67"
+    --https://github.com/openhie/openinfoman-dhis/commmit/7b33dfb
+    -58b60a7 added @code to dxf export
+    --https://github.com/openhie/openinfoman-dhis/commmit/58b60a7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 20 Mar 2016 18:35:25 +0000
+
 openinfoman-dhis (1.1.11~trusty) trusty; urgency=medium
 
   * Release Version 1.1.11
