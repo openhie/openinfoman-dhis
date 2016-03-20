@@ -12,7 +12,7 @@ declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 declare variable $careServicesRequest as item() external; 
 
 let $doc_name := string($careServicesRequest/@resource)
-let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
+let $doc := csd_dm:open_document($doc_name)
 let $req_org_id :=    $careServicesRequest/csd:organization/@entityID 
 let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
   (:the organziation we want to import to:)
@@ -112,7 +112,7 @@ return
 	  return 
 	  for $oid in $oids
             let $ur_oid := concat($oid,'.1')
-	    let $svs := svs_lsvs:get_single_version_value_set($csd_webconf:db,$ur_oid)
+	    let $svs := svs_lsvs:get_single_version_value_set($ur_oid)
 	    return
 	      if (not(exists($svs)))
 	      then ()
@@ -135,7 +135,7 @@ return
 	  return 
 	  for $oid in $oids
             let $ag_oid := concat($oid,'.4')
-	    let $svs := svs_lsvs:get_single_version_value_set($csd_webconf:db,$ag_oid)
+	    let $svs := svs_lsvs:get_single_version_value_set($ag_oid)
 	    return
 	      if (not(exists($svs)))
 	      then ()
@@ -157,7 +157,8 @@ return
 	  for $org in $orgs
 	  let $dhis_url := string($org/csd:record/@sourceDirectory)
 	  let $dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
-
+          let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
+	   
 	  let $level_code := string(($org/csd:codedType[@codingScheme=concat("urn:" ,$dhis_url,"/api/organisationUnitLevels")])[1]/@code)
 	  let $level := 
 	    if (not(functx:all-whitespace($level_code)))
@@ -216,7 +217,6 @@ return
 	     then ()
 	     else attribute code {$dhis_code}
 	    }
-
 	    {$parent}
 	    {$avs}
 	    <dxf:openingDate>1970-01-01</dxf:openingDate> 
@@ -228,6 +228,7 @@ return
 	  let $dhis_url := string($fac/csd:record/@sourceDirectory)
 	  let $dhis_uuid := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	  let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
+          let $dhis_code := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
 	  let $org := 
 	    if (functx:all-whitespace($dhis_uuid))
 	    then ()
@@ -278,6 +279,12 @@ return
 		 lastUpdated="{$lm}"
 		 created="{$created}"
 		 >
+		 { 
+		   if (functx:all-whitespace($dhis_code))
+		   then ()
+		   else attribute code {$dhis_code}
+		 }
+
 		 {$parent}
 		 {$avs}
 		 <dxf:openingDate>1970-01-01</dxf:openingDate> 
@@ -293,7 +300,7 @@ return
 	      ))
 	    
 	  for $ou_group_scheme in $ou_group_schemes
-	  let $types :=  svs_lsvs:get_single_version_value_set($csd_webconf:db,string($ou_group_scheme) )	  
+	  let $types :=  svs_lsvs:get_single_version_value_set(string($ou_group_scheme) )	  
 
 	  let $org_unit_groups :=   
   	    for $concept in $types//svs:Concept
@@ -329,7 +336,7 @@ return
 	  
 	  for $oid in $ou_oids
             let $level_oid := concat($oid,'.2')
-	    let $svs := svs_lsvs:get_single_version_value_set($csd_webconf:db,$level_oid)
+	    let $svs := svs_lsvs:get_single_version_value_set($level_oid)
 	    return
 	      if (not(exists($svs)))
 	      then ()

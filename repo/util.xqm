@@ -54,7 +54,7 @@ declare function util:get_child_orgs($orgs,$org) {
 declare function util:uuid_generate($name,$namespace) {
   (: adapted from http://www.ietf.org/rfc/rfc4122.txt and https://gist.github.com/dahnielson/508447 :)
   let $bits := util:uuid_tobits(functx:chars(translate($namespace,'-','' )))
-  let $s_bits := serialize($bits,map{'method':'raw'})
+  let $s_bits := serialize($bits)
   let $hash := serialize(xs:hexBinary(hash:md5(concat($s_bits,  $name))))
 
   let $uuid :=
@@ -75,7 +75,20 @@ declare function util:uuid_generate($name,$namespace) {
 
 
 declare function util:fixup_date($date) {
-  replace(substring(string($date),1,19),'\+(\d{2})(\d{2})','+$1:$2')
+  let $d := string($date)
+  let $i := functx:index-of-match-first($d,'[+\-][\d:]+$')
+  return
+    if ($i)
+    then
+       let $tz := substring($d,$i)
+       return  concat (
+         substring($d,1,$i  - 1)
+         ,
+         if (matches($tz,'[+\-]\d{2}:\d{2}'))
+         then $tz
+         else ()
+         )
+    else $d
 };
 
 

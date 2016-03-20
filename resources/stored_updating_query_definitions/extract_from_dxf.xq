@@ -9,6 +9,7 @@ import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm"
 import module namespace svs_lsvs = "https://github.com/openhie/openinfoman/svs_lsvs";
 import module namespace functx = "http://www.functx.com";
 import module namespace util = "https://github.com/openhie/openinfoman-dhis/util";
+import module namespace async = "http://basex.org/modules/async";
 
 declare variable $careServicesRequest as item() external; 
 
@@ -39,7 +40,7 @@ let $dataElements := $dxf/dxf:metaData/dxf:dataElements
 let $catCombos := $dxf/dxf:metaData/dxf:categoryCombos
   
 let $doc_name := string($careServicesRequest/@resource)
-let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
+let $doc := csd_dm:open_document($doc_name)
 let $org_dir := $doc/csd:CSD/csd:organizationDirectory
 let $fac_dir := $doc/csd:CSD/csd:facilityDirectory
 let $prov_dir := $doc/csd:CSD/csd:providerDirectory
@@ -53,8 +54,7 @@ let $now := current-dateTime()
 let $org_otherids := $org_dir/csd:organization/csd:otherID[@code='id']
 let $orggroups_by_ou := $orgGroups/dxf:organisationUnits/dxf:organisationUnit
 
-let $entities:= 
-  for $orgUnit in $orgUnits
+let $process_orgunit := function($orgUnit) {
   let $level := xs:integer($orgUnit/@level)
   let $id := $orgUnit/@id
   let $uuid := string($orgUnit/@uuid)
@@ -203,15 +203,18 @@ let $entities:=
     </csd:organization>
   return ($org_entity,$fac_entity)
 
-	
+}
 
-(: create dhis2 users as health workers/providers if requested :)
 
-let $providers := 
-  if (not($do_hws))
-  then ()
-  else 
-    for $user in $dxf/dxf:metaData/dxf:users/dxf:user 
+let $entities :=  
+  let $orgunit_funcs :=     
+    for $orgUnit in $orgUnits
+    return function() {$process_orgunit($orgUnit)}
+  return async:fork-join($orgunit_funcs)
+
+
+
+let $process_users := function($user) {  
     let $id := string($user/@id)
     let $entityID := concat("urn:uuid:",util:uuid_generate(concat('provider:',$id),$namespace_uuid))
     let $ur_oid := concat($oid,'.1')
@@ -341,16 +344,10 @@ let $providers :=
       }
     <csd:record created="{$created}" updated="{$lm}" status="106-001" sourceDirectory="{$dhis_url}"/>
     </csd:provider>
+}
 
 
-(: Create CSD Services for DHIS2 Data Elements :) 
-
-
-let $srvcs := 
-  if (not($do_srvcs))
-  then ()
-  else 
-    for $de in ($dataElements/dxf:dataElement)
+let $process_dataelements := function($de) {
     let $de_id := string($de/@id)
     let $name := string($de/@name)
     let $code := string($de/@code)
@@ -434,22 +431,16 @@ let $srvcs :=
 	}
 
 	<csd:record 
-          created="{$de/@created}" 
-          updated="{$de/@lastUpdated}" 
+          created="{util:fixup_date($de/@created)}" 
+          updated="{util:fixup_date($de/@lastUpdated)}" 
           status="Active" 
 	  sourceDirectory="{$dhis_url}"/>        
       </csd:service>
 
+}
 
-(: Create an SVS list for each of the disaggregator sets in  the service :)
-let $categories := $dxf/dxf:metaData/dxf:categories/dxf:category[dxf:dataDimensionType/text() = 'DISAGGREGATION']
 
-let $svs_srvcs := 
-  if (not($do_srvcs))
-  then ()
-  else
-(:    for $category in $categories :)
-    for $category in $categories[ @id  = $catCombos/dxf:categoryCombo/dxf:categories/dxf:category/@id]
+let $process_categories := function($category) {
     let $disag_code := string($category/@code)
     let $disag_oid := string-join(for $cp in string-to-codepoints(string($disag_code)) return string($cp))      
     let $disag_date := xs:dateTime(substring(string($category/@lastUpdated),1,19))
@@ -477,6 +468,45 @@ let $svs_srvcs :=
       </svs:ValueSet>
     where ( not(functx:all-whitespace($disag_code))  and not($disag_name = 'default'))   
     return $svs_doc
+}
+	
+
+(: create dhis2 users as health workers/providers if requested :)
+
+let $providers := 
+  if (not($do_hws))
+  then ()
+  else 
+    let $prov_funcs := 
+      for $user in $dxf/dxf:metaData/dxf:users/dxf:user 
+      return function() {$process_users($user)}
+    return async:fork-join($prov_funcs)
+
+
+(: Create CSD Services for DHIS2 Data Elements :) 
+
+
+let $srvcs := 
+  if (not($do_srvcs))
+  then ()
+  else 
+    let $de_funcs := 
+      for $de in ($dataElements/dxf:dataElement)
+      return function() {$process_dataelements($de)}
+    return async:fork-join($de_funcs)
+
+(: Create an SVS list for each of the disaggregator sets in  the service :)
+let $categories := $dxf/dxf:metaData/dxf:categories/dxf:category[dxf:dataDimensionType/text() = 'DISAGGREGATION']
+
+let $svs_srvcs := 
+  if (not($do_srvcs))
+  then ()
+  else
+(:    for $category in $categories :)
+    let $cat_funcs := 
+       for $category in $categories[ @id  = $catCombos/dxf:categoryCombo/dxf:categories/dxf:category/@id]
+       return function() {$process_categories($category)}
+    return async:fork-join($cat_funcs)
 
 
 
@@ -585,6 +615,6 @@ return (
     
 
   ,
-  for $svs_doc in $svs_docs return svs_lsvs:insert($csd_webconf:db,$svs_doc) 
+  for $svs_doc in $svs_docs return svs_lsvs:insert($svs_doc) 
 
 )
