@@ -1,3 +1,11 @@
+openinfoman-dhis (1.2.2~vivid) vivid; urgency=medium
+
+  * Release Version 1.2.2
+    -31ea0df fixup csd_webconf references
+    --http://github.com/openhie/openinfoman-dhis/commmit/31ea0df
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 28 Mar 2016 01:59:02 +0000
+
 openinfoman-dhis (1.2.1~vivid) vivid; urgency=medium
 
   * Release Version 1.2.1
