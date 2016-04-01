@@ -370,6 +370,7 @@ let $process_dataelements := function($de) {
 (:    let $entityID := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid)) :)
     let $cat_id := $de/dxf:categoryCombo/@id
     let $cc :=  ($catCombos/dxf:categoryCombo[@id = $cat_id])[1]
+    let $cc_code := string($cc/@code)
     let $created := util:fixup_date($de/@created)
     let $lm := util:fixup_date($de/@lastUpdated)
 
@@ -426,7 +427,7 @@ let $process_dataelements := function($de) {
 	  then ()
 	  else 
 	    <csd:extension urn="urn:http://www.openhie.org/adx" type="disaggregators">
-	      <adx:disaggregatorSet id="{$cat_id}">
+	      <adx:disaggregatorSet id="{$cat_id}" code="{$cc_code}">
 		{$disaggregatorSet}
 	      </adx:disaggregatorSet>
 	    </csd:extension>
@@ -473,6 +474,7 @@ let $process_dataset := function($ds) {
 
     let $cat_id := $ds/dxf:categoryCombo/@id
     let $cc :=  ($catCombos/dxf:categoryCombo[@id = $cat_id])[1]
+    let $cc_code := string($cc/@code)
 
     let $disaggregatorSet := 
       for $disag in  $cc/dxf:categories/dxf:category
@@ -504,7 +506,7 @@ let $process_dataset := function($ds) {
 	  then ()
 	  else 
 	    <csd:extension urn="urn:http://www.openhie.org/adx" type="disaggregators">
-	      <adx:disaggregatorSet id="{$cat_id}">
+	      <adx:disaggregatorSet id="{$cat_id}" code="{$cc_code}">
 		{$disaggregatorSet}
 	      </adx:disaggregatorSet>
 	    </csd:extension>
