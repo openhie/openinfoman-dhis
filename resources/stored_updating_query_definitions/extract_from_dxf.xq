@@ -425,7 +425,7 @@ let $process_dataelements := function($de) {
 	  if (count($disaggregatorSet) = 0) 
 	  then ()
 	  else 
-	    <csd:extension urn="urn:http://www.openhie.org/adx" type="disaggreators">
+	    <csd:extension urn="urn:http://www.openhie.org/adx" type="disaggregators">
 	      <adx:disaggregatorSet id="{$cat_id}">
 		{$disaggregatorSet}
 	      </adx:disaggregatorSet>
@@ -469,6 +469,22 @@ let $process_dataset := function($ds) {
       if (not(functx:all-whitespace($uuid)))
       then concat("urn:uuid:",$uuid)  
       else  concat("urn:uuid:",util:uuid_generate(concat('service:',$ds_id),$namespace_uuid))
+
+
+    let $cat_id := $ds/dxf:categoryCombo/@id
+    let $cc :=  ($catCombos/dxf:categoryCombo[@id = $cat_id])[1]
+
+    let $disaggregatorSet := 
+      for $disag in  $cc/dxf:categories/dxf:category
+      let $disag_id := $disag/@id
+      let $disag_code := $disag/@code
+      let $disag_oid := string-join(for $cp in string-to-codepoints(string($disag_code)) return string($cp))
+      let $doid :=  concat($oid , '.6.' , $disag_oid )
+      let $attr_display:= string($disag/@name)
+      let $attr := $disag_code
+      let $attr_name := string($attr)
+      where ( not(functx:all-whitespace($attr_name))  and  not($attr_display = 'default')) 
+      return <adx:disaggregator  id="{$doid}"  code="{$attr_name}">{$attr_display}</adx:disaggregator>
  
     return 
       <csd:service entityID="{$entityID}">
@@ -482,6 +498,16 @@ let $process_dataset := function($ds) {
 	{ if (not(functx:all-whitespace($code)))
 	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataSets" code="code">{$code}</csd:otherID>
 	  else ()
+	}
+	{
+	  if (count($disaggregatorSet) = 0) 
+	  then ()
+	  else 
+	    <csd:extension urn="urn:http://www.openhie.org/adx" type="disaggregators">
+	      <adx:disaggregatorSet id="{$cat_id}">
+		{$disaggregatorSet}
+	      </adx:disaggregatorSet>
+	    </csd:extension>
 	}
 
 	{
@@ -516,6 +542,7 @@ let $process_dataset := function($ds) {
 (:    let $entityID := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid)) :)
 
 }
+
 
 
 
@@ -583,7 +610,7 @@ let $srvcs :=
 
 
 (: Create an SVS list for each of the disaggregator sets in  the service :)
-let $categories := $dxf/dxf:metaData/dxf:categories/dxf:category[dxf:dataDimensionType/text() = 'DISAGGREGATION']
+let $categories := $dxf/dxf:metaData/dxf:categories/dxf:category
 
 let $svs_srvcs := 
   if (not($do_srvcs))
