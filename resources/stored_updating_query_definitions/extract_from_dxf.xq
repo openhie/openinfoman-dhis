@@ -157,18 +157,34 @@ let $process_orgunit := function($orgUnit) {
     then ()
     else 
       (: get data sets that are associated to this org unit :)
-      let $des :=
-        for $dset in $dataSets/dxf:dataSet[dxf:organisationUnits/dxf:organisationUnit/@id = $id]
-	return $dataElements/dxf:dataElement[@id = $dset/dxf:dataElements/dxf:dataElement/@id]
+      let $dsets := $dataSets/dxf:dataSet[dxf:organisationUnits/dxf:organisationUnit/@id = $id]
       return 
-        for $de in  $des
-	let $de_id := $de/@id
-	let $de_uuid := $de/@uuid
-	let $srvc_entity_id := 
-	  if (not(functx:all-whitespace($de_uuid)))
-	  then concat("urn:uuid:",$de_uuid)
-	  else concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
-	return <csd:service entityID="{$srvc_entity_id}"/>
+	(
+	  (:each data set is a service :)
+	  for $ds in $dsets
+	  let $ds_id := string($ds/@id)
+	  let $ds_uuid := string($ds/@uuid)
+	  let $ds_entityID :=
+	    if (not(functx:all-whitespace($ds_uuid)))
+	    then concat("urn:uuid:",$ds_uuid)  
+	    else  concat("urn:uuid:",util:uuid_generate(concat('service:',$ds_id),$namespace_uuid))
+	  return <csd:service entityID="{$ds_entityID}"/>    
+	  ,
+	  (:each data element is a service :)
+	  let $des :=
+            for $dset in $dsets
+	    return $dataElements/dxf:dataElement[@id = $dset/dxf:dataElements/dxf:dataElement/@id]
+	  return 
+            for $de in  $des
+	    let $de_id := $de/@id
+	    let $de_uuid := $de/@uuid
+	    let $srvc_entity_id := 
+	      if (not(functx:all-whitespace($de_uuid)))
+	      then concat("urn:uuid:",$de_uuid)
+	      else concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+	    return <csd:service entityID="{$srvc_entity_id}"/>
+	  )
+
   let $fac_entity :=
     if (($group_codes = $facility_group_codes) or ( $level = $facility_levels)) 
     then
@@ -389,7 +405,7 @@ let $process_dataelements := function($de) {
 :)
       let $attr_name := string($attr)
       where ( not(functx:all-whitespace($attr_name))  and  not($attr_display = 'default')) 
-      return <adx:disaggregator id="{$doid}" name="{$attr_name}">{$attr_display}</adx:disaggregator>
+      return <adx:disaggregator  id="{$doid}" refid="{$disag_id}" code="{$attr_name}">{$attr_display}</adx:disaggregator>
 
     return 
       <csd:service entityID="{$srvcEntityID}">
@@ -410,7 +426,7 @@ let $process_dataelements := function($de) {
 	  then ()
 	  else 
 	    <csd:extension urn="urn:http://www.openhie.org/adx" type="disaggreators">
-	      <adx:disaggregatorSet>
+	      <adx:disaggregatorSet id="{$cat_id}">
 		{$disaggregatorSet}
 	      </adx:disaggregatorSet>
 	    </csd:extension>
@@ -438,6 +454,69 @@ let $process_dataelements := function($de) {
       </csd:service>
 
 }
+
+
+let $process_dataset := function($ds) {
+    let $ds_id := string($ds/@id)
+    let $des := $ds/dxf:dataElements/dxf:dataElement
+    let $name := string($ds/@name)
+    let $s_name := string($ds/@shortName)
+    let $pt := string($ds/dxf:periodType) 
+    let $code := string($ds/@code)
+
+    let $uuid := string($ds/@uuid)
+    let $entityID :=
+      if (not(functx:all-whitespace($uuid)))
+      then concat("urn:uuid:",$uuid)  
+      else  concat("urn:uuid:",util:uuid_generate(concat('service:',$ds_id),$namespace_uuid))
+ 
+    return 
+      <csd:service entityID="{$entityID}">
+	<csd:primaryName>{$name}</csd:primaryName>
+	<csd:otherID assigningAuthorityName="{$dhis_url}/api/dataSets" code="id">{$ds_id}</csd:otherID>
+	{     
+	  if (not(functx:all-whitespace($uuid)))
+	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataSets" code="uuid">{string($uuid)}</csd:otherID>
+	  else ()
+	}
+	{ if (not(functx:all-whitespace($code)))
+	  then <csd:otherID assigningAuthorityName="{$dhis_url}/api/dataSets" code="code">{$code}</csd:otherID>
+	  else ()
+	}
+
+	{
+	  if (count($des) = 0) 
+	  then ()
+	  else 
+	    <csd:extension urn="urn:http://www.openhie.org/adx" type="dataSet">
+	      {
+              for $de in $des
+	      let $de_id := string($de/@id)
+	      let $uuid := string($de/@uuid)
+	      let $entity_uuid :=((($de/dxf:attributeValues/dxf:attributeValue[./dxf:attribute[@name='entityID']])[1])/dxf:value[1])/text()
+	      let $srvcEntityID :=
+		if (not(functx:all-whitespace($entity_uuid)))
+		then concat("urn:uuid:",$entity_uuid)
+	        else if (not(functx:all-whitespace($uuid)))
+		then concat("urn:uuid:",$uuid)  
+	        else  concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid))
+ 	      return <csd:service entityID="{$srvcEntityID}"/>
+	      }
+	    </csd:extension>
+	}
+
+	<csd:record 
+          created="{util:fixup_date($ds/@created)}" 
+          updated="{util:fixup_date($ds/@lastUpdated)}" 
+          status="Active" 
+	  sourceDirectory="{$dhis_url}"/>        
+      </csd:service>
+
+
+(:    let $entityID := concat("urn:uuid:",util:uuid_generate(concat('service:',$de_id),$namespace_uuid)) :)
+
+}
+
 
 
 let $process_categories := function($category) {
@@ -490,10 +569,18 @@ let $srvcs :=
   if (not($do_srvcs))
   then ()
   else 
+    (
     let $de_funcs := 
       for $de in ($dataElements/dxf:dataElement)
       return function() {$process_dataelements($de)}
     return async:fork-join($de_funcs)
+    ,
+    let $ds_funcs := 
+      for $ds in $dataSets/dxf:dataSet
+      return function() {$process_dataset($ds)}
+    return async:fork-join($ds_funcs)
+    )
+
 
 (: Create an SVS list for each of the disaggregator sets in  the service :)
 let $categories := $dxf/dxf:metaData/dxf:categories/dxf:category[dxf:dataDimensionType/text() = 'DISAGGREGATION']
