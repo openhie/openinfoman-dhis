@@ -15,16 +15,16 @@ declare variable $careServicesRequest as item() external;
 
 
 
-let $dhis_url := replace($careServicesRequest/URL/text(),'/+$','')
+let $dhis_url := replace($careServicesRequest/csd:requestParams/URL/text(),'/+$','')
 let $namespace_uuid := util:uuid_generate($dhis_url,$util:namespace_uuid)
 
-let $dxf := $careServicesRequest/dxf
-let $facility_group_codes := $careServicesRequest/groupCodes/groupCode/text()
-let $facility_levels := $careServicesRequest/levels/level/text()
-let $do_hws :=  ($careServicesRequest/usersAreHealthWorkers/text() = '1')
-let $do_srvcs :=  ($careServicesRequest/dataelementsAreServices/text() = '1')
+let $dxf := $careServicesRequest/csd:requestParams/dxf
+let $facility_group_codes := $careServicesRequest/csd:requestParams/groupCodes/groupCode/text()
+let $facility_levels := $careServicesRequest/csd:requestParams/levels/level/text()
+let $do_hws :=  ($careServicesRequest/csd:requestParams/usersAreHealthWorkers/text() = '1')
+let $do_srvcs :=  ($careServicesRequest/csd:requestParams/dataelementsAreServices/text() = '1')
 
-let $t_oid := $careServicesRequest/oid/text()  
+let $t_oid := $careServicesRequest/csd:requestParams/oid/text()  
 let $oid :=      
   if (not(functx:all-whitespace($t_oid)))
   then $t_oid
@@ -39,7 +39,7 @@ let $dataSets := $dxf/dxf:metaData/dxf:dataSets
 let $dataElements := $dxf/dxf:metaData/dxf:dataElements
 let $catCombos := $dxf/dxf:metaData/dxf:categoryCombos
   
-let $doc_name := string($careServicesRequest/@resource)
+let $doc_name := string($careServicesRequest/csd:requestParams/@resource)
 let $doc := csd_dm:open_document($doc_name)
 let $org_dir := $doc/csd:CSD/csd:organizationDirectory
 let $fac_dir := $doc/csd:CSD/csd:facilityDirectory

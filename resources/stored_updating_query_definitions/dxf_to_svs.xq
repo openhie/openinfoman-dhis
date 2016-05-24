@@ -14,12 +14,12 @@ let $version := concat(year-from-date(current-date()),'.',month-from-date(curren
 
 return (
   let $list_name := "DHIS2 Organization Unit Levels"
-  let $id := dxf2csd:oid_orgtype($careServicesRequest/oid/text())
+  let $id := dxf2csd:oid_orgtype($careServicesRequest/csd:requestParams/oid/text())
   let $svs := 
   <svs:ValueSet id="{$id}" version="{$version}" displayName="{$list_name}">
     <svs:ConceptList xml:lang="en-US">
       {
-	for $level in $careServicesRequest/dxf/dxf:metaData/dxf:organisationUnitLevels/dxf:organisationUnitLevel
+	for $level in $careServicesRequest/csd:requestParams/dxf/dxf:metaData/dxf:organisationUnitLevels/dxf:organisationUnitLevel
 	return   <svs:Concept code="{$level/@level}" displayName="{$level/@name}" codeSystem="{$id}"/>
       }
     </svs:ConceptList>
@@ -27,12 +27,12 @@ return (
   return svs_lsvs:insert($svs)
   ,
   let $list_name := "DHIS2 User Role List"
-  let $id := dxf2csd:oid_hwtype($careServicesRequest/oid/text())
+  let $id := dxf2csd:oid_hwtype($careServicesRequest/csd:requestParams/oid/text())
   let $svs := 
   <svs:ValueSet id="{$id}" version="{$version}" displayName="{$list_name}">
     <svs:ConceptList xml:lang="en-US">
       {
-        for $role in $careServicesRequest/dxf/dxf:metaData/dxf:userRoles/dxf:userRole
+        for $role in $careServicesRequest/csd:requestParams/dxf/dxf:metaData/dxf:userRoles/dxf:userRole
         return   <svs:Concept code="{$role/@id}" displayName="{$role/@name}" codeSystem="{$id}"/>
       }
     </svs:ConceptList>

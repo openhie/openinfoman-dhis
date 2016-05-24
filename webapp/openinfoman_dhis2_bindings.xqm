@@ -214,13 +214,11 @@ declare updating
     let $content := parse-xml(convert:binary-to-string($dxf($name)))
 
     let $careServicesRequest := 
-      <csd:careServicesRequest>
-       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{csd_webui:generateURL()}">
+      <csd:careServicesRequest urn="{$search_name}" resource="{$doc_name}" base_url="{csd_webui:generateURL()}">
          <csd:requestParams >
            <dxf>{$content}</dxf>
            <oid>{$s_oid}</oid>
          </csd:requestParams>
-       </csd:function>
       </csd:careServicesRequest>
     return 
        (
@@ -278,8 +276,7 @@ declare updating
        )
     let $group_codes_exploded := for $g in tokenize($group_codes,',') return <group_code>{$g}</group_code>
     let $careServicesRequest := 
-      <csd:careServicesRequest>
-       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{csd_webui:generateURL()}">
+      <csd:careServicesRequest urn="{$search_name}" resource="{$doc_name}" base_url="{csd_webui:generateURL()}">
          <csd:requestParams >
            <dxf>{$content}</dxf>
 	   <groupCodes>{$group_codes_exploded}</groupCodes>
@@ -290,7 +287,6 @@ declare updating
 	   <dataelementsAreServices>{if ($do_srvcs = '1') then '1' else '0'}</dataelementsAreServices>
 
          </csd:requestParams>
-       </csd:function>
       </csd:careServicesRequest>
     return 
        (

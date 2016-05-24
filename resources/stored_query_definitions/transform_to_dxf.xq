@@ -13,8 +13,8 @@ declare variable $careServicesRequest as item() external;
 
 let $doc_name := string($careServicesRequest/@resource)
 let $doc := csd_dm:open_document($doc_name)
-let $req_org_id :=    $careServicesRequest/csd:organization/@entityID 
-let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
+let $req_org_id :=    $careServicesRequest/csd:requestParams/csd:organization/@entityID 
+let $req_ou_group_schemes:= distinct-values($careServicesRequest/csd:requestParams/orgUnitGroupSchemes/orgUnitGroupScheme/text())
   (:the organziation we want to import to:)
 
 
