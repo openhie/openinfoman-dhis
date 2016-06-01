@@ -1,3 +1,17 @@
+openinfoman-dhis (1.2.3~vivid) vivid; urgency=medium
+
+  * Release Version 1.2.3
+    -65f3921 output csd->dxf transform in a zip file
+    --http://github.com/openhie/openinfoman-dhis/commmit/65f3921
+    -c3e6a84 added categoryCombo code to disaggregator sets
+    --http://github.com/openhie/openinfoman-dhis/commmit/c3e6a84
+    -5d2efbd added in disaggregators for data sets as services
+    --http://github.com/openhie/openinfoman-dhis/commmit/5d2efbd
+    -04d054c added data sets as csd services
+    --http://github.com/openhie/openinfoman-dhis/commmit/04d054c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 01 Jun 2016 15:31:29 +0000
+
 openinfoman-dhis (1.2.2~vivid) vivid; urgency=medium
 
   * Release Version 1.2.2
