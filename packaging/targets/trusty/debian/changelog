@@ -1,3 +1,11 @@
+openinfoman-dhis (1.2.5~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.5
+    -080c4b5 updated csd loader app to handle .zip
+    --http://github.com/openhie/openinfoman-dhis/commmit/080c4b5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 01 Jun 2016 15:56:17 +0000
+
 openinfoman-dhis (1.2.4~trusty) trusty; urgency=medium
 
   * Release Version 1.2.4
