@@ -4,6 +4,7 @@ import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm"
 import module namespace svs_lsvs = "https://github.com/openhie/openinfoman/svs_lsvs";
 import module namespace util = "https://github.com/openhie/openinfoman-dhis/util";
 import module namespace functx = "http://www.functx.com";
+import module namespace archive = "http://basex.org/modules/archive";
 
 declare namespace svs = "urn:ihe:iti:svs:2008";
 declare namespace csd = "urn:ihe:iti:csd:2013";
@@ -47,7 +48,7 @@ let $ou_oids :=
   return $oid
 
     
-return 
+let $dxf := 
     <dxf:metaData>
       <dxf:users>
       {
@@ -350,3 +351,9 @@ return
       </dxf:organisationUnitLevels>
 
     </dxf:metaData>
+
+
+let $zip :=  archive:create(   <archive:entry>csd_dxf.xml</archive:entry>, serialize($dxf))
+
+
+return $zip

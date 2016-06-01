@@ -5,7 +5,9 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:csd="urn:ihe:iti:csd:2013" 
-  urn="urn:dhis.org:transform_to_dxf:v2.19">
+  urn="urn:dhis.org:transform_to_dxf:v2.19"
+  content-type="application/zip"
+  >
   <csd:description> 
     Returns DHIS2 DXF Metadata representation of CSD providers, facilties and organizations for import into a DHIS2 instance 
     
