@@ -450,10 +450,12 @@ CSDLoader.prototype.ImportSelected = function() {
     var selected = this.form.find('select[name=org] option:selected')
     var parentID = selected.val();
     var doUsers = this.form.find('select[name=users] option:selected').val() == '1' ? true : false;
+    var doUUUIDs = this.form.find('select[name=uuids] option:selected').val() == '1' ? true : false;
     var msg =
       "<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>\n"
       +" <csd:organization entityID='" + parentID + "'/>\n"
-      +" <processUsers value='" + (doUsers ? 'true' : 'false') + "'/>\n"
+      +" <processUsers value='" + (doUsers ? '1' : '0') + "'/>\n"
+      +" <preserveUUIDs value='" + (doUUIDs ? '1' : '0') + "'/>\n"
       +"</csd:requestParams>";
     this.UpdateStatus('Requesting Data From ILR');
     this.Log('SENDING to ' + url + "\n" + msg);
