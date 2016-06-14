@@ -441,6 +441,8 @@ CSDLoader.prototype.Export = function() {
 
 };
 
+
+
 CSDLoader.prototype.ImportSelected = function() {
     this.UpdateStatus('Beginning Data Import');
     var doc = this.form.find('select[name=docs] option:selected').val();
@@ -455,39 +457,49 @@ CSDLoader.prototype.ImportSelected = function() {
       +"</csd:requestParams>";
     this.UpdateStatus('Requesting Data From ILR');
     this.Log('SENDING to ' + url + "\n" + msg);
-    $.ajax({
-	method:'POST',
-	type: 'POST',
-	url:url,
-	data:msg,
-	contentType: 'text/xml',
-	dataType: "xml",
-	context: this,
-	cache: false,
-	error: function() {
-	    this.Alert('Could not load the selected organisation units');
-	    this.UpdateStatus('Request For Data From ILR Failed');
-	},
-	success: function(xml) {
-	    this.UpdateStatus('Sending Data For Import To DHIS2');
-	    this.Log("Received\n" +  this.xmlSerializer.serializeToString(xml));
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.responseType = 'blob';
+    xhr.setRequestHeader("Content-type", "text/xml");
+    this.SetStatusAsLoading(true);
+    xhr.onerror = $.proxy(function() {
+	this.UpdateStatus('Retrieving Data For Import To DHIS2 Failed');
+	this.SetStatusAsLoading(false);
+    },this);
+    that = this;
+    xhr.onload = function(e) {
+	that.UpdateStatus('loaded' + this.status + '/' + this.readyState);
+	if (this.status == 200) {
+	    var blob = new Blob([this.response],{type:'application/zip'});
+	    console.log(blob);
+	    that.UpdateStatus('Sending Data For Import To DHIS');
+	    console.log(that.BaseURL);
 	    $.ajax({
-	        url: this.BaseURL + '/api/metadata',
+	        url: that.BaseURL + '/api/metadata',
 	        method: 'POST',
 	        type: 'POST',
-		context: this,
-		data:  this.xmlSerializer.serializeToString(xml),
-		contentType: 'application/xml',
-		error: function() {
-		    this.Alert('Could not upload the metadata');
-		    this.UpdateStatus('Data Import On DHIS2 Failed');},
+		context: that,
+		data:  blob,
+		contentType: "application/octet-stream",
+		processData: false,
+		error: function(e) {
+		    that.Log('Error' + JSON.stringify(e));
+		    that.Alert('Could not upload the metadata');
+		    that.UpdateStatus('Data Import On DHIS2 Failed');
+		    that.SetStatusAsLoading(false);
+		},
 		success: function(xmlResponse) {
-		    this.Log("Received\n" +   xmlResponse);		    
-		    this.UpdateStatus('Data Import On DHIS2 Initiated');
+		    that.Log("Received\n" +   xmlResponse);		    
+		    that.UpdateStatus('Data Import On DHIS2 Initiated');
+		    that.SetStatusAsLoading(false);
 		}
 		
 	    });
-	    }
-        });
+	    
+	}
+	
+    };
+    xhr.send(msg);
 };
 
