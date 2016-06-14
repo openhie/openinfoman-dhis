@@ -12,6 +12,14 @@ declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 declare variable $careServicesRequest as item() external; 
 
 let $doc_name := string($careServicesRequest/@resource)
+let $processUsers := 
+  if (exists($careServicesRequest/processUsers/@value))
+  then ( not ($careServicesRequest/processUsers/@value = 1))
+  else true()
+let $preserveUUIDs := 
+  if (exists($careServicesRequest/preserveUUIDs/@value))
+  then ( not ($careServicesRequest/preserveUUIDs/@value = 1))
+  else true()
 let $doc := csd_dm:open_document($doc_name)
 let $req_org_id :=    $careServicesRequest/csd:organization/@entityID 
 let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
@@ -36,7 +44,10 @@ let $facilities :=
   then $doc/csd:CSD/csd:facilityDirectory/csd:facility
   else  $doc/csd:CSD/csd:facilityDirectory/csd:facility[./csd:organizations/csd:organization = $orgs]
 
-let $provs := $doc/csd:CSD/csd:providerDirectory/csd:provider
+let $provs := 
+  if ($processUsers)
+  then $doc/csd:CSD/csd:providerDirectory/csd:provider
+  else ()
 
 
 
@@ -75,7 +86,9 @@ return
 	let $p_orgs := 
 	  for $org in $prov/csd:organizations/csd:organization
 	  let $ou_uuid := 
-	    ($facilities[@entityID = $org/@entityID]/csd:otherID[@assigningAuthorityName = concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
+	    if ($preserveUUIDs) 
+	    then ($facilities[@entityID = $org/@entityID]/csd:otherID[@assigningAuthorityName = concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
+	    else ()
 	  return 
 	    if (functx:all-whitespace($ou_uuid)) 
 	    then () 
@@ -156,7 +169,10 @@ return
         {	 
 	  for $org in $orgs
 	  let $dhis_url := string($org/csd:record/@sourceDirectory)
-	  let $dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
+	  let $dhis_uuid :=
+	    if ($preserveUUIDs) 
+	    then ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
+	    else ()
           let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
 	   
 	  let $level_code := string(($org/csd:codedType[@codingScheme=concat("urn:" ,$dhis_url,"/api/organisationUnitLevels")])[1]/@code)
@@ -167,10 +183,19 @@ return
 
 	  let $name := $org/csd:primaryName/text()
 
-	  let $uuid := 
+	  let $uuid :=
+	    if ($preserveUUIDs)
+	    then
+	      if (not(functx:all-whitespace($dhis_uuid)))
+	      then $dhis_uuid
+	      else ()
+	    else ()
+
+	  let $entity_uuid := 
 	    if (functx:all-whitespace($dhis_uuid))
 	    then dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
 	    else string($dhis_uuid)
+
 
 	  let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
 
@@ -196,31 +221,53 @@ return
 	    <dxf:attributeValues>
 	      <dxf:attributeValue>
 		<dxf:attribute name="entityID"/>
-		<dxf:value>{$uuid}</dxf:value>
+		<dxf:value>{$entity_uuid}</dxf:value>
 	      </dxf:attributeValue>
 	    </dxf:attributeValues>
 		    
 	  return 
-	    if (functx:all-whitespace($uuid))
-	    then ()
-	    else <organisationUnit 
-              level="{$level}"
-	      name="{$name}"
-	      shortName="{substring($name,1,50)}"
-	      uuid="{$uuid}" 
-	      id="{$id}"
-	      lastUpdated="{$lm}"
-	      created="{$created}"
-	      >
-	    { 
-	     if (functx:all-whitespace($dhis_code))
-	     then ()
-	     else attribute code {$dhis_code}
-	    }
-	    {$parent}
-	    {$avs}
-	    <dxf:openingDate>1970-01-01</dxf:openingDate> 
-	  </organisationUnit>
+	    if ($preserveUUIDs) 
+	    then
+	      if (functx:all-whitespace($uuid))
+	      then ()
+	      else 
+	        <organisationUnit 
+                  level="{$level}"
+		  name="{$name}"
+		  shortName="{substring($name,1,50)}"
+		  uuid="{$uuid}" 
+		  id="{$id}"
+		  lastUpdated="{$lm}"
+		  created="{$created}"
+		  >
+		  { 
+	            if (functx:all-whitespace($dhis_code))
+		    then ()
+	            else attribute code {$dhis_code}
+		  }
+		  {$parent}
+		  {$avs}
+		  <dxf:openingDate>1970-01-01</dxf:openingDate> 
+		</organisationUnit>
+	    else
+	        <organisationUnit 
+                  level="{$level}"
+		  name="{$name}"
+		  shortName="{substring($name,1,50)}"
+		  id="{$id}"
+		  lastUpdated="{$lm}"
+		  created="{$created}"
+		  >
+		  { 
+	            if (functx:all-whitespace($dhis_code))
+		    then ()
+	            else attribute code {$dhis_code}
+		  }
+		  {$parent}
+		  {$avs}
+		  <dxf:openingDate>1970-01-01</dxf:openingDate> 
+		</organisationUnit>
+
 	}
         {
 	  for $fac in $facilities

@@ -20,6 +20,10 @@
 	<b>processUsers</b>
 	0..1 processUsers  element has integer attribute @value.  Defaults to 1 which means we process provides as DHIS2 users.
       </li>
+      <li>
+	<b>preserveUUIDs</b>
+	0..1 processUUIDs  element has integer attribute @value.  Defaults to 1 which means we preserve DHIS2 UUIDs, if present, when creating the DXF metadata for import.
+      </li>
     </ul>
   </csd:description>
   <csd:definition ><xi:include parse='text' href='transform_to_dxf.xq'/></csd:definition>
