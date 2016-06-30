@@ -450,7 +450,7 @@ CSDLoader.prototype.ImportSelected = function() {
     var selected = this.form.find('select[name=org] option:selected')
     var parentID = selected.val();
     var doUsers = this.form.find('select[name=users] option:selected').val() == '1' ? true : false;
-    var doUUUIDs = this.form.find('select[name=uuids] option:selected').val() == '1' ? true : false;
+    var doUUIDs = this.form.find('select[name=uuids] option:selected').val() == '1' ? true : false;
     var msg =
       "<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>\n"
       +" <csd:organization entityID='" + parentID + "'/>\n"
@@ -478,12 +478,12 @@ CSDLoader.prototype.ImportSelected = function() {
 	    that.UpdateStatus('Sending Data For Import To DHIS');
 	    console.log(that.BaseURL);
 	    $.ajax({
-	        url: that.BaseURL + '/api/metadata',
+	        url: that.BaseURL + '/api/metadata.xml.zip',
 	        method: 'POST',
 	        type: 'POST',
 		context: that,
 		data:  blob,
-		contentType: "application/octet-stream",
+		contentType: "application/xml",
 		processData: false,
 		error: function(e) {
 		    that.Log('Error' + JSON.stringify(e));
