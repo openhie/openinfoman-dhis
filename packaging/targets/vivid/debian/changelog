@@ -1,3 +1,19 @@
+openinfoman-dhis (1.2.6~vivid) vivid; urgency=medium
+
+  * Release Version 1.2.6
+    -3d6479c fixed .zip upload to DHIS2
+    --http://github.com/openhie/openinfoman-dhis/commmit/3d6479c
+    -5d4ccf2 updated CSD Loader app to allow user to select 'preserve U
+    --http://github.com/openhie/openinfoman-dhis/commmit/5d4ccf2
+    -8ab33ac Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/8ab33ac
+    -bb21f9d in CSD->DXF transform, it is now optional to preserve UUID
+    --http://github.com/openhie/openinfoman-dhis/commmit/bb21f9d
+    -db48d07 getting closer to .zip submit to dhis2 in csd-loader app
+    --http://github.com/openhie/openinfoman-dhis/commmit/db48d07
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 30 Jun 2016 17:49:49 +0000
+
 openinfoman-dhis (1.2.5~vivid) vivid; urgency=medium
 
   * Release Version 1.2.5
