@@ -460,6 +460,30 @@ CSDLoader.prototype.Export = function() {
 };
 
 
+CSDLoader.prototype.PollImportStatus = function(that) {
+    var url= that.BaseURL + '/api/system/tasks/METADATA_IMPORT';
+    that.Log('polling import at '  + url);
+    SetStatusAsLoading = $.proxy(that.SetStatusAsLoading,that);
+    UpdateStatus = $.proxy(that.UpdateStatus,that);
+    var pingImport =  function() {
+	$.ajax({
+	    url: url,
+	    contentType: "application/json",
+	    error: function(e) {
+		that.Log('Error' + JSON.stringify(e));
+		console.log('error pingImport');
+		UpdateStatus("Could not get DHIS2 Import Status");
+		SetStatusAsLoading(false);
+	    },
+	    success: function(m) {
+		console.log('success pingImport');
+		UpdateStatus("DHIS2 Import Status:" + JSON.stringify(m));
+		setTimeout( pingImport,2000);
+	    }
+	});	
+    };
+    pingImport();
+};
 
 CSDLoader.prototype.ImportSelected = function() {
     this.UpdateStatus('Beginning Data Import');
@@ -508,11 +532,13 @@ CSDLoader.prototype.ImportSelected = function() {
 		    that.Alert('Could not upload the metadata');
 		    that.UpdateStatus('Data Import On DHIS2 Failed');
 		    that.SetStatusAsLoading(false);
+		    that.PollImportStatus(that);
 		},
 		success: function(xmlResponse) {
 		    that.Log("Received\n" +   xmlResponse);		    
 		    that.UpdateStatus('Data Import On DHIS2 Initiated');
 		    that.SetStatusAsLoading(false);
+		    that.PollImportStatus(that);
 		}
 		
 	    });
