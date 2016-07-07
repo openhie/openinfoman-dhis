@@ -1,3 +1,11 @@
+openinfoman-dhis (1.2.13~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.13
+    -98796a6 csd-loader.zip has 1.2.10 manifest
+    --http://github.com/openhie/openinfoman-dhis/commmit/98796a6
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 07 Jul 2016 13:00:21 +0000
+
 openinfoman-dhis (1.2.12~trusty) trusty; urgency=medium
 
   * Release Version 1.2.12
