@@ -1,3 +1,11 @@
+openinfoman-dhis (1.2.11~vivid) vivid; urgency=medium
+
+  * Release Version 1.2.11
+    -6cb80c5 version bump csd-loader app
+    --http://github.com/openhie/openinfoman-dhis/commmit/6cb80c5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 07 Jul 2016 01:07:29 +0000
+
 openinfoman-dhis (1.2.10~vivid) vivid; urgency=medium
 
   * Release Version 1.2.10
