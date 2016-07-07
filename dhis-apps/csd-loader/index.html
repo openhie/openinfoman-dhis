@@ -32,12 +32,17 @@ $(function() {
     <script type='text/javascript'>
 $(function() {	
     $("#tabs").tabs(); //{active: false});
-    (new CSDLoader($("#csdimport" ))).LoadDocs();
+    var importtab = new CSDLoader($("#csdimport" ));
+    importtab.LoadDocs();
+    importtab.ping();
     (new CSDLoader($("#csdexport" ))).LoadDocs();
 });
     </script>
 
+
+
   </head>
+
   <body>
 
       

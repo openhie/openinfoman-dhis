@@ -250,6 +250,24 @@ CSDLoader.prototype.BindActions = function() {
 
 
 
+CSDLoader.prototype.ping = function() {
+    var url= this.BaseURL + '/api/configuration/systemId';
+    var ping =  function() {
+	$.ajax({
+	    url: url,
+	    error: function() {
+		console.log('error ping');
+		setTimeout( ping,60000);
+	    },
+	    success: function() {
+		console.log('success ping');
+		setTimeout( ping,60000);
+	    }
+	});	
+    };
+    ping();
+};
+
 CSDLoader.prototype.LoadDocs = function() {
     
     var docs = this.form.find('select[name=docs]');
