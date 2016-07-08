@@ -1,3 +1,11 @@
+openinfoman-dhis (1.2.14~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.14
+    -d435bf1 try to get status of import in csd-loader app
+    --http://github.com/openhie/openinfoman-dhis/commmit/d435bf1
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 08 Jul 2016 13:03:12 +0000
+
 openinfoman-dhis (1.2.13~trusty) trusty; urgency=medium
 
   * Release Version 1.2.13
