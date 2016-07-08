@@ -168,176 +168,175 @@ let $dxf :=
 
       <dxf:organisationUnits>
         {	 
-	  for $org in $orgs
-	  let $dhis_url := string($org/csd:record/@sourceDirectory)
-	  let $dhis_uuid :=
-	    if ($preserveUUIDs) 
-	    then ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
-	    else ()
-          let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
-	   
-	  let $level_code := string(($org/csd:codedType[@codingScheme=concat("urn:" ,$dhis_url,"/api/organisationUnitLevels")])[1]/@code)
-	  let $level := 
-	    if (not(functx:all-whitespace($level_code)))
-	    then $level_code
-	    else dxf2csd:get_level($doc,$org)
-
-	  let $name := $org/csd:primaryName/text()
-
-	  let $uuid :=
-	    if ($preserveUUIDs)
-	    then
-	      if (not(functx:all-whitespace($dhis_uuid)))
-	      then $dhis_uuid
+	  let $processOrgUnit := function($org) {
+	    let $dhis_url := string($org/csd:record/@sourceDirectory)
+	    let $dhis_uuid :=
+	      if ($preserveUUIDs) 
+	      then ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
 	      else ()
-	    else ()
+	    let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
+	   
+	    let $level_code := string(($org/csd:codedType[@codingScheme=concat("urn:" ,$dhis_url,"/api/organisationUnitLevels")])[1]/@code)
+	    let $level := 
+	      if (not(functx:all-whitespace($level_code)))
+	      then $level_code
+	      else dxf2csd:get_level($doc,$org)
 
-	  let $entity_uuid := 
-	    if (functx:all-whitespace($dhis_uuid))
-	    then dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
-	    else string($dhis_uuid)
+	    let $name := $org/csd:primaryName/text()
+
+	    let $uuid :=
+	      if ($preserveUUIDs)
+	      then 
+	        if (not(functx:all-whitespace($dhis_uuid)))
+		then $dhis_uuid
+	        else ()
+	      else ()
+
+	    let $entity_uuid := 
+	      if (functx:all-whitespace($dhis_uuid))
+	      then dxf2csd:extract_uuid_from_entityid(string($org/@entityID))
+	      else string($dhis_uuid)
 
 
-	  let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
+	    let $dhis_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
 
-	  let $id_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]/text()
-	  let $id :=
-	    if (not(functx:all-whitespace($id_code)))
-	    then $id_code
-	    else dxf2csd:extract_id_from_entityid(string($org/@entityID)) 
+	    let $id_code := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]/text()
+	    let $id :=
+	      if (not(functx:all-whitespace($id_code)))
+	      then $id_code
+	      else dxf2csd:extract_id_from_entityid(string($org/@entityID)) 
 
-	  let $created := dxf2csd:fixup_date($org/csd:record/@created)
-	  let $lm := dxf2csd:fixup_date($org/csd:record/@updated)
+	    let $created := dxf2csd:fixup_date($org/csd:record/@created)
+	    let $lm := dxf2csd:fixup_date($org/csd:record/@updated)
 
-	  let $porg_id := $org/csd:parent/@entityID
-	  let $porg := $orgs[@entityID = $porg_id]
-	  let $porg_dhis_uuid := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
-	  let $parent :=
-	    if (functx:all-whitespace($porg_id))
-	    then () (: no parent :)
-	    else if (not(functx:all-whitespace($porg_dhis_uuid)))
-	    then <dxf:parent uuid="{$porg_dhis_uuid}"/>
-  	    else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($porg_id))}"/>
-	  let $avs :=
-	    <dxf:attributeValues>
-	      <dxf:attributeValue>
-		<dxf:attribute name="entityID"/>
-		<dxf:value>{$entity_uuid}</dxf:value>
-	      </dxf:attributeValue>
-	    </dxf:attributeValues>
+	    let $porg_id := $org/csd:parent/@entityID
+	    let $porg := $orgs[@entityID = $porg_id]
+	    let $porg_dhis_uuid := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
+	    let $parent :=
+	      if (functx:all-whitespace($porg_id))
+	      then () (: no parent :)
+	      else if (not(functx:all-whitespace($porg_dhis_uuid)))
+	      then <dxf:parent uuid="{$porg_dhis_uuid}"/>
+  	      else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($porg_id))}"/>
+	    let $avs :=
+	      <dxf:attributeValues>
+	        <dxf:attributeValue>
+	  	  <dxf:attribute name="entityID"/>
+		  <dxf:value>{$entity_uuid}</dxf:value>
+	        </dxf:attributeValue>
+	      </dxf:attributeValues>
 		    
-	  return 
-	    if ($preserveUUIDs) 
-	    then
-	      if (functx:all-whitespace($uuid))
-	      then ()
-	      else 
-	        <organisationUnit 
-                  level="{$level}"
-		  name="{$name}"
-		  shortName="{substring($name,1,50)}"
-		  uuid="{$uuid}" 
-		  id="{$id}"
-		  lastUpdated="{$lm}"
-		  created="{$created}"
-		  >
-		  { 
-	            if (functx:all-whitespace($dhis_code))
-		    then ()
-	            else attribute code {$dhis_code}
-		  }
-		  {$parent}
-		  {$avs}
-		  <dxf:openingDate>1970-01-01</dxf:openingDate> 
-		</organisationUnit>
-	    else
-	        <organisationUnit 
-                  level="{$level}"
-		  name="{$name}"
-		  shortName="{substring($name,1,50)}"
-		  id="{$id}"
-		  lastUpdated="{$lm}"
-		  created="{$created}"
-		  >
-		  { 
-	            if (functx:all-whitespace($dhis_code))
-		    then ()
-	            else attribute code {$dhis_code}
-		  }
-		  {$parent}
-		  {$avs}
-		  <dxf:openingDate>1970-01-01</dxf:openingDate> 
-		</organisationUnit>
+	    return 
+	      <organisationUnit 
+                level="{$level}"
+		name="{$name}"
+		shortName="{substring($name,1,50)}"
+		id="{$id}"
+		lastUpdated="{$lm}"
+		created="{$created}"
+		>
+		{
+		  if (($preserveUUIDs) and (not(functx:all-whitespace($uuid))))
+		  then attribute uuid {$uuid}
+		  else ()
+	        }
+		{ 
+	          if (functx:all-whitespace($dhis_code))
+		  then ()
+	          else attribute code {$dhis_code}
+		}
+		{$parent}
+		{$avs}
+		<dxf:openingDate>1970-01-01</dxf:openingDate> 
+	      </organisationUnit>
+	  }	  
+	  let $orgunit_funcs :=     
+  	    for $orgUnit in $orgs
+	    return function() {$process_orgunit($orgUnit)}
+	  return async:fork-join($orgunit_funcs)
+  
 
 	}
         {
-	  for $fac in $facilities
-	  (: remove the facilities that have already been created from a DHIS2 org unit:)
-	  let $dhis_url := string($fac/csd:record/@sourceDirectory)
-	  let $dhis_uuid := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
-	  let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
-          let $dhis_code := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
-	  let $org := 
-	    if (functx:all-whitespace($dhis_uuid))
-	    then ()
-	    else ($orgs[./csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid" and ./text() = $dhis_uuid]])[1]
-	  where not(exists($org))
-	  return 
-  	    let $level := dxf2csd:get_level($doc,$fac)
-	    let $name := $fac/csd:primaryName/text()
-	    let $uuid := 
-	      if (functx:all-whitespace($dhis_uuid))
-	      then dxf2csd:extract_uuid_from_entityid(string($fac/@entityID))
-	      else string($dhis_uuid)
-            let $id := 
-	      if (functx:all-whitespace($dhis_id))
-	      then dxf2csd:extract_id_from_entityid(string($fac/@entityID)) 
-	      else string($dhis_id)
-	    let $created := dxf2csd:fixup_date($fac/csd:record/@created)
-	    let $lm := dxf2csd:fixup_date($fac/csd:record/@updated)
+	  let $processFac := function($org) {
+	    let $dhis_url := string($fac/csd:record/@sourceDirectory)
+	    let $dhis_uuid := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
+	    let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
+            let $dhis_code := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="code"])[1]/text()
+	    return 
+  	      let $level := dxf2csd:get_level($doc,$fac)
+	      let $name := $fac/csd:primaryName/text()
+	      let $uuid := 
+	        if (functx:all-whitespace($dhis_uuid))
+	        then dxf2csd:extract_uuid_from_entityid(string($fac/@entityID))
+	        else string($dhis_uuid)
+              let $id := 
+	        if (functx:all-whitespace($dhis_id))
+	        then dxf2csd:extract_id_from_entityid(string($fac/@entityID)) 
+	        else string($dhis_id)
+	      let $created := dxf2csd:fixup_date($fac/csd:record/@created)
+	      let $lm := dxf2csd:fixup_date($fac/csd:record/@updated)
 
-	    (: in CSD we can have multiple "parents" but not so DXF.  We just choose the first one    :)
-	    let $org_id := ($orgs[@entityID = ($fac/csd:organizations/csd:organization)[1]/@entityID ])[1]
-	    let $org := $orgs[@entity_id = $org_id]
-	    let $org_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
-	    let $parent := 
-	      if (functx:all-whitespace($org_id))
-	      then ()  (: no parent :)
-	      else if (not(functx:all-whitespace($org_dhis_uuid)))
-	      then <dxf:parent id="{$org_dhis_uuid}"/>
-	      else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($org_id))}"/>
-	    let $avs :=
-	      <dxf:attributeValues>
-		<dxf:attributeValue>
-		  <dxf:attribute name="entityID"/>
-		  <dxf:value>{$uuid}</dxf:value>
-		</dxf:attributeValue>
-	      </dxf:attributeValues>
+	      (: in CSD we can have multiple "parents" but not so DXF.  We just choose the first one    :)
+	      let $org_id := ($orgs[@entityID = ($fac/csd:organizations/csd:organization)[1]/@entityID ])[1]
+	      let $org := $orgs[@entity_id = $org_id]
+	      let $org_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
+	      let $parent := 
+	        if (functx:all-whitespace($org_id))
+	        then ()  (: no parent :)
+	        else if (not(functx:all-whitespace($org_dhis_uuid)))
+	          then <dxf:parent id="{$org_dhis_uuid}"/>
+	          else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($org_id))}"/>
+	      let $avs :=
+	        <dxf:attributeValues>
+  		  <dxf:attributeValue>  
+		    <dxf:attribute name="entityID"/>
+		    <dxf:value>{$uuid}</dxf:value>
+		  </dxf:attributeValue>
+	        </dxf:attributeValues>
 	
-	   return 
-	     if (functx:all-whitespace($uuid) )
-	     then ()
-	     else
-	       <dxf:organisationUnit 
-                 level="{$level}"
-		 name="{$name}"
-		 shortName="{substring($name,1,50)}"
-		 uuid="{$uuid}" 
-		 id="{$id}" 
-		 lastUpdated="{$lm}"
-		 created="{$created}"
-		 >
-		 { 
+	      return 
+	        <dxf:organisationUnit 
+                  level="{$level}"
+		  name="{$name}"
+		  shortName="{substring($name,1,50)}"
+		  lastUpdated="{$lm}"
+		  created="{$created}"
+		  >
+		  {
+		    if (not(functx:all-whitespace($uuid)))
+		    then attribute uuid {$uuid}
+		    else ()
+	          }
+		  {
+		    if (not(functx:all-whitespace($id)))
+		    then attribute id {$id}
+		    else ()
+	          }
+		  { 
 		   if (functx:all-whitespace($dhis_code))
 		   then ()
 		   else attribute code {$dhis_code}
-		 }
-
+		  }
 		 {$parent}
 		 {$avs}
 		 <dxf:openingDate>1970-01-01</dxf:openingDate> 
 	       </dxf:organisationUnit>
-	   }
+	  }
+	  let $fac_funcs :=     
+  	    for $fac in $facilities
+	    let $dhis_url := string($fac/csd:record/@sourceDirectory)
+	    let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
+	    let $org := 
+	      if (functx:all-whitespace($dhis_uuid))
+	      then ()
+	      else ($orgs[./csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid" and ./text() = $dhis_uuid]])[1]
+	    where not(exists($org)) 	    (: remove the facilities that have already been created from a DHIS2 org unit:)
+
+	    return function() {$processFac($fac)}
+	  return async:fork-join($fac_funcs)
+
+	}
       </dxf:organisationUnits>
 
       <dxf:organisationUnitGroups>    
