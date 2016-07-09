@@ -21,6 +21,18 @@ let $preserveUUIDs :=
   if (exists($careServicesRequest/preserveUUIDs/@value))
   then ( not ($careServicesRequest/preserveUUIDs/@value = 1))
   else true()
+
+let $onlyDirectChildren := 
+  if (exists($careServicesRequest/onlyDirectChildren/@value))
+  then ( not ($careServicesRequest/onlyDirectChildren/@value = 1))
+  else false()
+
+let $zip := 
+  if (exists($careServicesRequest/zip/@value))
+  then ( not ($careServicesRequest/zip/@value = 1))
+  else false()
+
+
 let $doc := csd_dm:open_document($doc_name)
 let $req_org_id :=    $careServicesRequest/csd:organization/@entityID 
 let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
@@ -29,7 +41,7 @@ let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSch
 
 
 let $svcs := $doc/csd:CSD/csd:serviceDirectory/csd:service
-let $t0 := trace(current-dateTime(),"Starting org hierarchy")
+
 let $orgs := 
   if (functx:all-whitespace($req_org_id))
   then dxf2csd:ensure_properly_ordered_orgs($doc/csd:CSD/csd:organizationDirectory/csd:organization)
@@ -39,13 +51,17 @@ let $orgs :=
     return 
       if (not(exists($org)))
       then ()
-      else  (util:get_parent_orgs($all_orgs,$org),$org,util:get_child_orgs($all_orgs,$org))  (: this comes back properly ordered for DHIS2 import :)
-let $t1 := trace(current-dateTime(),"finished org hierarchy")
+      else
+	if ($onlyDirectChildren)
+	then (util:get_parent_orgs($all_orgs,$org),$org,$all_orgs[./csd:parent[@entityID = $req_org_id]])
+	else (util:get_parent_orgs($all_orgs,$org),$org,util:get_child_orgs($all_orgs,$org))  (: this comes back properly ordered for DHIS2 import :)
+
+
 let $facilities := 
   if (functx:all-whitespace($req_org_id))
   then $doc/csd:CSD/csd:facilityDirectory/csd:facility
   else  $doc/csd:CSD/csd:facilityDirectory/csd:facility[./csd:organizations/csd:organization = $orgs]
-let $t2 := trace(current-dateTime(),"finished facilities")
+
 let $provs := 
   if ($processUsers)
   then $doc/csd:CSD/csd:providerDirectory/csd:provider
@@ -58,7 +74,7 @@ let $ou_oids :=
   let $namespace_uuid := util:uuid_generate($dhis_url,$util:namespace_uuid)
   let $oid := concat('2.25.',util:hexdec(util:uuid_generate('rootoid',$namespace_uuid)))	
   return $oid
-let $t3 := trace(current-dateTime(),"finished oids")
+
     
 let $dxf := 
     <dxf:metaData>
@@ -251,11 +267,11 @@ let $dxf :=
 		<dxf:openingDate>1970-01-01</dxf:openingDate> 
 	      </organisationUnit>
 	  }	  
-	  let $t4 := trace(current-dateTime(),"creating org funcs")
+
 	  let $orgunit_funcs :=     
   	    for $orgUnit in $orgs
 	    return function() {$processOrgUnit($orgUnit)}
-  	  let $tf:= trace(current-dateTime(),"starting orgs")
+
 	  return async:fork-join($orgunit_funcs)
 
 	}
@@ -325,7 +341,7 @@ let $dxf :=
 		 <dxf:openingDate>1970-01-01</dxf:openingDate> 
 	       </dxf:organisationUnit>
 	  }
-  	  let $t7:= trace(current-dateTime(),"creating fac funcs")
+
 	  let $fac_funcs :=     
   	    for $fac in $facilities
 	    let $dhis_url := string($fac/csd:record/@sourceDirectory)
@@ -338,12 +354,12 @@ let $dxf :=
 	    where not(exists($org)) 	    (: remove the facilities that have already been created from a DHIS2 org unit:)
 
 	    return function() {$processFac($fac)}
-  	  let $t7:= trace(current-dateTime(),"creating facs")
+
 	  return async:fork-join($fac_funcs)
 
 	}
       </dxf:organisationUnits>
-      {  	  ( trace(current-dateTime(),"done with facs"))}
+
 
       <dxf:organisationUnitGroups>    
         {
@@ -406,7 +422,9 @@ let $dxf :=
     </dxf:metaData>
 
 
-let $zip :=  archive:create(   <archive:entry>csd_dxf.xml</archive:entry>, serialize($dxf))
+let $out := 
+  if ($zip)
+  then archive:create(   <archive:entry>csd_dxf.xml</archive:entry>, serialize($dxf))
+  else $dxf
 
-
-return $zip
+return $out

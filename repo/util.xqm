@@ -46,15 +46,8 @@ declare function util:get_child_orgs($orgs,$org) {
     then ()
     else $orgs[./csd:parent[@entityID = $org_id]]	
   return 
-(:
     for $c_org in $c_orgs
     return ($c_org,util:get_child_orgs($orgs,$c_org))
-:)
-    let $corg_funcs :=    
-      for $c in $c_orgs 
-      return function() {($c,util:get_child_orgs($orgs,$c))}
-    return async:fork-join($corg_funcs)
-
 	      
 
 };
