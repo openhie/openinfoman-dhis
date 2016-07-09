@@ -15,27 +15,37 @@ declare variable $careServicesRequest as item() external;
 let $doc_name := string($careServicesRequest/@resource)
 let $processUsers := 
   if (exists($careServicesRequest/processUsers/@value))
-  then ( not ($careServicesRequest/processUsers/@value = 1))
+  then ($careServicesRequest/processUsers/@value = 1)
   else true()
 let $preserveUUIDs := 
   if (exists($careServicesRequest/preserveUUIDs/@value))
-  then ( not ($careServicesRequest/preserveUUIDs/@value = 1))
+  then ($careServicesRequest/preserveUUIDs/@value = 1)
   else true()
 
 let $onlyDirectChildren := 
   if (exists($careServicesRequest/onlyDirectChildren/@value))
-  then ( not ($careServicesRequest/onlyDirectChildren/@value = 1))
-  else false()
+  then ($careServicesRequest/onlyDirectChildren/@value = 1)
+  else true()
 
 let $zip := 
   if (exists($careServicesRequest/zip/@value))
-  then ( not ($careServicesRequest/zip/@value = 1))
-  else false()
-
-
-let $doc := csd_dm:open_document($doc_name)
+  then ($careServicesRequest/zip/@value = 1)
+  else true()
 let $req_org_id :=    $careServicesRequest/csd:organization/@entityID 
 let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
+
+
+let $t0 :=
+  (
+    trace($processUsers,'Process users: '),
+    trace($preserveUUIDs,'Preserve UUIDs: '),
+    trace($onlyDirectChildren,'Only Direct Children: '),
+    trace($zip,'Zip: '),
+    trace($req_org_id,'Requested Org EntityID: '),
+    trace($req_ou_group_schemes,'Request Org Group Schemes: ')
+  )
+
+let $doc := csd_dm:open_document($doc_name)
   (:the organziation we want to import to:)
 
 
@@ -244,7 +254,7 @@ let $dxf :=
 	      </dxf:attributeValues>
 		    
 	    return 
-	      <organisationUnit 
+	      <dxf:organisationUnit 
                 level="{$level}"
 		name="{$name}"
 		shortName="{substring($name,1,50)}"
@@ -265,7 +275,7 @@ let $dxf :=
 		{$parent}
 		{$avs}
 		<dxf:openingDate>1970-01-01</dxf:openingDate> 
-	      </organisationUnit>
+	      </dxf:organisationUnit>
 	  }	  
 
 	  let $orgunit_funcs :=     
