@@ -45,7 +45,10 @@ while (($qs = count($org_queue)) > 0) {
 </csd:requestParams>";
 
     curl_setopt($ch, CURLOPT_POSTFIELDS, $request); 
+    $r_time_start = microtime(true);
     $response = curl_exec($ch);
+    $duration = (microtime(true) - $r_time_start);
+    echo "\tRequest: $duration\n";
     if ($e = curl_error($ch)) {
         echo('Error:' . $e . "\n");
         continue;
