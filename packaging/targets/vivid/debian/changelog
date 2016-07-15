@@ -1,3 +1,17 @@
+openinfoman-dhis (1.3.2~vivid) vivid; urgency=medium
+
+  * Release Version 1.3.2
+    -16d3b33 Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/16d3b33
+    -ecd8947 updated openinfoman reqs
+    --http://github.com/openhie/openinfoman-dhis/commmit/ecd8947
+    -b260a03 Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/b260a03
+    -91b1eea hierachy walker script points to localhost
+    --http://github.com/openhie/openinfoman-dhis/commmit/91b1eea
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 15 Jul 2016 17:59:11 +0000
+
 openinfoman-dhis (1.3.1~vivid) vivid; urgency=medium
 
   * Release Version 1.3.1
