@@ -5,6 +5,7 @@ import module namespace svs_lsvs = "https://github.com/openhie/openinfoman/svs_l
 import module namespace util = "https://github.com/openhie/openinfoman-dhis/util";
 import module namespace functx = "http://www.functx.com";
 import module namespace archive = "http://basex.org/modules/archive";
+import module namespace xquery = " http://basex.org/modules/xquery";
 
 declare namespace svs = "urn:ihe:iti:svs:2008";
 declare namespace csd = "urn:ihe:iti:csd:2013";
@@ -282,7 +283,7 @@ let $dxf :=
   	    for $orgUnit in $orgs
 	    return function() {$processOrgUnit($orgUnit)}
 
-	  return async:fork-join($orgunit_funcs)
+	  return xquery:fork-join($orgunit_funcs)
 
 	}
         {
@@ -365,7 +366,7 @@ let $dxf :=
 
 	    return function() {$processFac($fac)}
 
-	  return async:fork-join($fac_funcs)
+	  return xquery:fork-join($fac_funcs)
 
 	}
       </dxf:organisationUnits>

@@ -4,12 +4,12 @@ declare namespace svs = "urn:ihe:iti:svs:2008";
 declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 declare namespace adx = "http://www.openhie.org/adx";
 
+import module namespace xquery = " http://basex.org/modules/xquery";
 import module namespace csd_webconf =  "https://github.com/openhie/openinfoman/csd_webconf";
 import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm";
 import module namespace svs_lsvs = "https://github.com/openhie/openinfoman/svs_lsvs";
 import module namespace functx = "http://www.functx.com";
 import module namespace util = "https://github.com/openhie/openinfoman-dhis/util";
-import module namespace async = "http://basex.org/modules/async";
 
 declare variable $careServicesRequest as item() external; 
 
@@ -226,7 +226,7 @@ let $entities :=
   let $orgunit_funcs :=     
     for $orgUnit in $orgUnits
     return function() {$process_orgunit($orgUnit)}
-  return async:fork-join($orgunit_funcs)
+  return xquery:fork-join($orgunit_funcs)
 
 
 
@@ -588,7 +588,7 @@ let $providers :=
     let $prov_funcs := 
       for $user in $dxf/dxf:metaData/dxf:users/dxf:user 
       return function() {$process_users($user)}
-    return async:fork-join($prov_funcs)
+    return xquery:fork-join($prov_funcs)
 
 
 (: Create CSD Services for DHIS2 Data Elements :) 
@@ -602,12 +602,12 @@ let $srvcs :=
     let $de_funcs := 
       for $de in ($dataElements/dxf:dataElement)
       return function() {$process_dataelements($de)}
-    return async:fork-join($de_funcs)
+    return xquery:fork-join($de_funcs)
     ,
     let $ds_funcs := 
       for $ds in $dataSets/dxf:dataSet
       return function() {$process_dataset($ds)}
-    return async:fork-join($ds_funcs)
+    return xquery:fork-join($ds_funcs)
     )
 
 
@@ -622,7 +622,7 @@ let $svs_srvcs :=
     let $cat_funcs := 
        for $category in $categories[ @id  = $catCombos/dxf:categoryCombo/dxf:categories/dxf:category/@id]
        return function() {$process_categories($category)}
-    return async:fork-join($cat_funcs)
+    return xquery:fork-join($cat_funcs)
 
 
 
