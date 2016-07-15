@@ -4,6 +4,7 @@
 
 $host = 'http://52.90.211.227:8984';
 $host = 'http://54.237.247.69:8984';
+$host = 'http://localhost:8984';
 $document  = 'DATIM-Global.2.23.2016';
 $start_org = 'urn:uuid:a0c7c9cb-cdc4-4d24-b644-04dfcd45f9ea';
 
