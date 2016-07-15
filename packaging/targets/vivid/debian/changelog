@@ -1,3 +1,11 @@
+openinfoman-dhis (1.3.1~vivid) vivid; urgency=medium
+
+  * Release Version 1.3.1
+    -d4f96ed based 8.5.1 - switch fork-join namespace
+    --http://github.com/openhie/openinfoman-dhis/commmit/d4f96ed
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 15 Jul 2016 17:57:11 +0000
+
 openinfoman-dhis (1.2.15~vivid) vivid; urgency=medium
 
   * Release Version 1.2.15
