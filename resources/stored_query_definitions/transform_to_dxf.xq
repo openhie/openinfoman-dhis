@@ -1,6 +1,7 @@
 import module namespace dxf2csd = "http://dhis2.org/csd/dxf/2.0";
 import module namespace csd_webconf =  "https://github.com/openhie/openinfoman/csd_webconf";
 import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm";
+import module namespace csd_bl = "https://github.com/openhie/openinfoman/csd_bl";
 import module namespace svs_lsvs = "https://github.com/openhie/openinfoman/svs_lsvs";
 import module namespace util = "https://github.com/openhie/openinfoman-dhis/util";
 import module namespace functx = "http://www.functx.com";
@@ -50,9 +51,7 @@ let $doc := csd_dm:open_document($doc_name)
   (:the organziation we want to import to:)
 
 
-
 let $svcs := $doc/csd:CSD/csd:serviceDirectory/csd:service
-
 let $orgs := 
   if (functx:all-whitespace($req_org_id))
   then dxf2csd:ensure_properly_ordered_orgs($doc/csd:CSD/csd:organizationDirectory/csd:organization)
@@ -64,9 +63,10 @@ let $orgs :=
       then ()
       else
 	if ($onlyDirectChildren)
-	then (util:get_parent_orgs($all_orgs,$org),$org,$all_orgs[./csd:parent[@entityID = $req_org_id]])
-	else (util:get_parent_orgs($all_orgs,$org),$org,util:get_child_orgs($all_orgs,$org))  (: this comes back properly ordered for DHIS2 import :)
+        then (csd_bl:get_parent_orgs($all_orgs,$org),$org,$all_orgs[./csd:parent[@entityID = $req_org_id]]) 
+	else (csd_bl:get_parent_orgs($all_orgs,$org),$org,csd_bl:get_child_orgs($all_orgs,$org))   (: this comes back properly ordered for DHIS2 import :)
 
+let $t0:= trace(count($orgs), " Examining orgs: ")
 
 let $facilities := 
   if (functx:all-whitespace($req_org_id))
@@ -83,10 +83,12 @@ let $provs :=
 let $ou_oids := 
   for $dhis_url in distinct-values(($orgs/csd:record/@sourceDirectory,$facilities/csd:record/@sourceDirectory))
   let $namespace_uuid := util:uuid_generate($dhis_url,$util:namespace_uuid)
-  let $oid := concat('2.25.',util:hexdec(util:uuid_generate('rootoid',$namespace_uuid)))	
+  let $t_uuid := util:uuid_generate('rootoid',$namespace_uuid)	
+  let $t_hex := util:hexdec($t_uuid)
+  let $oid := concat('2.25.',$t_hex)
   return $oid
 
-    
+let $t3:= trace((),"OK3")
 let $dxf := 
     <dxf:metaData>
       <dxf:users>
@@ -196,6 +198,7 @@ let $dxf :=
 
       <dxf:organisationUnits>
         {	 
+	  let $t0:= trace((),"create org funcs")
 	  let $processOrgUnit := function($org) {
 	    let $dhis_url := string($org/csd:record/@sourceDirectory)
 	    let $dhis_uuid :=
@@ -278,16 +281,18 @@ let $dxf :=
 		<dxf:openingDate>1970-01-01</dxf:openingDate> 
 	      </dxf:organisationUnit>
 	  }	  
-
+	  let $t1:= trace((),"process orgs")
 	  let $orgunit_funcs :=     
   	    for $orgUnit in $orgs
 	    return function() {$processOrgUnit($orgUnit)}
 
-	  return xquery:fork-join($orgunit_funcs)
+	  return xquery:fork-join($orgunit_funcs) 
 
 	}
         {
+	  let $t0:= trace((),"create fac funcs")
 	  let $processFac := function($fac) {
+
 	    let $dhis_url := string($fac/csd:record/@sourceDirectory)
 	    let $dhis_uuid := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	    let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
@@ -351,10 +356,12 @@ let $dxf :=
 		 {$avs}
 		 <dxf:openingDate>1970-01-01</dxf:openingDate> 
 	       </dxf:organisationUnit>
+	 
 	  }
-
+	  let $t0:= trace((),"process fac funcs")
 	  let $fac_funcs :=     
   	    for $fac in $facilities
+
 	    let $dhis_url := string($fac/csd:record/@sourceDirectory)
 	    let $dhis_uuid := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	    let $dhis_id := ($fac/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
@@ -362,19 +369,20 @@ let $dxf :=
 	      if (functx:all-whitespace($dhis_uuid))
 	      then ()
 	      else ($orgs[./csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid" and ./text() = $dhis_uuid]])[1]
-	    where not(exists($org)) 	    (: remove the facilities that have already been created from a DHIS2 org unit:)
+	    where not(exists($org)) 	    (: remove the facilities that have already been created from a DHIS2 org unit:) 
+
 
 	    return function() {$processFac($fac)}
 
-	  return xquery:fork-join($fac_funcs)
-
+	  return xquery:fork-join($fac_funcs) 
+	  
 	}
       </dxf:organisationUnits>
 
 
       <dxf:organisationUnitGroups>    
         {
-	  
+	  let $t0:= trace((),"process OUGs")	  
 	  let $ou_group_schemes := distinct-values((
 	    $req_ou_group_schemes,
 	    for $oid in $ou_oids return  concat($oid,'.3')
