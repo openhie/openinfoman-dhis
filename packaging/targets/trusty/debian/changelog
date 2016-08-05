@@ -1,3 +1,13 @@
+openinfoman-dhis (1.4.3~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.3
+    -a218320 Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/a218320
+    -0a4595b fixed byte issue in until
+    --http://github.com/openhie/openinfoman-dhis/commmit/0a4595b
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 05 Aug 2016 13:05:39 +0000
+
 openinfoman-dhis (1.4.2~trusty) trusty; urgency=medium
 
   * Release Version 1.4.2
