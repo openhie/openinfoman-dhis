@@ -17,14 +17,15 @@ declare function util:uuid_tobits($tokens) {
 };
 
 declare function util:hexdec($hex) {
-  let $zero := convert:binary-to-bytes('0')
-  let $nine := convert:binary-to-bytes('9')
-  let $a := convert:binary-to-bytes('A')
-  let $e := convert:binary-to-bytes('E')
-  let $u_hex := convert:binary-to-bytes(upper-case($hex))
-  let $dec := $u_hex
-    ! xs:decimal(if ( (. >= $zero and . <= $nine)) then (. - $zero) else if ( (. >= $a and . <= $e)) then (. - $a + 10) else ())
-  return  fold-left($dec, 0, function($a, $b) { $a * 16 + $b }) 
+  let $zero := convert:binary-to-bytes(convert:string-to-hex('0'))
+  let $nine := convert:binary-to-bytes(convert:string-to-hex('9'))
+  let $a := convert:binary-to-bytes(convert:string-to-hex('A'))
+  let $e := convert:binary-to-bytes(convert:string-to-hex('E'))
+  let $uuid := xs:hexBinary(upper-case(translate($hex,'-','')))
+  let $bytes := convert:binary-to-bytes($uuid) !
+    xs:decimal(if ( (. >= $zero and . <= $nine)) then (.  - $zero) else if ( (. >= $a and . <= $e)) then (. - $a + 10) else ())
+  return  fold-left($bytes, 0, function($a, $b) { $a * 16 + $b }) 
+
 };
 
 declare function util:get_parent_orgs($all_orgs,$org) {
