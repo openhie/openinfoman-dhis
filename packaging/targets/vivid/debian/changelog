@@ -1,3 +1,13 @@
+openinfoman-dhis (1.4.5~vivid) vivid; urgency=medium
+
+  * Release Version 1.4.5
+    -82ebcfb Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/82ebcfb
+    -46a9219 added traces to dxf transform.  fixed minor syntax issues
+    --http://github.com/openhie/openinfoman-dhis/commmit/46a9219
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 14 Aug 2016 15:19:31 +0000
+
 openinfoman-dhis (1.4.4~vivid) vivid; urgency=medium
 
   * Release Version 1.4.4
