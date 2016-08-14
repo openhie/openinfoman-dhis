@@ -14,6 +14,7 @@ declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 
 declare variable $careServicesRequest as item() external; 
 
+let $t_req := trace($careServicesRequest, "Transforming according to request=")
 let $doc_name := string($careServicesRequest/@resource)
 let $processUsers := 
   if (exists($careServicesRequest/processUsers/@value))
@@ -249,6 +250,13 @@ let $dxf :=
 	      else if (not(functx:all-whitespace($porg_dhis_uuid)))
 	      then <dxf:parent uuid="{$porg_dhis_uuid}"/>
   	      else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($porg_id))}"/>
+	    let $tracers:=
+	      (trace($porg_id, "Parent Org ID="), 
+	      trace($porg, "Parent Org="),
+	      trace($porg_dhis_uuid,"Parent DHIS UUID="),
+	      trace($parent,"DXF Parent=")
+	      )
+
 	    let $avs :=
 	      <dxf:attributeValues>
 	        <dxf:attributeValue>

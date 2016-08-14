@@ -73,7 +73,7 @@ CSDLoader.prototype.GetServerTime = function () {
 
 
 CSDLoader.prototype.GetKeys = function() {
-    this.Log('getting keys')
+    this.Log('getting keys');
     var keys  = [];
     var options = {
 	url: this.BaseURL + '/api/dataStore/CSD-Loader',
@@ -99,7 +99,7 @@ CSDLoader.prototype.GetKeys = function() {
 
 
 CSDLoader.prototype.SetupGroups = function(elem) {
-    this.Log('getting groups')
+    this.Log('getting groups');
     var options = {
 	url: this.BaseURL + '/api/organisationUnitGroups',
 	method: 'GET',
@@ -182,7 +182,7 @@ CSDLoader.prototype.BindActions = function() {
 
     this.form.click(  $.proxy(function(event) {
 	//save the orgin of every click within this form so we can recover submission button
-	$(this).data('clicked',$(event.target))
+	$(this).data('clicked',$(event.target));
     },this));
 
     var lm  = this.form.find('input[name=lastmodified]');
@@ -306,7 +306,7 @@ CSDLoader.prototype.LoadDocs = function() {
 CSDLoader.prototype.UpdateSelection = function() { 
     var doc = this.form.find('select[name=docs] option:selected').val();
     var url  = this.BaseILRURL + '/csr/' + doc + '/careServicesRequest/urn:ihe:iti:csd:2014:stored-function:organization-search';
-    var selected = this.form.find('select[name=org] option:selected')
+    var selected = this.form.find('select[name=org] option:selected');
     var parentID = selected.val();
     var parentName = selected.text();
     var msg ="<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'><csd:parent entityID='" + parentID + "'/></csd:requestParams>";
@@ -335,7 +335,7 @@ CSDLoader.prototype.UpdateSelection = function() {
 	    }
 	    select.append("<option value=''></option>");
 	    this.Log("Received\n" +  this.xmlSerializer.serializeToString(xml));
-	    var logger = this.Log
+	    var logger = this.Log;
 	    $(xml).find("csd\\:organization,organization").each(
 	        function() {
 		    logger(this);
@@ -489,15 +489,17 @@ CSDLoader.prototype.ImportSelected = function() {
     this.UpdateStatus('Beginning Data Import');
     var doc = this.form.find('select[name=docs] option:selected').val();
     var url  = this.BaseILRURL + '/csr/' + doc + '/careServicesRequest/urn:dhis.org:transform_to_dxf:v2.19';
-    var selected = this.form.find('select[name=org] option:selected')
+    var selected = this.form.find('select[name=org] option:selected');
     var parentID = selected.val();
     var doUsers = this.form.find('select[name=users] option:selected').val() == '1' ? true : false;
     var doUUIDs = this.form.find('select[name=uuids] option:selected').val() == '1' ? true : false;
+    var onlyChildren = this.form.find('select[name=children] option:selected').val() == '1' ? true : false;
     var msg =
       "<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>\n"
       +" <csd:organization entityID='" + parentID + "'/>\n"
       +" <processUsers value='" + (doUsers ? '1' : '0') + "'/>\n"
       +" <preserveUUIDs value='" + (doUUIDs ? '1' : '0') + "'/>\n"
+      +" <onlyDirectChildren value='" + (onlyChildren ? '1' : '0') + "'/>\n"
       +"</csd:requestParams>";
     this.UpdateStatus('Requesting Data From ILR');
     this.Log('SENDING to ' + url + "\n" + msg);
