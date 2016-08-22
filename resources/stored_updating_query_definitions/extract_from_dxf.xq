@@ -40,7 +40,7 @@ let $dataElements := $dxf/dxf:metaData/dxf:dataElements
 let $catCombos := $dxf/dxf:metaData/dxf:categoryCombos
   
 let $doc_name := string($careServicesRequest/@resource)
-let $doc := csd_dm:open_document($doc_name)
+let $doc := csd_dm:open_document($doc_name,true())
 let $org_dir := $doc/csd:CSD/csd:organizationDirectory
 let $fac_dir := $doc/csd:CSD/csd:facilityDirectory
 let $prov_dir := $doc/csd:CSD/csd:providerDirectory
