@@ -34,7 +34,7 @@ let $zip :=
   if (exists($careServicesRequest/zip/@value))
   then ($careServicesRequest/zip/@value = 1)
   else true()
-let $req_org_id :=    $careServicesRequest/csd:organization/@entityID 
+let $req_org_id :=    xs:string($careServicesRequest/csd:organization/@entityID )
 let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
 
 
@@ -45,20 +45,24 @@ let $t0 :=
     trace($onlyDirectChildren,'Only Direct Children: '),
     trace($zip,'Zip: '),
     trace($req_org_id,'Requested Org EntityID: '),
-    trace($req_ou_group_schemes,'Request Org Group Schemes: ')
+    trace(xs:string($req_org_id),'Requested Org EntityID text: '),
+    trace($req_ou_group_schemes,'Request Org Group Schemes: '),
+    trace(count($doc/csd:CSD/csd:organizationDirectory/csd:organization), 'All Orgs count:')
   )
 
 let $doc := csd_dm:open_document($doc_name)
   (:the organziation we want to import to:)
 
-
 let $svcs := $doc/csd:CSD/csd:serviceDirectory/csd:service
 let $orgs := 
   if (functx:all-whitespace($req_org_id))
-  then dxf2csd:ensure_properly_ordered_orgs($doc/csd:CSD/csd:organizationDirectory/csd:organization)
+  then 
+    let $t0-norg := trace(() , "no org matching req_org_id")
+    return dxf2csd:ensure_properly_ordered_orgs($doc/csd:CSD/csd:organizationDirectory/csd:organization)
   else 
     let $all_orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
     let $org := $all_orgs[@entityID = $req_org_id]
+    let $t0-child := trace($org, "Found organization:")
     return 
       if (not(exists($org)))
       then ()
@@ -117,6 +121,8 @@ let $dxf :=
 	   return <dxf:userAuthorityGroup id="{string($o_id/@code)}"/>
 	let $p_orgs := 
 	  for $org in $prov/csd:organizations/csd:organization
+	  let $ou_dhis_id :=
+	    ($facilities[@entityID = $org/@entityID]/csd:otherID[@assigningAuthorityName = concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]/text()
 	  let $ou_uuid := 
 	    if ($preserveUUIDs) 
 	    then ($facilities[@entityID = $org/@entityID]/csd:otherID[@assigningAuthorityName = concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]/text()
@@ -124,7 +130,7 @@ let $dxf :=
 	  return 
 	    if (functx:all-whitespace($ou_uuid)) 
 	    then () 
-	    else  <dxf:organisationUnit uuid="{$ou_uuid}"/>
+	    else  <dxf:organisationUnit uuid="{$ou_uuid}" id="{$ou_dhis_id}"/>
 
 	      
 	return
@@ -241,15 +247,21 @@ let $dxf :=
 	    let $created := dxf2csd:fixup_date($org/csd:record/@created)
 	    let $lm := dxf2csd:fixup_date($org/csd:record/@updated)
 
-	    let $porg_id := $org/csd:parent/@entityID
-	    let $porg := $orgs[@entityID = $porg_id]
+	    let $porg_ent_id := $org/csd:parent/@entityID
+	    let $porg := $orgs[@entityID = $porg_ent_id]
 	    let $porg_dhis_uuid := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
+	    let $porg_dhis_id := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
+	    let $porg_id :=
+	      if (not(functx:all-whitespace($porg_dhis_uuid)))
+              then $porg_dhis_id
+	      else dxf2csd:extract_id_from_entityid(string($porg_ent_id))
+
 	    let $parent :=
-	      if (functx:all-whitespace($porg_id))
+	      if (functx:all-whitespace($porg_ent_id))
 	      then () (: no parent :)
 	      else if (not(functx:all-whitespace($porg_dhis_uuid)))
-	      then <dxf:parent uuid="{$porg_dhis_uuid}"/>
-  	      else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($porg_id))}"/>
+	      then <dxf:parent uuid="{$porg_dhis_uuid}" id="{$porg_id}"/>     (: DHIS2 2.25 drops support for uuid :)
+  	      else <dxf:parent id="{$porg_id}"/> 
 	    let $tracers:=
 	      (trace($porg_id, "Parent Org ID="), 
 	      trace($porg, "Parent Org="),
@@ -323,12 +335,18 @@ let $dxf :=
 	      let $org_id := ($orgs[@entityID = ($fac/csd:organizations/csd:organization)[1]/@entityID ])[1]
 	      let $org := $orgs[@entity_id = $org_id]
 	      let $org_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
+	      let $org_dhis_id := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
+	      let $org_id :=
+	        if (not(functx:all-whitespace($org_dhis_uuid)))
+		then $org_dhis_id
+	        else dxf2csd:extract_id_from_entityid(xs:string($org_id))
+
 	      let $parent := 
 	        if (functx:all-whitespace($org_id))
 	        then ()  (: no parent :)
 	        else if (not(functx:all-whitespace($org_dhis_uuid)))
-	          then <dxf:parent id="{$org_dhis_uuid}"/>
-	          else <dxf:parent id="{dxf2csd:extract_id_from_entityid(string($org_id))}"/>
+	          then <dxf:parent uuid="{$org_dhis_uuid}" id="{$org_id}"/>
+	          else <dxf:parent uuid="{dxf2csd:extract_id_from_entityid(string($org_id))}" id="{$org_id}"/>
 	      let $avs :=
 	        <dxf:attributeValues>
   		  <dxf:attributeValue>  
@@ -341,6 +359,7 @@ let $dxf :=
 	        <dxf:organisationUnit 
                   level="{$level}"
 		  name="{$name}"
+		  id="{$dhis_id}"
 		  shortName="{substring($name,1,50)}"
 		  lastUpdated="{$lm}"
 		  created="{$created}"
