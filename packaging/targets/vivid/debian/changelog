@@ -1,3 +1,11 @@
+openinfoman-dhis (1.4.6~vivid) vivid; urgency=medium
+
+  * Release Version 1.4.6
+    -160df63 updated transform to DXF so that it should work with DHIS2
+    --http://github.com/openhie/openinfoman-dhis/commmit/160df63
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 22 Aug 2016 12:31:58 +0000
+
 openinfoman-dhis (1.4.5~vivid) vivid; urgency=medium
 
   * Release Version 1.4.5
