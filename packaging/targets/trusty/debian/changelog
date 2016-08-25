@@ -1,3 +1,11 @@
+openinfoman-dhis (1.4.9~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.9
+    -5466e90 fixup UUID support with basex 8.4 changes
+    --http://github.com/openhie/openinfoman-dhis/commmit/5466e90
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 25 Aug 2016 19:30:05 +0000
+
 openinfoman-dhis (1.4.8~trusty) trusty; urgency=medium
 
   * Release Version 1.4.8
