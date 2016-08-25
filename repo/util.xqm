@@ -1,5 +1,5 @@
 module namespace util = "https://github.com/openhie/openinfoman-dhis/util";
-
+declare namespace UUID = "java.util.UUID";
 declare namespace dxf = "http://dhis2.org/schema/dxf/2.0";
 declare namespace csd = "urn:ihe:iti:csd:2013";
 declare namespace gml = "http://www.opengis.net/gml";
@@ -15,6 +15,7 @@ declare function util:uuid_tobits($tokens) {
         )
   else $tokens
 };
+
 
 declare function util:hexdec($hex) {
   let $zero := convert:binary-to-bytes(convert:string-to-hex('0'))
@@ -55,23 +56,9 @@ declare function util:get_child_orgs($orgs,$org) {
 
 
 declare function util:uuid_generate($name,$namespace) {
-  (: adapted from http://www.ietf.org/rfc/rfc4122.txt and https://gist.github.com/dahnielson/508447 :)
-  let $bits := util:uuid_tobits(functx:chars(translate($namespace,'-','' )))
-  let $s_bits := serialize($bits)
-  let $hash := serialize(xs:hexBinary(hash:md5(concat($s_bits,  $name))))
-
-  let $uuid :=
-    concat(
-      substring( $hash,1, 8)
-      ,'-'
-      ,substring( $hash,9, 4)  
-      ,'-'
-      ,xs:hexBinary(bin:or(bin:and(bin:hex(substring($hash, 13, 4)),bin:hex('0FFF')),bin:hex('3000')))
-      ,'-'
-       ,xs:hexBinary(bin:or( bin:and(bin:hex(substring( $hash,17, 4)) , bin:hex('3FFF')) , bin:hex('8000')))
-      ,'-'
-      ,substring( $hash,21, 12)
-      )
+  let $ns_bits := util:uuid_tobits(functx:chars(translate($namespace,'-','' )))
+  let $n_bytes := convert:string-to-base64($name) 
+  let $uuid := UUID:nameUUIDFromBytes(  bin:join(($ns_bits, $n_bytes)))
   return lower-case($uuid)
 };
 
