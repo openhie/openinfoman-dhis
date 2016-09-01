@@ -2,7 +2,13 @@ var CSDLoader = function(form) {
     this.form = form;
     this.status = this.form.find( ".csdstatus" );
     this.BaseURL = window.location.href.substring(0, window.location.href.indexOf('/api/apps/csd-loader'));
-    this.Log('BaseURL=' + this.BaseURL);
+
+    if (this.BaseURL.lastIndexOf('/') > 9) {
+        this.BaseILRURL = this.BaseURL.substring(0,this.BaseURL.lastIndexOf('/'))+ '/ILR/CSD';
+    } else{
+        this.BaseILRURL = this.BaseURL + '/ILR/CSD';
+    }
+
     this.BaseILRURL = this.BaseURL.substring(0,this.BaseURL.lastIndexOf('/'))+ '/ILR/CSD';   
     this.Log('Base ILR URL=' + this.BaseILRURL);
     this.xmlSerializer = new XMLSerializer();
