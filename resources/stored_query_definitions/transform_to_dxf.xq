@@ -38,6 +38,9 @@ let $req_org_id :=    xs:string($careServicesRequest/csd:organization/@entityID 
 let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
 
 
+let $doc := csd_dm:open_document($doc_name)
+  (:the organziation we want to import to:)
+
 let $t0 :=
   (
     trace($processUsers,'Process users: '),
@@ -50,8 +53,6 @@ let $t0 :=
     trace(count($doc/csd:CSD/csd:organizationDirectory/csd:organization), 'All Orgs count:')
   )
 
-let $doc := csd_dm:open_document($doc_name)
-  (:the organziation we want to import to:)
 
 let $svcs := $doc/csd:CSD/csd:serviceDirectory/csd:service
 let $orgs := 
@@ -263,9 +264,17 @@ let $dxf :=
 	      then <dxf:parent uuid="{$porg_dhis_uuid}" id="{$porg_id}"/>     (: DHIS2 2.25 drops support for uuid :)
   	      else <dxf:parent id="{$porg_id}"/> 
 	    let $tracers:=
-	      (trace($porg_id, "Parent Org ID="), 
+	      (trace($org, "Org="), 
+	      trace($dhis_url, "DHIS URL= "),
+	      trace($dhis_code, "DHIS Code- "),
+	      trace($id_code, "DHIS ID Code= "),
+	      trace($id, "DHIS ID= "),
+	      trace($uuid, "UUID= "),
+	      trace($porg_id, "Parent Org ID="), 
+	      trace($porg_ent_id, "Parent Org Ent ID="), 
 	      trace($porg, "Parent Org="),
 	      trace($porg_dhis_uuid,"Parent DHIS UUID="),
+	      trace($porg_dhis_id,"Parent DHIS ID="),
 	      trace($parent,"DXF Parent=")
 	      )
 
@@ -277,7 +286,7 @@ let $dxf :=
 	        </dxf:attributeValue>
 	      </dxf:attributeValues>
 		    
-	    return 
+	    let $org_unit := 
 	      <dxf:organisationUnit 
                 level="{$level}"
 		name="{$name}"
@@ -300,6 +309,9 @@ let $dxf :=
 		{$avs}
 		<dxf:openingDate>1970-01-01</dxf:openingDate> 
 	      </dxf:organisationUnit>
+
+	    let $t3 := trace($org_unit, "Created Org Unit")
+	    return $org_unit
 	  }	  
 	  let $t1:= trace((),"process orgs")
 	  let $orgunit_funcs :=     
