@@ -1,0 +1,5 @@
+<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>
+  <csd:organization  entityID="urn:uuid:dd65dd2b-0c1e-46b6-bcbc-6eb3be0c388f"/>
+  <zip value="0"/>
+  <onlyDirectChildren value="0"/>
+</csd:requestParams>
