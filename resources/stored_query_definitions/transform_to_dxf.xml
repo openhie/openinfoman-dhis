@@ -26,6 +26,19 @@
 	<b>preserveUUIDs</b>
 	0..1 processUUIDs  element has integer attribute @value.  Defaults to 1 which means we preserve DHIS2 UUIDs, if present, when creating the DXF metadata for import.
       </li>
+      <li>
+	<b>onlyDirectChildren</b>
+	0..1 onlyDirectChildren  element has integer attribute @value.  Defaults to 1 which means that, if a organization is specified, we only extract the direct children of that organization
+      </li>
+      <li>
+	<b>zip</b>
+	0..1 zip  element has integer attribute @value.  Defaults to 1 which means that the DHIS2 DXF file will be zipped
+      </li>
+      <li>
+	<b>csd:record </b>
+	0..1 csd:record element.  If csd:record element has @updated attribute which is a valid xs:dateTime, then  the transformation will be restricted to those elements which have been updated since the indicated time.   In the case of a matching organization, all parents of that matching organizations will also be included.
+      </li>
+
     </ul>
   </csd:description>
   <csd:definition ><xi:include parse='text' href='transform_to_dxf.xq'/></csd:definition>

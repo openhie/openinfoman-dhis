@@ -30,10 +30,21 @@ let $onlyDirectChildren :=
   then ($careServicesRequest/onlyDirectChildren/@value = 1)
   else true()
 
+
+let $record := $careServicesRequest/csd:record
+
+let $updated := 
+  try {
+    xs:dateTime($careServicesRequest/csd:record/@updated)
+  } catch e {
+    false()
+  }
+
 let $zip := 
   if (exists($careServicesRequest/zip/@value))
   then ($careServicesRequest/zip/@value = 1)
   else true()
+
 let $req_org_id :=    xs:string($careServicesRequest/csd:organization/@entityID )
 let $req_ou_group_schemes:= distinct-values($careServicesRequest/orgUnitGroupSchemes/orgUnitGroupScheme/text())
 
@@ -53,36 +64,101 @@ let $t0 :=
     trace(count($doc/csd:CSD/csd:organizationDirectory/csd:organization), 'All Orgs count:')
   )
 
-
+let $all_orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
 let $svcs := $doc/csd:CSD/csd:serviceDirectory/csd:service
 let $orgs := 
   if (functx:all-whitespace($req_org_id))
-  then 
-    let $t0-norg := trace(() , "no org matching req_org_id")
-    return dxf2csd:ensure_properly_ordered_orgs($doc/csd:CSD/csd:organizationDirectory/csd:organization)
+  then     
+    if (not($updated instance of xs:dateTime))
+    then $all_orgs
+    else
+      let $roots := $all_orgs[functx:all-whitespace(./csd:parent/@entityID)]
+      return 
+        for $root in $roots
+	return csd_bl:get_child_orgs($all_orgs,$root,$updated)
   else 
-    let $all_orgs := $doc/csd:CSD/csd:organizationDirectory/csd:organization
     let $org := $all_orgs[@entityID = $req_org_id]
     let $t0-child := trace($org, "Found organization:")
     return 
       if (not(exists($org)))
-      then ()
+      then 
+        let $t0-norg := trace($req_org_id , "no org matching req_org_id")
+	return ()
       else
-	if ($onlyDirectChildren)
-        then (csd_bl:get_parent_orgs($all_orgs,$org),$org,$all_orgs[./csd:parent[@entityID = $req_org_id]]) 
-	else (csd_bl:get_parent_orgs($all_orgs,$org),$org,csd_bl:get_child_orgs($all_orgs,$org))   (: this comes back properly ordered for DHIS2 import :)
+	if (not($updated instance of xs:dateTime))
+	then 
+	  if ($onlyDirectChildren)
+          then (csd_bl:get_parent_orgs($all_orgs,$org),$org,$all_orgs[./csd:parent[@entityID = $req_org_id]]) 
+	  else (csd_bl:get_parent_orgs($all_orgs,$org),$org,csd_bl:get_child_orgs($all_orgs,$org))   
+	else
+	  let $children := 
+	    if ($onlyDirectChildren)
+	    then 
+	       for $child in $all_orgs[ (./csd:parent[@entityID = $req_org_id])]
+	       let $c_updated := 
+		 try { 
+		   xs:dateTime($child/csd:record/@updated)
+		 } catch e {
+		   false()
+		 }
+               return 
+		 if ( ($c_updated instance of xs:dateTime) and ($c_updated >= $updated) )
+	         then $child
+		 else ()
+	    else csd_bl:get_child_orgs($all_orgs,$org,$updated)
+	  return
+	    if (count($children) > 0)
+	    then (csd_bl:get_parent_orgs($all_orgs,$org),$org,$children)
+	    else 
+	      if (xs:dateTime($org/csd:record/@updated) >= $updated)
+	      then (csd_bl:get_parent_orgs($all_orgs,$org),$org)
+	      else ()
 
 let $t0:= trace(count($orgs), " Examining orgs: ")
 
 let $facilities := 
-  if (functx:all-whitespace($req_org_id))
-  then $doc/csd:CSD/csd:facilityDirectory/csd:facility
-  else  $doc/csd:CSD/csd:facilityDirectory/csd:facility[./csd:organizations/csd:organization = $orgs]
+  let $facs := 
+    if (functx:all-whitespace($req_org_id))
+    then $doc/csd:CSD/csd:facilityDirectory/csd:facility
+    else  $doc/csd:CSD/csd:facilityDirectory/csd:facility[./csd:organizations/csd:organization = $orgs]
+  return 
+    if (not($updated instance of xs:dateTime))
+    then $facs
+    else 
+      for $fac in $facs
+      let $f_updated := 
+        try { 
+          xs:dateTime($fac/csd:record/@updated)
+        } catch e {  
+	  false()
+        }
+      return 
+        if ( ($f_updated instance of xs:dateTime) and ($f_updated >= $updated) )
+        then $fac
+        else ()
 
 let $provs := 
-  if ($processUsers)
-  then $doc/csd:CSD/csd:providerDirectory/csd:provider
-  else ()
+  if (not($processUsers))
+  then ()
+  else
+    let $provs := $doc/csd:CSD/csd:providerDirectory/csd:provider
+    return
+      if (not($updated instance of xs:dateTime)) 
+      then $provs
+      else 
+	for $prov  in $provs
+	let $p_updated := 
+	  try { 
+            xs:dateTime($prov/csd:record/@updated)
+	  } catch e {
+	    false()
+	  }
+	return 
+	  if ( ($p_updated instance of xs:dateTime) and ($p_updated >= $updated) )
+	  then $prov
+	  else ()
+      
+
 
 
 
