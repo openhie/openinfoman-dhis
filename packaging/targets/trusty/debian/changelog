@@ -1,3 +1,15 @@
+openinfoman-dhis (1.4.13~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.13
+    -759044e added debuggin info for parents when processing dxf
+    --http://github.com/openhie/openinfoman-dhis/commmit/759044e
+    -0935899 remove file
+    --http://github.com/openhie/openinfoman-dhis/commmit/0935899
+    -7535490 moved tests artifacts
+    --http://github.com/openhie/openinfoman-dhis/commmit/7535490
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 14 Sep 2016 18:06:36 +0000
+
 openinfoman-dhis (1.4.12~trusty) trusty; urgency=medium
 
   * Release Version 1.4.12
