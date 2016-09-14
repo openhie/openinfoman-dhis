@@ -93,12 +93,16 @@ let $process_orgunit := function($orgUnit) {
     :)
     
   let $porg := ($orgUnits[@id=$pid])[1]
+  let $t0 := trace($orgUnit, "Processing org unit=")
+  let $t1 := trace($porg, "Parent org unit w/in DXF is=")
   let $parentEntityID :=     
     if (exists($porg))  (: there is a matching parent organization in the imported dxf document :)
     then  
       (:see if there is a DHIS2 attribute for the csd_entity ID :)
       let $p_entity_uuid :=((($porg/dxf:attributeValues/dxf:attributeValue[./dxf:attribute[@name='entityID']])[1])/dxf:value[1])/text()
       let $p_uuid := string($porg/@uuid)
+      let $t3 := trace($p_uuid, "porg found. Parent UUID is=")
+      let $t4 := trace($p_entity_uuid, "porg found. Parent Entity UUID is=")
       return
         if (not(functx:all-whitespace($p_entity_uuid))) 
         then concat("urn:uuid:",$p_entity_uuid)
@@ -108,6 +112,8 @@ let $process_orgunit := function($orgUnit) {
     else (: we didn't find a matching parent organization in the dxf document, but may already be in target:)
       let $peorg := ($org_otherids[./text() = $pid])[1]/..  (: get the parent csd:organization element :)
 (:      let $peorg := ($org_dir/csd:organization[./csd:otherID[@code='id' and ./text() = $pid]])[1] :)
+      let $t5 := trace( $pid, "PID=")
+      let $t6  :=trace($peorg, "CSD parent org is=")
       return
 	if (exists($peorg))
         then $peorg/@entityID
@@ -217,6 +223,7 @@ let $process_orgunit := function($orgUnit) {
       <csd:parent  entityID="{$parentEntityID}"/>
       {$record}
     </csd:organization>
+  let $t10 := trace($org_entity, "creating CSD organization=")
   return ($org_entity,$fac_entity)
 
 }
