@@ -43,7 +43,7 @@ EOF
 reset_time() {
     source_config
     echo "Resetting time on $DHIS2_URL"
-    $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_AUTH  $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs '200\|404'
+    $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_AUTH  $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $GREP -cs '200\|404'
 }
 
 
@@ -105,7 +105,7 @@ source_config
 
 #check if LastExported key is in CSD-Loader namespace for DHIS2 data store
 echo "Checking CSD-Loader data stored contents"
-HASKEY=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader | $GREP -sc LastExported || true`
+HASKEY=`$CURL -sv -o /dev/null  -w "%{http_code}"  $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $GREP -qs '200\|201'`
 
 
 #create destitation document (if it doesn't exist)
@@ -124,7 +124,7 @@ if [ "$FULL" = true ]; then
     LASTUPDATE=false
 elif [ "$HASKEY" = "1" ]; then
     echo "Getting last export time from $DHIS2_URL"
-    LASTUPDATE=`$CURL -sv  $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $JSHON -e value`
+    LASTUPDATE=`$CURL -sv  $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $JSHON -e value`
     #strip any beginning / ending quotes
     LASTUPDATE="${LASTUPDATE%\"}"
     LASTUPDATE="${LASTUPDATE#\"}"
@@ -229,6 +229,6 @@ fi
 
 echo "Publishing to ILR in $ILR_DOC at $ILR_URL"
 PAYLOAD="{ \"value\" : \"$EXPORTED\"}"
-echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader/LastExported | $GREP -qcs '200\|201'
+echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $GREP -cs '200\|201'
 echo "Successfully published to ILR"
 exit 0
