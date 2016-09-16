@@ -72,10 +72,11 @@ let $orgs :=
     if (not($updated instance of xs:dateTime))
     then $all_orgs
     else
-      let $roots := $all_orgs[functx:all-whitespace(./csd:parent/@entityID)]
-      return 
-        for $root in $roots
-	return csd_bl:get_child_orgs($all_orgs,$root,$updated)
+      functx:distinct-nodes(
+        for $changed in  $all_orgs[ (xs:dateTime(./csd:record/@updated) >= $updated ) ]
+	return csd_bl:get_parent_orgs($all_orgs,$changed)
+       )
+
   else 
     let $org := $all_orgs[@entityID = $req_org_id]
     let $t0-child := trace($org, "Found organization:")
@@ -93,26 +94,20 @@ let $orgs :=
 	else
 	  let $children := 
 	    if ($onlyDirectChildren)
-	    then 
-	       for $child in $all_orgs[ (./csd:parent[@entityID = $req_org_id])]
-	       let $c_updated := 
-		 try { 
-		   xs:dateTime($child/csd:record/@updated)
-		 } catch e {
-		   false()
-		 }
-               return 
-		 if ( ($c_updated instance of xs:dateTime) and ($c_updated >= $updated) )
-	         then $child
-		 else ()
-	    else csd_bl:get_child_orgs($all_orgs,$org,$updated)
-	  return
-	    if (count($children) > 0)
-	    then (csd_bl:get_parent_orgs($all_orgs,$org),$org,$children)
+	    then  
+	      $all_orgs[ 
+	        (./csd:parent[@entityID = $req_org_id]) 
+		and (xs:dateTime(./csd:record/@updated) >= $updated )
+		]
 	    else 
-	      if (xs:dateTime($org/csd:record/@updated) >= $updated)
-	      then (csd_bl:get_parent_orgs($all_orgs,$org),$org)
-	      else ()
+	      let $descendants := csd_bl:get_child_orgs($all_orgs,$org)
+	      return $descendants[xs:dateTime(./csd:record/@updated) >= $updated]
+	  return
+	    functx:distinct-nodes(
+              for $changed in  $children
+	      return csd_bl:get_parent_orgs($all_orgs,$changed)
+            )
+
 
 let $t0:= trace(count($orgs), " Examining orgs: ")
 
