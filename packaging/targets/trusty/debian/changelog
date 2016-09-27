@@ -1,3 +1,15 @@
+openinfoman-dhis (1.4.14~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.14
+    -9e637d9 added test
+    --http://github.com/openhie/openinfoman-dhis/commmit/9e637d9
+    -256b6dc updates for publisher to hamdle multiple docs
+    --http://github.com/openhie/openinfoman-dhis/commmit/256b6dc
+    -b2f6aab faster CSD->DXF when last updated time is set
+    --http://github.com/openhie/openinfoman-dhis/commmit/b2f6aab
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 27 Sep 2016 13:30:01 +0000
+
 openinfoman-dhis (1.4.13~trusty) trusty; urgency=medium
 
   * Release Version 1.4.13
