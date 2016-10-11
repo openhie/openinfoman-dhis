@@ -105,8 +105,9 @@ source_config
 
 #check if LastExported key is in CSD-Loader namespace for DHIS2 data store
 echo "Checking CSD-Loader data stored contents"
+set +e
 HASKEY=`$CURL -sv -o /dev/null  -w "%{http_code}"  $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $GREP -qs '200\|201'`
-
+set -e
 
 #create destitation document (if it doesn't exist)
 echo "Creating $ILR_DOC on ILR at $ILR_URL (if it doesn't exist)"
