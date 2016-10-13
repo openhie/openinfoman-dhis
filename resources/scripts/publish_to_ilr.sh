@@ -221,9 +221,9 @@ echo $CSR | $CURL -sv --data-binary @- -X POST -H 'Content-Type: text/xml' $ILR_
 #update last exported
 echo "Updating export time in CSD-Loader data store to $EXPORTED"
 if [ "$NOTHASKEY" = "1" ]; then
-    METHOD="PUT"
-else
     METHOD="POST"
+else
+    METHOD="PUT"
 fi
 
 
