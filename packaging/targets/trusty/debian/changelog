@@ -1,3 +1,21 @@
+openinfoman-dhis (1.4.15~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.15
+    -1bdc4fe fix child issue for csd->dxf w/ timestamp
+    --http://github.com/openhie/openinfoman-dhis/commmit/1bdc4fe
+    -f334b7c fixed boolean check with haskey
+    --http://github.com/openhie/openinfoman-dhis/commmit/f334b7c
+    -19a0721 fixed boolean check with haskey
+    --http://github.com/openhie/openinfoman-dhis/commmit/19a0721
+    -e8549f2 fix syntax error w/ HASKEY
+    --http://github.com/openhie/openinfoman-dhis/commmit/e8549f2
+    -09cd0e2 fix HASKEY in publish_to_ilr.sh
+    --http://github.com/openhie/openinfoman-dhis/commmit/09cd0e2
+    -2985300 don't error out when getting a 404 checked on the import t
+    --http://github.com/openhie/openinfoman-dhis/commmit/2985300
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 13 Oct 2016 21:16:51 +0000
+
 openinfoman-dhis (1.4.14~trusty) trusty; urgency=medium
 
   * Release Version 1.4.14
