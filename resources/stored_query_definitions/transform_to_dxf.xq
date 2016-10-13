@@ -105,7 +105,7 @@ let $orgs :=
 	  return
 	    functx:distinct-nodes(
               for $changed in  $children
-	      return csd_bl:get_parent_orgs($all_orgs,$changed)
+	      return (csd_bl:get_parent_orgs($all_orgs,$changed),$changed)
             )
 
 
