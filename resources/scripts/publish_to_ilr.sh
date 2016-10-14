@@ -125,6 +125,9 @@ if [ "$FULL" = true ]; then
     echo "Doing full publish"
     LASTUPDATE=false
 elif [ "$NOTHASKEY" = "1" ]; then
+    echo "Doing full publish"
+    LASTUPDATE=false
+else
     echo "Getting last export time from $DHIS2_URL"
     LASTUPDATE=`$CURL -sv  $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $JSHON -e value`
     #strip any beginning / ending quotes
@@ -135,9 +138,6 @@ elif [ "$NOTHASKEY" = "1" ]; then
     echo "Last export performed succesfully at $LASTUPDATE"
     #convert to yyyy-mm-dd format (dropping time as it is ignored by DHIS2)
     LASTUPDATE=$(date --date="$LASTUPDATE" +%F)
-else
-    echo "Doing full publish"
-    LASTUPDATE=false
 fi
 
 
