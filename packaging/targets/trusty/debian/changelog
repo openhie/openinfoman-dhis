@@ -1,3 +1,11 @@
+openinfoman-dhis (1.4.17~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.17
+    -cb80561 fix for https://github.com/pepfar-datim/OHIE/issues/564#ev
+    --http://github.com/openhie/openinfoman-dhis/commmit/cb80561
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 14 Oct 2016 14:00:15 +0000
+
 openinfoman-dhis (1.4.16~trusty) trusty; urgency=medium
 
   * Release Version 1.4.16
