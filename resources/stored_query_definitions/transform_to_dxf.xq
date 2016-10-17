@@ -74,7 +74,7 @@ let $orgs :=
     else
       functx:distinct-nodes(
         for $changed in  $all_orgs[ (xs:dateTime(./csd:record/@updated) >= $updated ) ]
-	return csd_bl:get_parent_orgs($all_orgs,$changed)
+	return (csd_bl:get_parent_orgs($all_orgs,$changed),$changed)
        )
 
   else 
