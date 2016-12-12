@@ -32,12 +32,12 @@ let $oid :=
     (:generate it from the uuid :)
     concat('2.25.',util:hexdec(util:uuid_generate('rootoid',$namespace_uuid)))
 
-let $orgUnits := $dxf/dxf:metaData/dxf:organisationUnits/dxf:organisationUnit
-let $orgGroups := $dxf/dxf:metaData/dxf:organisationUnitGroups/dxf:organisationUnitGroup
-let $userRoles := $dxf/dxf:metaData/dxf:userRoles
-let $dataSets := $dxf/dxf:metaData/dxf:dataSets
-let $dataElements := $dxf/dxf:metaData/dxf:dataElements
-let $catCombos := $dxf/dxf:metaData/dxf:categoryCombos
+let $orgUnits := $dxf/(dxf:metaData | dxf:metadata)/dxf:organisationUnits/dxf:organisationUnit
+let $orgGroups := $dxf/(dxf:metaData | dxf:metadata)/dxf:organisationUnitGroups/dxf:organisationUnitGroup
+let $userRoles := $dxf/(dxf:metaData | dxf:metadata)/dxf:userRoles
+let $dataSets := $dxf/(dxf:metaData | dxf:metadata)/dxf:dataSets
+let $dataElements := $dxf/(dxf:metaData | dxf:metadata)/dxf:dataElements
+let $catCombos := $dxf/(dxf:metaData | dxf:metadata)/dxf:categoryCombos
   
 let $doc_name := string($careServicesRequest/@resource)
 let $doc := csd_dm:open_document($doc_name,true())
@@ -48,7 +48,7 @@ let $srvc_dir := $doc/csd:CSD/csd:serviceDirectory
 
 let $now := current-dateTime()
 
-
+let $trace := trace((),"Begin extraction from DXF (v25)")
 
 (: cache some node calculations :)
 let $org_otherids := $org_dir/csd:organization/csd:otherID[@code='id']
@@ -219,8 +219,9 @@ let $process_orgunit := function($orgUnit) {
 
     let $dhis_extension := 
       <csd:extension urn="urn:http://www.dhis2.org/api/organisationUnit">
-	<dxf:organisationUnit shortname="{$orgUnit/@shortName}">
+	<dxf:organisationUnit shortName="{$orgUnit/@shortName}">
 	  {$orgUnit/dxf:displayShortName}
+	  {$orgUnit/dxf:openingDate}
 	  {$orgUnit/dxf:featureType}
 	  {$orgUnit/dxf:dimensionItem}
 	  {$orgUnit/dxf:coordinates}
@@ -613,7 +614,7 @@ let $providers :=
   then ()
   else 
     let $prov_funcs := 
-      for $user in $dxf/dxf:metaData/dxf:users/dxf:user 
+      for $user in $dxf/(dxf:metaData | dxf:metadata)/dxf:users/dxf:user 
       return function() {$process_users($user)}
     return xquery:fork-join($prov_funcs)
 
@@ -639,7 +640,7 @@ let $srvcs :=
 
 
 (: Create an SVS list for each of the disaggregator sets in  the service :)
-let $categories := $dxf/dxf:metaData/dxf:categories/dxf:category
+let $categories := $dxf/(dxf:metaData | dxf:metadata)/dxf:categories/dxf:category
 
 let $svs_srvcs := 
   if (not($do_srvcs))
@@ -656,7 +657,7 @@ let $svs_srvcs :=
 (: Create an SVS list for the Org Unit Levels :)
 	
 let $level_oid := concat($oid,'.2')
-let $levels := $dxf/dxf:metaData/dxf:organisationUnitLevels/dxf:organisationUnitLevel
+let $levels := $dxf/(dxf:metaData | dxf:metadata)/dxf:organisationUnitLevels/dxf:organisationUnitLevel
 let $level_version := max(for $date in $levels/@lastUpdated return xs:dateTime(util:fixup_date($date)))
 let $svs_levels :=
   <svs:ValueSet  xmlns:svs="urn:ihe:iti:svs:2008" id="{$level_oid}" version="{$level_version}" displayName="Organisation Unit Levels for DHIS at {$dhis_url}">
@@ -688,8 +689,8 @@ let $svs_providers :=
   if (not($do_hws))
   then ()
   else 
-    let $urs := $dxf/dxf:metaData/dxf:userRoles/dxf:userRole
-    let $ags := $dxf/dxf:metaData/dxf:userAuthorityGroups/dxf:userAuthorityGroup
+    let $urs := $dxf/(dxf:metaData | dxf:metadata)/dxf:userRoles/dxf:userRole
+    let $ags := $dxf/(dxf:metaData | dxf:metadata)/dxf:userAuthorityGroups/dxf:userAuthorityGroup
     let $urs_version := max(for $date in $urs/@lastUpdated return xs:dateTime(util:fixup_date($date)))
     let $ags_version := max(for $date in $ags/@lastUpdated return xs:dateTime(util:fixup_date($date)))
     let $ur_oid := concat($oid,'.1')
