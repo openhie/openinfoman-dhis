@@ -1,3 +1,11 @@
+openinfoman-dhis (1.4.19~vivid) vivid; urgency=medium
+
+  * Release Version 1.4.19
+    -9f32884 fixes for opening date, feature type, short name, coordina
+    --http://github.com/openhie/openinfoman-dhis/commmit/9f32884
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 12 Dec 2016 05:17:11 +0000
+
 openinfoman-dhis (1.4.18~vivid) vivid; urgency=medium
 
   * Release Version 1.4.18
