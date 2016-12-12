@@ -277,7 +277,7 @@ let $dxf :=
 
       <dxf:organisationUnits>
         {	 
-	  let $t0:= trace((),"create org funcs")
+	  let $t0:= trace((),"create org funcs ")
 	  let $processOrgUnit := function($org) {
 	    let $dhis_url := string($org/csd:record/@sourceDirectory)
 	    let $dhis_uuid :=
@@ -295,34 +295,36 @@ let $dxf :=
             
 	    let $name := $org/csd:primaryName/text()
 	    let $dhis_extensions := $org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/*
-	    let $short_name := ($dhis_extensions/dxf:displayShortName)[1]/text()
-	    let $displayShortName := 	         
-	       <dxf:displayShortName>{$short_name}</dxf:displayShortName>
-	    let $featureType := 	         
-	       <dxf:featureType>{($dhis_extensions/dxf:featureType)[1]/text()}</dxf:featureType>
-	    let $openingDate := 	         
-	       <dxf:openingDate>{($dhis_extensions/dxf:openingDate)[1]/text()}</dxf:openingDate>
-	    let $dimensionItem := 	         
-	       <dxf:dimensionItem>{($dhis_extensions/dxf:dimensionItem)[1]/text()}</dxf:dimensionItem>
-	    let $coordinates := 	         
-	       <dxf:coordinates>{($dhis_extensions/dxf:coordinates)[1]}</dxf:coordinates>
+	    let $trace_org := trace( $org, 'org=')
+	    let $trace_ext := trace ($dhis_extensions, "extensions")
+	    let $short_name := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/@shortName)[1]
+	    let $displayShortName := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:displayShortName)[1]
+	    let $featureType := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:featureType)[1]
+	    let $openingDate := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:openingDate)[1]
+	    let $dimensionItem := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:dimensionItem)[1]
+
+
+	    let $displayShortName := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:displayShortName)[1]
+	    let $displayShortName := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:displayShortName)[1]
+	    let $displayShortName := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:displayShortName)[1]
+
+	    let $coordinates := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:coordinates)[1]
 	       (: should also look at  
                   csd:extension[@urn="urn:http://www.opengis.net/gml" and @type="Polygon"]/gml:Polygon/gml:outerBoundaryIs/gml:LinearRing/gml:coordinates
                 :)
+	    let $dimensionItemType := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:dimensionItemType)[1]
 
-	    let $dimensionItemType := 	         
-	       <dxf:dimensionItemType>{($dhis_extensions/dxf:dimensionItemType)[1]/text()}</dxf:dimensionItemType>
 	    let $translations := 	         
-	       <dxf:translations>{$dhis_extensions/dxf:translations/dxf:translation}</dxf:translations>
+	       <dxf:translations>{$org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:translations/dxf:translation}</dxf:translations>
 	    let $organisationUnitGroups := 	         
-	       <dxf:organisationUnitGroups>{$dhis_extensions/dxf:organisationUnitGroups/dxf:organisationUnitGroups}</dxf:organisationUnitGroups>
+	       <dxf:organisationUnitGroups>{$org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:organisationUnitGroups/dxf:organisationUnitGroup}</dxf:organisationUnitGroups>
 	    let $dataSets :=
-	       <dxf:dataSets>{$dhis_extensions/dxf:dataSets/dxf:dataSet}</dxf:dataSets>
+	       <dxf:dataSets>{$org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:dataSets/dxf:dataSet}</dxf:dataSets>
 
 
 	    let $uuid :=
 	      if ($preserveUUIDs)
-	      then 
+		then 
 	        if (not(functx:all-whitespace($dhis_uuid)))
 		then $dhis_uuid
 	        else ()
@@ -392,10 +394,6 @@ let $dxf :=
 	          if (not(functx:all-whitespace($dhis_code)))
 		  then attribute code {$dhis_code}
 	          else ()
-		  ,
-	          if (not(functx:all-whitespace($short_name)))
-		  then attribute shortName {$short_name}		 
-	          else ()
 		)
 
 
@@ -406,9 +404,10 @@ let $dxf :=
 		id="{$id}"
 		lastUpdated="{$lm}"
 		created="{$created}"
-		>		
-		(
-		  $optional_attributes
+		>
+		{(
+		  $short_name
+		  ,$optional_attributes
 		  ,$displayShortName
 		  ,$featureType
 		  ,$openingDate
@@ -420,7 +419,7 @@ let $dxf :=
 		  ,$organisationUnitGroups
 		  ,$dataSets
 		  ,$avs
-
+		  )}
 	      </dxf:organisationUnit>
 
 	    let $t3 := trace($org_unit, "Created Org Unit")

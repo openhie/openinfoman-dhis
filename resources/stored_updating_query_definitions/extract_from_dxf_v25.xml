@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<careServicesFunction xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:xforms="http://www.w3.org/2002/xforms"
+  xmlns:hfp="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:csd="urn:ihe:iti:csd:2013" 
+  xmlns="urn:ihe:iti:csd:2013" 
+  urn="urn:dhis.org:extract_from_dxf:v2.25">
+  <description>
+    <pre>
+This extracts all organisation units matching the given facility conditions as a CSD facility entity.  
+It also extracts all organisation units a CSD organization entity.  
+In the case that a CSD facility entity is created, it will have as an organizational association to it's corresponding organization entity.
+These two entities will have distinct entity IDs (UUIDs)
+
+This Also creates SVS for relevant terminologies (e.g. Organisation Unit Groups and Levels )
+
+Imports: DHIS2 metadata export of Organsation Units, Organisation Unit Group,  Organisation Unit Group Set, Organization Unit Level from DHIS2 2.25
+
+This optionally processes DHIS2 Users as health workers (CSD Providers).
+In order to do so, you will need to have included Users, UserRoles and UserAuthorityGroups in your DXF2 meta-data extract.
+
+    </pre>
+  </description>
+  <definition ><xi:include parse='text' href='extract_from_dxf_v25.xq'/></definition>
+  <xforms:instance>
+    <careServicesRequest>
+      <dxf/>
+      <groupCodes/>
+      <levels/>
+      <URL/>
+      <oid/>
+      <usersAreHealthWorkers/>
+      <dataelementsAreServices/>
+    </careServicesRequest>
+  </xforms:instance>
+  <csd:extension type='dhis2' urn='urn:openhie.org:openinfoman:adapter'/>
+  <csd:extension type='simple_upload' urn='urn:openhie.org:openinfoman:adapter:dhis2:action'/>
+</careServicesFunction>
