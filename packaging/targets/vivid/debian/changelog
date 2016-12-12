@@ -1,3 +1,15 @@
+openinfoman-dhis (1.4.21~vivid) vivid; urgency=medium
+
+  * Release Version 1.4.21
+    -1cf89ec Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/1cf89ec
+    -6a5fa6a Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/6a5fa6a
+    -28e4ec2 fixes for opening date, feature type, short name, coordina
+    --http://github.com/openhie/openinfoman-dhis/commmit/28e4ec2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 12 Dec 2016 05:26:51 +0000
+
 openinfoman-dhis (1.4.20~vivid) vivid; urgency=medium
 
   * Release Version 1.4.20
