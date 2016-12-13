@@ -384,7 +384,7 @@ let $dxf :=
 	    let $avs :=
 	      <dxf:attributeValues>
 	        <dxf:attributeValue>
-	  	  <dxf:attribute name="entityID"/>
+	  	  <dxf:attribute name="entityID" id="jrZ74V1Lp2N"/>
 		  <dxf:value>{$entity_uuid}</dxf:value>
 	        </dxf:attributeValue>
 	      </dxf:attributeValues>
