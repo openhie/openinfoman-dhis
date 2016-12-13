@@ -1,3 +1,11 @@
+openinfoman-dhis (1.4.23~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.23
+    -f77de7f workaround for DHIS2 bug when no translations
+    --http://github.com/openhie/openinfoman-dhis/commmit/f77de7f
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 13 Dec 2016 15:41:14 +0000
+
 openinfoman-dhis (1.4.22~trusty) trusty; urgency=medium
 
   * Release Version 1.4.22
