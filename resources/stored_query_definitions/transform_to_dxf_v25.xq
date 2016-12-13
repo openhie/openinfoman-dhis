@@ -314,8 +314,12 @@ let $dxf :=
                 :)
 	    let $dimensionItemType := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:dimensionItemType)[1]
 
-	    let $translations := 	         
-	       <dxf:translations>{$org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:translations/dxf:translation}</dxf:translations>
+	    let $t_translations := $org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:translations/dxf:translation
+	    let $translations :=
+	      if (count($t_translations) = 0)
+              then ()
+	      else  <dxf:translations>{$t_translations}</dxf:translations>
+
 	    let $organisationUnitGroups := 	         
 	       <dxf:organisationUnitGroups>{$org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:organisationUnitGroups/dxf:organisationUnitGroup}</dxf:organisationUnitGroups>
 	    let $dataSets :=
