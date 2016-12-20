@@ -193,7 +193,7 @@ fi
 
 #extract data from DHIS2
 echo "Extracting DXF from DHIS2 at $DHIS2_URL"
-DXF=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/xml' "$DHIS2_URL/api/metadata?${VAR:1}"  `
+DXF=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/xml' "$DHIS2_URL/api/24/metadata?${VAR:1}"  `
 EXPORTED=`echo $DXF | $XMLLINT  --xpath 'string((/*[local-name()="metaData"])[1]/@created)' -`
 
 
