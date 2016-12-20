@@ -1,3 +1,13 @@
+openinfoman-dhis (1.4.24~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.24
+    -428daf1 switch publish to ilr script to use /api/24/metadata
+    --http://github.com/openhie/openinfoman-dhis/commmit/428daf1
+    -3e302ef hard code id of entityID
+    --http://github.com/openhie/openinfoman-dhis/commmit/3e302ef
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 20 Dec 2016 14:26:48 +0000
+
 openinfoman-dhis (1.4.23~trusty) trusty; urgency=medium
 
   * Release Version 1.4.23
