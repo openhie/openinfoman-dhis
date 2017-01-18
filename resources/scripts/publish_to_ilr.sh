@@ -227,7 +227,7 @@ else
 fi
 
 
-
+EXPORTED=$(date --date="$EXPORTED" +%FT%T%z | sed 's/.\{2\}$/:&/')
 
 echo "Publishing to ILR in $ILR_DOC at $ILR_URL"
 PAYLOAD="{ \"value\" : \"$EXPORTED\"}"
