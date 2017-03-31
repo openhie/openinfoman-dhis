@@ -51,7 +51,7 @@ source_config() {
     echo "Loading configuration options from $CONFIG"
     source $CONFIG
     #setup DHIS2 and ILR authorization
-    DHIS2_AUTH="-u $DHIS2_USER:$DHIS2_PASS"
+    DHIS2_AUTH="-u '$DHIS2_USER:$DHIS2_PASS'"
     if [ "$IGNORECERTS" = true ]; then
 	DHIS2_AUTH=" -k $DHIS2_AUTH"
     fi
@@ -59,7 +59,7 @@ source_config() {
     if [ "$ILR_USER" = false ]; then
 	ILR_AUTH=""
     else
-	ILR_AUTH="-u $ILR_USER:$ILR_PASS"
+	ILR_AUTH="-u '$ILR_USER:$ILR_PASS'"
     fi
     if [ "$IGNORECERTS" = true ]; then
 	ILR_AUTH=" -k $ILR_AUTH"
