@@ -43,7 +43,7 @@ EOF
 reset_time() {
     source_config
     echo "Resetting time on $DHIS2_URL"
-    $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_AUTH  $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $GREP -cs '200\|404'
+    $CURL -sv -o /dev/null -w "%{http_code}"  -X DELETE  $DHIS2_AUTH -H "$DHIS2_AUTH_HEAD"  $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $GREP -cs '200\|404'
 }
 
 
@@ -51,15 +51,19 @@ source_config() {
     echo "Loading configuration options from $CONFIG"
     source $CONFIG
     #setup DHIS2 and ILR authorization
-    DHIS2_AUTH="-u '$DHIS2_USER:$DHIS2_PASS'"
+    #DHIS2_AUTH="-u '$DHIS2_USER:$DHIS2_PASS'"
+    DHIS2_AUTH=""
+    DHIS2_AUTH_HEAD="Authorization: Basic $(echo -ne $DHIS2_USER:$DHIS2_PASS | base64 --wrap 0)"
     if [ "$IGNORECERTS" = true ]; then
 	DHIS2_AUTH=" -k $DHIS2_AUTH"
     fi
 
     if [ "$ILR_USER" = false ]; then
 	ILR_AUTH=""
+    ILR_AUTH_HEAD=""
     else
 	ILR_AUTH="-u '$ILR_USER:$ILR_PASS'"
+    ILR_AUTH_HEAD="Authorization: Basic $(echo -ne $ILR_USER:$ILR_PASS | base64 --wrap 0)"
     fi
     if [ "$IGNORECERTS" = true ]; then
 	ILR_AUTH=" -k $ILR_AUTH"
@@ -106,17 +110,17 @@ source_config
 #check if LastExported key is in CSD-Loader namespace for DHIS2 data store
 echo "Checking CSD-Loader data stored contents"
 set +e
-NOTHASKEYOUT="`$CURL -sv -o /dev/null  -w \"%{http_code}\"  $DHIS2_AUTH  -H \"Accept: application/json\" $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC |  $GREP -qs \"200\|201\"`"
+NOTHASKEYOUT="`$CURL -sv -o /dev/null  -w \"%{http_code}\"  $DHIS2_AUTH -H \"$DHIS2_AUTH_HEAD\"  -H \"Accept: application/json\" $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC |  $GREP -qs \"200\|201\"`"
 NOTHASKEY=$?
 set -e
 
 #create destitation document (if it doesn't exist)
 echo "Creating $ILR_DOC on ILR at $ILR_URL (if it doesn't exist)"
-$CURL -sv -o /dev/null -w "%{http_code}" -d "directory=$ILR_DOC"  -X POST $ILR_AUTH $ILR_URL/createDirectory | $GREP -qcs '200\|302'
+$CURL -sv -o /dev/null -w "%{http_code}" -d "directory=$ILR_DOC"  -X POST $ILR_AUTH -H "$ILR_AUTH_HEAD" $ILR_URL/createDirectory | $GREP -qcs '200\|302'
 
 
 if [ "$EMPTY" = true ]; then
-    $CURL -sv -o /dev/null -w "%{http_code}" $ILR_AUTH $ILR_URL/emptyDirectory/$ILR_DOC | $GREP -qcs '200\|302'
+    $CURL -sv -o /dev/null -w "%{http_code}" $ILR_AUTH -H "$ILR_AUTH_HEAD" $ILR_URL/emptyDirectory/$ILR_DOC | $GREP -qcs '200\|302'
     reset_time
 fi
 
@@ -129,7 +133,7 @@ elif [ "$NOTHASKEY" = "1" ]; then
     LASTUPDATE=false
 else
     echo "Getting last export time from $DHIS2_URL"
-    LASTUPDATE=`$CURL -sv  $DHIS2_AUTH  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $JSHON -e value`
+    LASTUPDATE=`$CURL -sv  $DHIS2_AUTH -H "$DHIS2_AUTH_HEAD"  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $JSHON -e value`
     #strip any beginning / ending quotes
     LASTUPDATE="${LASTUPDATE%\"}"
     LASTUPDATE="${LASTUPDATE#\"}"
@@ -193,7 +197,7 @@ fi
 
 #extract data from DHIS2
 echo "Extracting DXF from DHIS2 at $DHIS2_URL"
-DXF=`$CURL -sv $DHIS2_AUTH  -H 'Accept: application/xml' "$DHIS2_URL/api/24/metadata?${VAR:1}"  `
+DXF=`$CURL -sv $DHIS2_AUTH -H "$DHIS2_AUTH_HEAD"  -H 'Accept: application/xml' "$DHIS2_URL/api/24/metadata?${VAR:1}"  `
 EXPORTED=`echo $DXF | $XMLLINT  --xpath 'string((/*[local-name()="metaData"])[1]/@created)' -`
 
 
@@ -215,7 +219,7 @@ CSR="<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>
 
 #publish to ILR
 echo "Publishing to $ILR_DOC on $ILR_URL"
-echo $CSR | $CURL -sv --data-binary @- -X POST -H 'Content-Type: text/xml' $ILR_AUTH $ILR_URL/csr/$ILR_DOC/careServicesRequest/update/urn:dhis.org:extract_from_dxf:v2.19
+echo $CSR | $CURL -sv --data-binary @- -X POST -H 'Content-Type: text/xml' $ILR_AUTH -H "$ILR_AUTH_HEAD" $ILR_URL/csr/$ILR_DOC/careServicesRequest/update/urn:dhis.org:extract_from_dxf:v2.19
 
 
 #update last exported
@@ -231,6 +235,6 @@ EXPORTED=$(date --date="$EXPORTED" +%FT%T%z | sed 's/.\{2\}$/:&/')
 
 echo "Publishing to ILR in $ILR_DOC at $ILR_URL"
 PAYLOAD="{ \"value\" : \"$EXPORTED\"}"
-echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $GREP -cs '200\|201'
+echo $PAYLOAD | $CURL -sv -o /dev/null -w "%{http_code}"  --data-binary @- $DHIS2_AUTH -H "$DHIS2_AUTH_HEAD" -X $METHOD -H 'Content-Type: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $GREP -cs '200\|201'
 echo "Successfully published to ILR"
 exit 0
