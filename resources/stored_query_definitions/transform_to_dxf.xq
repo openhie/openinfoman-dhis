@@ -34,11 +34,9 @@ let $onlyDirectChildren :=
 let $record := $careServicesRequest/csd:record
 
 let $updated := 
-  try {
-    xs:dateTime($careServicesRequest/csd:record/@updated)
-  } catch e {
-    false()
-  }
+  if ( $record/@updated castable as xs:dateTime )
+  then xs:dateTime($record/@updated)
+  else false()
 
 let $zip := 
   if (exists($careServicesRequest/zip/@value))
@@ -122,11 +120,9 @@ let $facilities :=
     else 
       for $fac in $facs
       let $f_updated := 
-        try { 
-          xs:dateTime($fac/csd:record/@updated)
-        } catch e {  
-	  false()
-        }
+        if ( $fac/csd:record/@updated castable as xs:dateTime )
+        then xs:dateTime($fac/csd:record/@updated)
+        else false()
       return 
         if ( ($f_updated instance of xs:dateTime) and ($f_updated >= $updated) )
         then $fac
@@ -143,11 +139,9 @@ let $provs :=
       else 
 	for $prov  in $provs
 	let $p_updated := 
-	  try { 
-            xs:dateTime($prov/csd:record/@updated)
-	  } catch e {
-	    false()
-	  }
+      if ( $prov/csd:record/@updated castable as xs:dateTime )
+      then xs:dateTime($prov/csd:record/@updated)
+      else false()
 	return 
 	  if ( ($p_updated instance of xs:dateTime) and ($p_updated >= $updated) )
 	  then $prov
