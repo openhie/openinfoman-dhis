@@ -162,26 +162,26 @@ fi
 
 
 VAR=(
-    'assumeTrue=false'
-    'organisationUnits=true'
-    'organisationUnitGroups=true'
-    'organisationUnitLevels=true'
-    'organisationUnitGroupSets=true'
-    "categoryOptions=$SFLAG"
-    "optionSets=$SFLAG"
-    "dataElementGroupSets=$SFLAG"
-    "categoryOptionGroupSets=$SFLAG"
-    "categoryCombos=$SFLAG"
-    "options=$SFLAG"
-    "categoryOptionCombos=$SFLAG"
-    "dataSets=$SFLAG"
-    "dataElementGroups=$SFLAG"
-    "dataElements=$SFLAG"
-    "categoryOptionGroups=$SFLAG"
-    "categories=$SFLAG"
-    "users=$UFLAG"
-    "userGroups=$UFLAG"
-    "userRoles=$UFLAG"
+    'filter=assumeTrue:eq:false'
+    'filter=organisationUnits:eq:true'
+    'filter=organisationUnitGroups:eq:true'
+    'filter=organisationUnitLevels:eq:true'
+    'filter=organisationUnitGroupSets:eq:true'
+    "filter=categoryOptions:eq:$SFLAG"
+    "filter=optionSets:eq:$SFLAG"
+    "filter=dataElementGroupSets:eq:$SFLAG"
+    "filter=categoryOptionGroupSets:eq:$SFLAG"
+    "filter=categoryCombos:eq:$SFLAG"
+    "filter=options:eq:$SFLAG"
+    "filter=categoryOptionCombos:eq:$SFLAG"
+    "filter=dataSets:eq:$SFLAG"
+    "filter=dataElementGroups:eq:$SFLAG"
+    "filter=dataElements:eq:$SFLAG"
+    "filter=categoryOptionGroups:eq:$SFLAG"
+    "filter=categories:eq:$SFLAG"
+    "filter=users:eq:$UFLAG"
+    "filter=userGroups:eq:$UFLAG"
+    "filter=userRoles:eq:$UFLAG"
     )
 
 VAR=$($PRINTF "&%s" "${VAR[@]}")
@@ -190,7 +190,7 @@ if [ "$LASTUPDATE" = false ]; then
     echo "Publishing all data"
 else
     echo "Publishing changes since $LASTUPDATE"
-    VAR="$VAR&lastUpdated=$LASTUPDATE"
+    VAR="$VAR&filter=lastUpdated:gt:$LASTUPDATE"
 fi
 
 
