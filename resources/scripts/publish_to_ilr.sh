@@ -62,7 +62,8 @@ source_config() {
 	ILR_AUTH=""
     ILR_AUTH_HEAD=""
     else
-	ILR_AUTH="-u '$ILR_USER:$ILR_PASS'"
+	#ILR_AUTH="-u '$ILR_USER:$ILR_PASS'"
+	ILR_AUTH=""
     ILR_AUTH_HEAD="Authorization: Basic $(echo -ne $ILR_USER:$ILR_PASS | base64 --wrap 0)"
     fi
     if [ "$IGNORECERTS" = true ]; then
