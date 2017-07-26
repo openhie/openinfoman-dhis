@@ -146,7 +146,7 @@ else
 fi
 
 
-if [ "$DOSUERS" = true ]; then
+if [ "$DOUSERS" = true ]; then
     UFLAG="true"
     UVAL="1"
 else 
