@@ -357,7 +357,7 @@ let $dxf :=
 	    let $porg_dhis_uuid := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	    let $porg_dhis_id := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
 	    let $porg_id :=
-	      if (not(functx:all-whitespace($porg_dhis_uuid)))
+	      if (not(functx:all-whitespace($porg_dhis_id)))
               then $porg_dhis_id
 	      else dxf2csd:extract_id_from_entityid(string($porg_ent_id))
 
@@ -467,7 +467,7 @@ let $dxf :=
 	      let $org_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	      let $org_dhis_id := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
 	      let $org_id :=
-	        if (not(functx:all-whitespace($org_dhis_uuid)))
+	        if (not(functx:all-whitespace($org_dhis_id)))
 		then $org_dhis_id
 	        else dxf2csd:extract_id_from_entityid(xs:string($org_id))
 
