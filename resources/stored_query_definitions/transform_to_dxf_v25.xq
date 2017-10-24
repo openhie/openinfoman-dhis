@@ -302,6 +302,7 @@ let $dxf :=
 	    let $featureType := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:featureType)[1]
 	    let $openingDate := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:openingDate)[1]
 	    let $dimensionItem := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:dimensionItem)[1]
+        let $attributeValues := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:attributeValues/dxf:attributeValue)
 
 
 	    let $displayShortName := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:displayShortName)[1]
@@ -387,6 +388,7 @@ let $dxf :=
 	  	  <dxf:attribute name="entityID" id="jrZ74V1Lp2N"/>
 		  <dxf:value>{$entity_uuid}</dxf:value>
 	        </dxf:attributeValue>
+            {$attributeValues}
 	      </dxf:attributeValues>
 	    
 
