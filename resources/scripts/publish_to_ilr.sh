@@ -199,10 +199,10 @@ fi
 #extract data from DHIS2
 echo "Extracting DXF from DHIS2 at $DHIS2_URL"
 DXF=`$CURL -sv $DHIS2_AUTH -H "$DHIS2_AUTH_HEAD"  -H 'Accept: application/xml' "$DHIS2_URL/api/24/metadata?${VAR:1}"  `
-EXPORTED=`echo $DXF | $XMLLINT  --xpath 'string((/*[local-name()="metaData"])[1]/@created)' -`
+EXPORTED=`echo "$DXF" | $XMLLINT  --xpath 'string((/*[local-name()="metaData"])[1]/@created)' -`
 
 
-DXF=`echo $DXF | $XMLLINT --c14n -`
+DXF=`echo "$DXF" | $XMLLINT --c14n -`
 
 
 #Create Care Services Request Parameteres
@@ -220,7 +220,7 @@ CSR="<csd:requestParams xmlns:csd='urn:ihe:iti:csd:2013'>
 
 #publish to ILR
 echo "Publishing to $ILR_DOC on $ILR_URL"
-echo $CSR | $CURL -sv --data-binary @- -X POST -H 'Content-Type: text/xml' $ILR_AUTH -H "$ILR_AUTH_HEAD" $ILR_URL/csr/$ILR_DOC/careServicesRequest/update/urn:dhis.org:extract_from_dxf:v2.19
+echo "$CSR" | $CURL -sv --data-binary @- -X POST -H 'Content-Type: text/xml' $ILR_AUTH -H "$ILR_AUTH_HEAD" $ILR_URL/csr/$ILR_DOC/careServicesRequest/update/urn:dhis.org:extract_from_dxf:v2.19
 
 
 #update last exported
