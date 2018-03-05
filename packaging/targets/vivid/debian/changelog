@@ -1,3 +1,23 @@
+openinfoman-dhis (1.4.25~vivid) vivid; urgency=medium
+
+  * Release Version 1.4.25
+    -22ea726 Put back the URL attributes for getting DHIS2 updates as u
+    --git@github.com:openhie/openinfoman-dhis/commmit/22ea726
+    -b22b474 Another fix for allowing other characters in the password.
+    --git@github.com:openhie/openinfoman-dhis/commmit/b22b474
+    -5a2deb3 Fixed the way the parameters are sent to the /api/24/metad
+    --git@github.com:openhie/openinfoman-dhis/commmit/5a2deb3
+    -aa67005 Updated transform_to_dxf to check if the updated value is
+    --git@github.com:openhie/openinfoman-dhis/commmit/aa67005
+    -4fd9843 Further fixes to special characters in the publish to ilr
+    --git@github.com:openhie/openinfoman-dhis/commmit/4fd9843
+    -c3e8bf5 Modified publish_to_ilr to quite the DHIS2 password to avo
+    --git@github.com:openhie/openinfoman-dhis/commmit/c3e8bf5
+    -a07bb3e Update publish_to_ilr.sh
+    --git@github.com:openhie/openinfoman-dhis/commmit/a07bb3e
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 11 Jul 2017 11:45:54 -0400
+
 openinfoman-dhis (1.4.24~vivid) vivid; urgency=medium
 
   * Release Version 1.4.24

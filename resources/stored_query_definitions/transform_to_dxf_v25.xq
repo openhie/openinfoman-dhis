@@ -302,6 +302,7 @@ let $dxf :=
 	    let $featureType := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:featureType)[1]
 	    let $openingDate := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:openingDate)[1]
 	    let $dimensionItem := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:dimensionItem)[1]
+        let $attributeValues := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:attributeValues/dxf:attributeValue)
 
 
 	    let $displayShortName := ($org/csd:extension[@urn="urn:http://www.dhis2.org/api/organisationUnit"]/dxf:organisationUnit/dxf:displayShortName)[1]
@@ -356,7 +357,7 @@ let $dxf :=
 	    let $porg_dhis_uuid := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	    let $porg_dhis_id := ($porg/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
 	    let $porg_id :=
-	      if (not(functx:all-whitespace($porg_dhis_uuid)))
+	      if (not(functx:all-whitespace($porg_dhis_id)))
               then $porg_dhis_id
 	      else dxf2csd:extract_id_from_entityid(string($porg_ent_id))
 
@@ -387,6 +388,7 @@ let $dxf :=
 	  	  <dxf:attribute name="entityID" id="jrZ74V1Lp2N"/>
 		  <dxf:value>{$entity_uuid}</dxf:value>
 	        </dxf:attributeValue>
+            {$attributeValues}
 	      </dxf:attributeValues>
 	    
 
@@ -465,7 +467,7 @@ let $dxf :=
 	      let $org_dhis_uuid := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="uuid"])[1]
 	      let $org_dhis_id := ($org/csd:otherID[@assigningAuthorityName=concat($dhis_url,"/api/organisationUnits") and @code="id"])[1]
 	      let $org_id :=
-	        if (not(functx:all-whitespace($org_dhis_uuid)))
+	        if (not(functx:all-whitespace($org_dhis_id)))
 		then $org_dhis_id
 	        else dxf2csd:extract_id_from_entityid(xs:string($org_id))
 
