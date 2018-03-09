@@ -1,3 +1,21 @@
+openinfoman-dhis (1.4.26~xenial) xenial; urgency=medium
+
+  * Release Version 1.4.26
+    -77fbc78 adding some missing stored functions into the deb package
+    --https://github.com/openhie/openinfoman-dhis/commmit/77fbc78
+    -f9f8f9d Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/f9f8f9d
+    -263386c packaging for ubuntu 16.04
+    --https://github.com/openhie/openinfoman-dhis/commmit/263386c
+    -78e8ced Updated publish_to_ilr.sh script so it won't compress mult
+    --https://github.com/openhie/openinfoman-dhis/commmit/78e8ced
+    -85c6f50 Modifed the code that calls extract_id_from_entityid to on
+    --https://github.com/openhie/openinfoman-dhis/commmit/85c6f50
+    -8cd0850 Added in attributeValues to transform_to_dxf from the csd:
+    --https://github.com/openhie/openinfoman-dhis/commmit/8cd0850
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 09 Mar 2018 14:45:17 +0000
+
 openinfoman-dhis (1.4.24~trusty) trusty; urgency=medium
 
   * Release Version 1.4.24
