@@ -1,3 +1,11 @@
+openinfoman-dhis (1.4.29~xenial) xenial; urgency=medium
+
+  * Release Version 1.4.29
+    -267260d removing README.md file during installation
+    --https://github.com/openhie/openinfoman-dhis/commmit/267260d
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 14 Apr 2018 12:35:10 +0000
+
 openinfoman-dhis (1.4.28~xenial) xenial; urgency=medium
 
   * Release Version 1.4.28
