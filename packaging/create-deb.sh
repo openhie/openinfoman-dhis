@@ -6,7 +6,7 @@ set -e
 PPA=release
 CPDIRS=("webapp" "resources" )
 CPFILES=()
-
+RMFILES=("resources/scripts/README.md")
 #Don't edit below
 
 HOME=`pwd`
@@ -119,6 +119,12 @@ do
 	    cp -R $SRCDIR/$CPDIR $OIDIR
 	fi
     done
+    for RMFILE in "${RMFILES[@]}"
+    do
+  if [ -e "$OIDIR/$RMFILE" ]; then
+      rm $OIDIR/$RMFILE
+  fi
+    done
     for CPFILE in "${CPFILES[@]}"
     do
 	if [ -e "$SRCDIR/$CPFILE" ]; then
@@ -150,3 +156,4 @@ cd $HOME
 
 git push
 git push --tags
+
