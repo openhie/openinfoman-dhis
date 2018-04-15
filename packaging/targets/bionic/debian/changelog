@@ -1,0 +1,1150 @@
+openinfoman-dhis (1.4.29~xenial) xenial; urgency=medium
+
+  * Release Version 1.4.29
+    -267260d removing README.md file during installation
+    --https://github.com/openhie/openinfoman-dhis/commmit/267260d
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 14 Apr 2018 12:35:10 +0000
+
+openinfoman-dhis (1.4.28~xenial) xenial; urgency=medium
+
+  * Release Version 1.4.28
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 13 Apr 2018 04:31:09 +0000
+
+openinfoman-dhis (1.4.27~xenial) xenial; urgency=medium
+
+  * Release Version 1.4.27
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 09 Mar 2018 14:53:39 +0000
+
+openinfoman-dhis (1.4.26~xenial) xenial; urgency=medium
+
+  * Release Version 1.4.26
+    -77fbc78 adding some missing stored functions into the deb package
+    --https://github.com/openhie/openinfoman-dhis/commmit/77fbc78
+    -f9f8f9d Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/f9f8f9d
+    -263386c packaging for ubuntu 16.04
+    --https://github.com/openhie/openinfoman-dhis/commmit/263386c
+    -78e8ced Updated publish_to_ilr.sh script so it won't compress mult
+    --https://github.com/openhie/openinfoman-dhis/commmit/78e8ced
+    -85c6f50 Modifed the code that calls extract_id_from_entityid to on
+    --https://github.com/openhie/openinfoman-dhis/commmit/85c6f50
+    -8cd0850 Added in attributeValues to transform_to_dxf from the csd:
+    --https://github.com/openhie/openinfoman-dhis/commmit/8cd0850
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 09 Mar 2018 14:45:17 +0000
+
+openinfoman-dhis (1.4.24~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.24
+    -428daf1 switch publish to ilr script to use /api/24/metadata
+    --http://github.com/openhie/openinfoman-dhis/commmit/428daf1
+    -3e302ef hard code id of entityID
+    --http://github.com/openhie/openinfoman-dhis/commmit/3e302ef
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 20 Dec 2016 14:26:48 +0000
+
+openinfoman-dhis (1.4.23~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.23
+    -f77de7f workaround for DHIS2 bug when no translations
+    --http://github.com/openhie/openinfoman-dhis/commmit/f77de7f
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 13 Dec 2016 15:41:14 +0000
+
+openinfoman-dhis (1.4.22~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.22
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 12 Dec 2016 05:27:43 +0000
+
+openinfoman-dhis (1.4.21~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.21
+    -1cf89ec Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/1cf89ec
+    -6a5fa6a Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/6a5fa6a
+    -28e4ec2 fixes for opening date, feature type, short name, coordina
+    --http://github.com/openhie/openinfoman-dhis/commmit/28e4ec2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 12 Dec 2016 05:26:51 +0000
+
+openinfoman-dhis (1.4.20~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.20
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 12 Dec 2016 05:21:50 +0000
+
+openinfoman-dhis (1.4.19~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.19
+    -9f32884 fixes for opening date, feature type, short name, coordina
+    --http://github.com/openhie/openinfoman-dhis/commmit/9f32884
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 12 Dec 2016 05:17:11 +0000
+
+openinfoman-dhis (1.4.18~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.18
+    -3148113 csd->dxf include updated node when getting updates
+    --http://github.com/openhie/openinfoman-dhis/commmit/3148113
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 17 Oct 2016 13:48:47 +0000
+
+openinfoman-dhis (1.4.17~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.17
+    -cb80561 fix for https://github.com/pepfar-datim/OHIE/issues/564#ev
+    --http://github.com/openhie/openinfoman-dhis/commmit/cb80561
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 14 Oct 2016 14:00:15 +0000
+
+openinfoman-dhis (1.4.16~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.16
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 13 Oct 2016 21:17:36 +0000
+
+openinfoman-dhis (1.4.15~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.15
+    -1bdc4fe fix child issue for csd->dxf w/ timestamp
+    --http://github.com/openhie/openinfoman-dhis/commmit/1bdc4fe
+    -f334b7c fixed boolean check with haskey
+    --http://github.com/openhie/openinfoman-dhis/commmit/f334b7c
+    -19a0721 fixed boolean check with haskey
+    --http://github.com/openhie/openinfoman-dhis/commmit/19a0721
+    -e8549f2 fix syntax error w/ HASKEY
+    --http://github.com/openhie/openinfoman-dhis/commmit/e8549f2
+    -09cd0e2 fix HASKEY in publish_to_ilr.sh
+    --http://github.com/openhie/openinfoman-dhis/commmit/09cd0e2
+    -2985300 don't error out when getting a 404 checked on the import t
+    --http://github.com/openhie/openinfoman-dhis/commmit/2985300
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 13 Oct 2016 21:16:51 +0000
+
+openinfoman-dhis (1.4.14~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.14
+    -9e637d9 added test
+    --http://github.com/openhie/openinfoman-dhis/commmit/9e637d9
+    -256b6dc updates for publisher to hamdle multiple docs
+    --http://github.com/openhie/openinfoman-dhis/commmit/256b6dc
+    -b2f6aab faster CSD->DXF when last updated time is set
+    --http://github.com/openhie/openinfoman-dhis/commmit/b2f6aab
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 27 Sep 2016 13:30:01 +0000
+
+openinfoman-dhis (1.4.13~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.13
+    -759044e added debuggin info for parents when processing dxf
+    --http://github.com/openhie/openinfoman-dhis/commmit/759044e
+    -0935899 remove file
+    --http://github.com/openhie/openinfoman-dhis/commmit/0935899
+    -7535490 moved tests artifacts
+    --http://github.com/openhie/openinfoman-dhis/commmit/7535490
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 14 Sep 2016 18:06:36 +0000
+
+openinfoman-dhis (1.4.12~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.12
+    -7858491 added testing testing artefacts
+    --http://github.com/openhie/openinfoman-dhis/commmit/7858491
+    -4dfd988 added handling of updated timestamp to transform to dxf
+    --http://github.com/openhie/openinfoman-dhis/commmit/4dfd988
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 13 Sep 2016 19:55:32 +0000
+
+openinfoman-dhis (1.4.11~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.11
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 07 Sep 2016 17:02:25 +0000
+
+openinfoman-dhis (1.4.10~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.10
+    -6baeb60 more debuggin info for hierarchy extract
+    --http://github.com/openhie/openinfoman-dhis/commmit/6baeb60
+    -4172607 removed dhis apps as they have been moved to their respect
+    --http://github.com/openhie/openinfoman-dhis/commmit/4172607
+    -f57f4a9 updated csd loader app to handle hostanmes w/o path
+    --http://github.com/openhie/openinfoman-dhis/commmit/f57f4a9
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 07 Sep 2016 17:00:09 +0000
+
+openinfoman-dhis (1.4.9~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.9
+    -5466e90 fixup UUID support with basex 8.4 changes
+    --http://github.com/openhie/openinfoman-dhis/commmit/5466e90
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 25 Aug 2016 19:30:05 +0000
+
+openinfoman-dhis (1.4.8~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.8
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 22 Aug 2016 16:13:54 +0000
+
+openinfoman-dhis (1.4.7~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.7
+    -7652d8a extracting from DXF - open document for updating
+    --http://github.com/openhie/openinfoman-dhis/commmit/7652d8a
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 22 Aug 2016 16:13:35 +0000
+
+openinfoman-dhis (1.4.6~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.6
+    -160df63 updated transform to DXF so that it should work with DHIS2
+    --http://github.com/openhie/openinfoman-dhis/commmit/160df63
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 22 Aug 2016 12:31:58 +0000
+
+openinfoman-dhis (1.4.5~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.5
+    -82ebcfb Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/82ebcfb
+    -46a9219 added traces to dxf transform.  fixed minor syntax issues
+    --http://github.com/openhie/openinfoman-dhis/commmit/46a9219
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 14 Aug 2016 15:19:30 +0000
+
+openinfoman-dhis (1.4.4~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.4
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 05 Aug 2016 13:06:14 +0000
+
+openinfoman-dhis (1.4.3~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.3
+    -a218320 Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/a218320
+    -0a4595b fixed byte issue in until
+    --http://github.com/openhie/openinfoman-dhis/commmit/0a4595b
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 05 Aug 2016 13:05:39 +0000
+
+openinfoman-dhis (1.4.2~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 04 Aug 2016 09:54:23 +0300
+
+openinfoman-dhis (1.4.2~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 04 Aug 2016 09:53:08 +0300
+
+openinfoman-dhis (1.4.1~trusty) trusty; urgency=medium
+
+  * Release Version 1.4.1
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 21 Jul 2016 18:58:10 +0000
+
+openinfoman-dhis (1.3.2~trusty) trusty; urgency=medium
+
+  * Release Version 1.3.2
+    -16d3b33 Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/16d3b33
+    -ecd8947 updated openinfoman reqs
+    --http://github.com/openhie/openinfoman-dhis/commmit/ecd8947
+    -b260a03 Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/b260a03
+    -91b1eea hierachy walker script points to localhost
+    --http://github.com/openhie/openinfoman-dhis/commmit/91b1eea
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 15 Jul 2016 17:59:11 +0000
+
+openinfoman-dhis (1.3.1~trusty) trusty; urgency=medium
+
+  * Release Version 1.3.1
+    -d4f96ed based 8.5.1 - switch fork-join namespace
+    --http://github.com/openhie/openinfoman-dhis/commmit/d4f96ed
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 15 Jul 2016 17:57:11 +0000
+
+openinfoman-dhis (1.2.15~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.15
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 08 Jul 2016 13:03:46 +0000
+
+openinfoman-dhis (1.2.14~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.14
+    -d435bf1 try to get status of import in csd-loader app
+    --http://github.com/openhie/openinfoman-dhis/commmit/d435bf1
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 08 Jul 2016 13:03:12 +0000
+
+openinfoman-dhis (1.2.13~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.13
+    -98796a6 csd-loader.zip has 1.2.10 manifest
+    --http://github.com/openhie/openinfoman-dhis/commmit/98796a6
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 07 Jul 2016 13:00:21 +0000
+
+openinfoman-dhis (1.2.12~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.12
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 07 Jul 2016 01:07:54 +0000
+
+openinfoman-dhis (1.2.11~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.11
+    -6cb80c5 version bump csd-loader app
+    --http://github.com/openhie/openinfoman-dhis/commmit/6cb80c5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 07 Jul 2016 01:07:29 +0000
+
+openinfoman-dhis (1.2.10~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.10
+    -01e6a97 added a 1-minute ping on the csd-loader app to keep the se
+    --http://github.com/openhie/openinfoman-dhis/commmit/01e6a97
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 07 Jul 2016 01:05:51 +0000
+
+openinfoman-dhis (1.2.9~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.9
+    -ded555c version bump on csd loader app
+    --http://github.com/openhie/openinfoman-dhis/commmit/ded555c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jul 2016 15:01:30 +0000
+
+openinfoman-dhis (1.2.8~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.8
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 30 Jun 2016 17:50:54 +0000
+
+openinfoman-dhis (1.2.7~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 30 Jun 2016 17:50:32 +0000
+
+openinfoman-dhis (1.2.6~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.6
+    -3d6479c fixed .zip upload to DHIS2
+    --http://github.com/openhie/openinfoman-dhis/commmit/3d6479c
+    -5d4ccf2 updated CSD Loader app to allow user to select 'preserve U
+    --http://github.com/openhie/openinfoman-dhis/commmit/5d4ccf2
+    -8ab33ac Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/8ab33ac
+    -bb21f9d in CSD->DXF transform, it is now optional to preserve UUID
+    --http://github.com/openhie/openinfoman-dhis/commmit/bb21f9d
+    -db48d07 getting closer to .zip submit to dhis2 in csd-loader app
+    --http://github.com/openhie/openinfoman-dhis/commmit/db48d07
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 30 Jun 2016 17:49:49 +0000
+
+openinfoman-dhis (1.2.5~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.5
+    -080c4b5 updated csd loader app to handle .zip
+    --http://github.com/openhie/openinfoman-dhis/commmit/080c4b5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 01 Jun 2016 15:56:17 +0000
+
+openinfoman-dhis (1.2.4~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.4
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 01 Jun 2016 15:33:19 +0000
+
+openinfoman-dhis (1.2.3~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.3
+    -65f3921 output csd->dxf transform in a zip file
+    --http://github.com/openhie/openinfoman-dhis/commmit/65f3921
+    -c3e6a84 added categoryCombo code to disaggregator sets
+    --http://github.com/openhie/openinfoman-dhis/commmit/c3e6a84
+    -5d2efbd added in disaggregators for data sets as services
+    --http://github.com/openhie/openinfoman-dhis/commmit/5d2efbd
+    -04d054c added data sets as csd services
+    --http://github.com/openhie/openinfoman-dhis/commmit/04d054c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 01 Jun 2016 15:31:29 +0000
+
+openinfoman-dhis (1.2.2~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.2
+    -31ea0df fixup csd_webconf references
+    --http://github.com/openhie/openinfoman-dhis/commmit/31ea0df
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 28 Mar 2016 01:59:02 +0000
+
+openinfoman-dhis (1.2.1~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.1
+    -13903de merge
+    --https://github.com/openhie/openinfoman-dhis/commmit/13903de
+    -547a925 merge
+    --https://github.com/openhie/openinfoman-dhis/commmit/547a925
+    -7b33dfb "Release Version 1.0.67"
+    --https://github.com/openhie/openinfoman-dhis/commmit/7b33dfb
+    -58b60a7 added @code to dxf export
+    --https://github.com/openhie/openinfoman-dhis/commmit/58b60a7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 20 Mar 2016 18:35:25 +0000
+
+openinfoman-dhis (1.1.11~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.11
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 19 Mar 2016 14:04:36 +0000
+
+openinfoman-dhis (1.1.10~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.10
+    -ea809c1 Fixed typo
+    --http://github.com/openhie/openinfoman-dhis/commmit/ea809c1
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 19 Mar 2016 13:18:08 +0000
+
+openinfoman-dhis (1.1.9~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.9
+    -f5755a2 Merge branch 'master' of http://github.com/openhie/openinf
+    --http://github.com/openhie/openinfoman-dhis/commmit/f5755a2
+    -9fa062a "Release Version 1.1.8"
+    --http://github.com/openhie/openinfoman-dhis/commmit/9fa062a
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 19 Mar 2016 13:15:12 +0000
+
+openinfoman-dhis (1.1.8~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.8
+    -f540bd7 fixed namespace issue with util:fixup_date()
+    --http://github.com/openhie/openinfoman-dhis/commmit/f540bd7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 17 Mar 2016 14:00:38 +0000
+
+openinfoman-dhis (1.1.7~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 17 Mar 2016 14:00:38 +0000
+
+openinfoman-dhis (1.1.6~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.6
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 17 Mar 2016 14:00:26 +0000
+
+openinfoman-dhis (1.1.5~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.5
+    -76e9126 fixed issue with dateTimes for service elements which were
+    --http://github.com/openhie/openinfoman-dhis/commmit/76e9126
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 16 Mar 2016 15:34:22 +0000
+
+openinfoman-dhis (1.1.4~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.4
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 07 Mar 2016 04:13:16 +0000
+
+openinfoman-dhis (1.1.3~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.3
+    -2581e12 upgraded to do async processing
+    --http://github.com/openhie/openinfoman-dhis/commmit/2581e12
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 06 Mar 2016 22:00:45 +0000
+
+openinfoman-dhis (1.1.2~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:53:32 +0000
+
+openinfoman-dhis (1.1.1~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.1
+    -bb7a6b8 updated packaging for openinfoman 1.1
+    --http://github.com/openhie/openinfoman-dhis/commmit/bb7a6b8
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 09:12:40 +0000
+
+openinfoman-dhis (1.0.69~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.69
+    -febcb48 typo fix
+    --http://github.com/openhie/openinfoman-dhis/commmit/febcb48
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 25 Feb 2016 21:37:45 +0000
+
+openinfoman-dhis (1.0.68~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.68
+    -b6df639 added @code in CSD->DXF for facs
+    --http://github.com/openhie/openinfoman-dhis/commmit/b6df639
+    -894bb36 added @code in CSD->DXF
+    --http://github.com/openhie/openinfoman-dhis/commmit/894bb36
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 23 Feb 2016 16:22:25 +0000
+
+openinfoman-dhis (1.0.67~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.67
+    -7743030 fixed issue with creating directory/document in publishing
+    --http://github.com/openhie/openinfoman-dhis/commmit/7743030
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 23 Feb 2016 14:52:44 +0000
+
+openinfoman-dhis (1.0.66~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.66
+    -abd18c4 Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/abd18c4
+    -418da3c Merge branch 'master' of http://github.com/openhie/openinf
+    --https://github.com/openhie/openinfoman-dhis/commmit/418da3c
+    -69ce187 committing forgotten file for geocodes
+    --https://github.com/openhie/openinfoman-dhis/commmit/69ce187
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 19 Feb 2016 19:17:25 +0000
+
+openinfoman-dhis (1.0.65~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.65
+    -a3ed5c3 Merge pull request #2 from yatesr/spell
+    --https://github.com/openhie/openinfoman-dhis/commmit/a3ed5c3
+    -2a8d45f fix spelling of jshon
+    --https://github.com/openhie/openinfoman-dhis/commmit/2a8d45f
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 17 Feb 2016 18:19:51 +0000
+
+openinfoman-dhis (1.0.64~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.64
+    -1e8fc09 updated sierra leone demo data to include GML
+    --https://github.com/openhie/openinfoman-dhis/commmit/1e8fc09
+    -8a67e5f ../../repo/util.xqm
+    --https://github.com/openhie/openinfoman-dhis/commmit/8a67e5f
+    -932e184 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/932e184
+    -a67a844 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/a67a844
+    -4268152 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/4268152
+    -c9fda0e Update and rename README.MD to README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/c9fda0e
+    -b4a5cd2 Create README.MD
+    --https://github.com/openhie/openinfoman-dhis/commmit/b4a5cd2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 15 Feb 2016 04:08:11 +0000
+
+openinfoman-dhis (1.0.63~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.63
+    -2157469 Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/2157469
+    -724554a updated publishing script so you can empty the document.
+    --https://github.com/openhie/openinfoman-dhis/commmit/724554a
+    -ed35d6c publish script creates doc if not present.  also added con
+    --https://github.com/openhie/openinfoman-dhis/commmit/ed35d6c
+    -5aa5f73 fixup for script timestamp handling
+    --https://github.com/openhie/openinfoman-dhis/commmit/5aa5f73
+    -71a6896 fixup for script password handling
+    --https://github.com/openhie/openinfoman-dhis/commmit/71a6896
+    -93fb9ca fixup for script password handling
+    --https://github.com/openhie/openinfoman-dhis/commmit/93fb9ca
+    -f600ea7 Update publish_to_ilr.sh
+    --https://github.com/openhie/openinfoman-dhis/commmit/f600ea7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 14 Feb 2016 06:45:01 +0000
+
+openinfoman-dhis (1.0.62~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.62
+    -7024cd9 updated help for publish script
+    --https://github.com/openhie/openinfoman-dhis/commmit/7024cd9
+    -b0d6681 Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/b0d6681
+    -44c7832 pulled out configuration options from publish script.  add
+    --https://github.com/openhie/openinfoman-dhis/commmit/44c7832
+    -7c06f7c Update publish_to_ilr.sh
+    --https://github.com/openhie/openinfoman-dhis/commmit/7c06f7c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 14 Feb 2016 06:44:03 +0000
+
+openinfoman-dhis (1.0.61~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.61
+    -4e21f11 csd-loader app uses checkboxes for selecting group codes
+    --https://github.com/openhie/openinfoman-dhis/commmit/4e21f11
+    -28786ca csd-loader pulls base URL from manifest.   moved js functi
+    --https://github.com/openhie/openinfoman-dhis/commmit/28786ca
+    -a331c90 added external dhis2 url to script
+    --https://github.com/openhie/openinfoman-dhis/commmit/a331c90
+    -690527f added script to publish to ILR
+    --https://github.com/openhie/openinfoman-dhis/commmit/690527f
+    -88250de CSD Loader app now handles LastExported time
+    --https://github.com/openhie/openinfoman-dhis/commmit/88250de
+    -466e3f4 CSD loader stored last mod time - beta
+    --https://github.com/openhie/openinfoman-dhis/commmit/466e3f4
+    -22c59f9 removed fake top-level org
+    --https://github.com/openhie/openinfoman-dhis/commmit/22c59f9
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 10 Feb 2016 18:49:17 +0000
+
+openinfoman-dhis (1.0.60~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.60
+    -27c2596 fixup dxf namespace for csd->dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/27c2596
+    -6ff439e fix dxf:parent/@uuid on csd->dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/6ff439e
+    -70eaa8d getting parent orgs keeps them in DXF order
+    --https://github.com/openhie/openinfoman-dhis/commmit/70eaa8d
+    -3d94f62 fix for looking up org unit level when doing csd ->dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/3d94f62
+    -191016c speedups for csd->dxf and fixing of levels
+    --https://github.com/openhie/openinfoman-dhis/commmit/191016c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 03 Feb 2016 05:04:57 +0000
+
+openinfoman-dhis (1.0.59~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.59
+    -877e0d1 fixed issue with parent id
+    --https://github.com/openhie/openinfoman-dhis/commmit/877e0d1
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 02 Feb 2016 20:28:51 +0000
+
+openinfoman-dhis (1.0.58~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.58
+    -081e7f5 fixed cut paste issue with parent org
+    --https://github.com/openhie/openinfoman-dhis/commmit/081e7f5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 02 Feb 2016 18:29:07 +0000
+
+openinfoman-dhis (1.0.57~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.57
+    -80fdc9c added --no-check-certificate in packaging wget request
+    --https://github.com/openhie/openinfoman-dhis/commmit/80fdc9c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Tue, 02 Feb 2016 18:17:04 +0000
+
+openinfoman-dhis (1.0.56~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.56
+    -d5e8dcb Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/d5e8dcb
+    -21bf05b have a working mACM reporter
+    --https://github.com/openhie/openinfoman-dhis/commmit/21bf05b
+    -f402fac updated macm report content tpye
+    --https://github.com/openhie/openinfoman-dhis/commmit/f402fac
+    -2dfba02 macm report posts successuly
+    --https://github.com/openhie/openinfoman-dhis/commmit/2dfba02
+    -7188e33 added macm-reporter to app packaging
+    --https://github.com/openhie/openinfoman-dhis/commmit/7188e33
+    -49926f2 intial (buggy) commit of a simple macm reporter webapp
+    --https://github.com/openhie/openinfoman-dhis/commmit/49926f2
+    -f4c6f3f fixup where getting username/code
+    --https://github.com/openhie/openinfoman-dhis/commmit/f4c6f3f
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 29 Jan 2016 12:55:03 -0500
+
+openinfoman-dhis (1.0.55~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.55
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 29 Jan 2016 12:54:25 -0500
+
+openinfoman-dhis (1.0.54~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.54
+    -86fc412 Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/86fc412
+    -07e3c9c fixed issue with plurality in DHIS2 api endpoints
+    --https://github.com/openhie/openinfoman-dhis/commmit/07e3c9c
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 25 Jan 2016 12:31:05 -0500
+
+openinfoman-dhis (1.0.53~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.53
+    -94499a5 fixup entity for import csd:organization
+    --https://github.com/openhie/openinfoman-dhis/commmit/94499a5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 20:40:25 -0500
+
+openinfoman-dhis (1.0.52~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.52
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 20:27:51 -0500
+
+openinfoman-dhis (1.0.51~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.51
+    -7ffdfa5 fixup typo in extract from dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/7ffdfa5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 20:27:40 -0500
+
+openinfoman-dhis (1.0.50~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.50
+    -a102143 packaging fixup
+    --https://github.com/openhie/openinfoman-dhis/commmit/a102143
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 20:06:10 -0500
+
+openinfoman-dhis (1.0.49~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.49
+    -6e85385 fixed updating binding
+    --https://github.com/openhie/openinfoman-dhis/commmit/6e85385
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 19:58:33 -0500
+
+openinfoman-dhis (1.0.48~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.48
+    -ed6ad53 fixup generate URL
+    --https://github.com/openhie/openinfoman-dhis/commmit/ed6ad53
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 19:20:49 -0500
+
+openinfoman-dhis (1.0.47~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.47
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 18:48:09 -0500
+
+openinfoman-dhis (1.0.46~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.46
+    -a779a96 fixup wrapper
+    --https://github.com/openhie/openinfoman-dhis/commmit/a779a96
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 18:47:11 -0500
+
+openinfoman-dhis (1.0.45~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.45
+    -22ba9d6 expiremental cleanup and packaging for web UI and config
+    --https://github.com/openhie/openinfoman-dhis/commmit/22ba9d6
+    -dca6935 optimization on extract from dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/dca6935
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 18 Jan 2016 16:36:07 -0500
+
+openinfoman-dhis (1.0.44~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.44
+    -8367fc2 fixed typo in transform to dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/8367fc2
+    -c7e8ae2 added in a errant +
+    --https://github.com/openhie/openinfoman-dhis/commmit/c7e8ae2
+    -9afff0b Update README
+    --https://github.com/openhie/openinfoman-dhis/commmit/9afff0b
+    -215697d Update README
+    --https://github.com/openhie/openinfoman-dhis/commmit/215697d
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 13 Jan 2016 13:15:19 -0500
+
+openinfoman-dhis (1.0.43~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.43
+    -e163dc0 fixed up css and status for dhis2 webapp
+    --https://github.com/openhie/openinfoman-dhis/commmit/e163dc0
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 10 Jan 2016 12:49:38 -0500
+
+openinfoman-dhis (1.0.42~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.42
+    -b004c60 improvements to DHIS2 web app - now does export and import
+    --https://github.com/openhie/openinfoman-dhis/commmit/b004c60
+    -2067b1e improvements to DHIS2 web app - now does export and import
+    --https://github.com/openhie/openinfoman-dhis/commmit/2067b1e
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 10 Jan 2016 12:13:57 -0500
+
+openinfoman-dhis (1.0.41~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.41
+    -44d2787 updated dhis2 webapp zip
+    --https://github.com/openhie/openinfoman-dhis/commmit/44d2787
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 15:33:30 -0500
+
+openinfoman-dhis (1.0.40~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.40
+    -ba48bcb fixed typos in last commit
+    --https://github.com/openhie/openinfoman-dhis/commmit/ba48bcb
+    -1014a4f added status updates on loading DXF from ILR
+    --https://github.com/openhie/openinfoman-dhis/commmit/1014a4f
+    -73a1913 in extraction of DHIS2, used the entityID attribute if it
+    --https://github.com/openhie/openinfoman-dhis/commmit/73a1913
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 15:32:28 -0500
+
+openinfoman-dhis (1.0.39~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.39
+    -4731b23 dhis2 csd loader webapp - fixed jquery cross platform issu
+    --https://github.com/openhie/openinfoman-dhis/commmit/4731b23
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 09:25:49 -0500
+
+openinfoman-dhis (1.0.38~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.38
+    -3f4847e added logs to the webapp. fixed up some path stuff
+    --https://github.com/openhie/openinfoman-dhis/commmit/3f4847e
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 08:47:42 -0500
+
+openinfoman-dhis (1.0.37~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.37
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 08:04:37 -0500
+
+openinfoman-dhis (1.0.36~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.36
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 08:04:16 -0500
+
+openinfoman-dhis (1.0.35~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.35
+    -1205730 updates to the CSD Loader dhis2 app
+    --https://github.com/openhie/openinfoman-dhis/commmit/1205730
+    -6dc6e8e added entityID as an orgUnit attribute in the csd->dxf tra
+    --https://github.com/openhie/openinfoman-dhis/commmit/6dc6e8e
+    -a2b1829 updated readme
+    --https://github.com/openhie/openinfoman-dhis/commmit/a2b1829
+    -e84db69 fixed some issues in transform to DXF
+    --https://github.com/openhie/openinfoman-dhis/commmit/e84db69
+    -6eeff32 added example requests
+    --https://github.com/openhie/openinfoman-dhis/commmit/6eeff32
+    -9911676 Added logic in csd->dhis transform to try to presreve dhis
+    --https://github.com/openhie/openinfoman-dhis/commmit/9911676
+    -c22c731 started to add healthworker dhis2 to user support
+    --https://github.com/openhie/openinfoman-dhis/commmit/c22c731
+    -d660010 Added scaffolding for DHIS2 app
+    --https://github.com/openhie/openinfoman-dhis/commmit/d660010
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 06 Jan 2016 08:02:29 -0500
+
+openinfoman-dhis (1.0.34~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.34
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 06 Nov 2015 15:50:35 +0000
+
+openinfoman-dhis (1.0.33~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.33
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 26 Oct 2015 14:30:22 +0000
+
+openinfoman-dhis (1.0.32~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.32
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 26 Oct 2015 14:28:41 +0000
+
+openinfoman-dhis (1.0.31~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.31
+    -b595f64 reload stored functions when installing ubuntu package.  r
+    --https://github.com/openhie/openinfoman-dhis/commmit/b595f64
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 25 Oct 2015 20:37:26 -0400
+
+openinfoman-dhis (1.0.31~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.31
+    -b595f64 reload stored functions when installing ubuntu package.  r
+    --https://github.com/openhie/openinfoman-dhis/commmit/b595f64
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 25 Oct 2015 20:37:08 -0400
+
+openinfoman-dhis (1.0.31~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.31
+    -b595f64 reload stored functions when installing ubuntu package.  r
+    --https://github.com/openhie/openinfoman-dhis/commmit/b595f64
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 25 Oct 2015 20:37:03 -0400
+
+openinfoman-dhis (1.0.30~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.30
+    -29de9e7 removed debugging statment and clean-up trailing slashes i
+    --https://github.com/openhie/openinfoman-dhis/commmit/29de9e7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 21 Oct 2015 14:09:13 +0000
+
+openinfoman-dhis (1.0.29~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.29
+    -276f643 dxf:dataElements as csd:service are now linked to csd:faci
+    --https://github.com/openhie/openinfoman-dhis/commmit/276f643
+    -8228f49 added root organization node to put the full DHIS2 hierarc
+    --https://github.com/openhie/openinfoman-dhis/commmit/8228f49
+    -9c27568 accept gzip uploads of dhis2 metadata exports
+    --https://github.com/openhie/openinfoman-dhis/commmit/9c27568
+    -09d79cd removed redundant data in csd:servivce
+    --https://github.com/openhie/openinfoman-dhis/commmit/09d79cd
+    -330ebd7 added in extension point on csd:service for delta with dxf
+    --https://github.com/openhie/openinfoman-dhis/commmit/330ebd7
+    -875618e fixed issue with @entityID for csd:service
+    --https://github.com/openhie/openinfoman-dhis/commmit/875618e
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 07 Oct 2015 14:49:07 +0000
+
+openinfoman-dhis (1.0.28~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.28
+    -0f31001 fixed issues with dates and disaggregators for dxf:dataEle
+    --https://github.com/openhie/openinfoman-dhis/commmit/0f31001
+    -4a06851 improved UI for DXF upload
+    --https://github.com/openhie/openinfoman-dhis/commmit/4a06851
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 01 Oct 2015 03:43:50 +0000
+
+openinfoman-dhis (1.0.27~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.27
+    -e5469e8 services linked to providers
+    --https://github.com/openhie/openinfoman-dhis/commmit/e5469e8
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 25 Sep 2015 15:09:28 +0000
+
+openinfoman-dhis (1.0.26~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.26
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 25 Sep 2015 03:45:08 +0000
+
+openinfoman-dhis (1.0.25~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.25
+    -009711d added dataElements as a CSD service with disaggregators ac
+    --https://github.com/openhie/openinfoman-dhis/commmit/009711d
+    -f667ee4 Fixed syntax error
+    --https://github.com/openhie/openinfoman-dhis/commmit/f667ee4
+    -01fbb48 Fixed a bug where by var facs was not declared
+    --https://github.com/openhie/openinfoman-dhis/commmit/01fbb48
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 25 Sep 2015 03:44:43 +0000
+
+openinfoman-dhis (1.0.24~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.24
+    -c70294f add screenshot in docs
+    --https://github.com/openhie/openinfoman-dhis/commmit/c70294f
+    -f9f7f5f added forgotten files in last commit
+    --https://github.com/openhie/openinfoman-dhis/commmit/f9f7f5f
+    -18072a7 added a simplied DHIS2 DXF->CSD transform whose UI let's c
+    --https://github.com/openhie/openinfoman-dhis/commmit/18072a7
+    -9c400e2 fixed urn of demo stored extraction query
+    --https://github.com/openhie/openinfoman-dhis/commmit/9c400e2
+    -ba772bf pulled some datim util functionality into dhis2 source.
+    --https://github.com/openhie/openinfoman-dhis/commmit/ba772bf
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 04 Sep 2015 14:33:37 +0000
+
+openinfoman-dhis (1.0.23~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.23
+    -21fdbf8 copied wrong file on commit of sierra_leone_demo_metadata_
+    --https://github.com/openhie/openinfoman-dhis/commmit/21fdbf8
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 20 Apr 2015 09:40:13 -0400
+
+openinfoman-dhis (1.0.22~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.22
+    -4db4f41 refresh sierra leone demo data
+    --https://github.com/openhie/openinfoman-dhis/commmit/4db4f41
+    -ccf9c6f fixed issues with hierarchy
+    --https://github.com/openhie/openinfoman-dhis/commmit/ccf9c6f
+    -0dfdcac updated sierra leone demo csd service directory
+    --https://github.com/openhie/openinfoman-dhis/commmit/0dfdcac
+    -d78481c more fixups for dxf2csd
+    --https://github.com/openhie/openinfoman-dhis/commmit/d78481c
+    -6826a1f Merge branch 'master' of https://github.com/openhie/openin
+    --https://github.com/openhie/openinfoman-dhis/commmit/6826a1f
+    -4bc43bb some fixes for generating CSD
+    --https://github.com/openhie/openinfoman-dhis/commmit/4bc43bb
+    -38e91c0 uncommented/removed the workarounds for when we couldn't u
+    --https://github.com/openhie/openinfoman-dhis/commmit/38e91c0
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 17 Apr 2015 12:41:40 -0400
+
+openinfoman-dhis (1.0.21~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.21
+    -6f1bcc4 updated aggregate HW report for CP-800
+    --https://github.com/openhie/openinfoman-dhis/commmit/6f1bcc4
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Fri, 13 Mar 2015 14:30:32 +0000
+
+openinfoman-dhis (1.0.20~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.20
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 12 Mar 2015 18:12:45 +0000
+
+openinfoman-dhis (1.0.19~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.19
+    -12419b3 fix for csd2dxf in case the facility type list/org unit gr
+    --https://github.com/openhie/openinfoman-dhis/commmit/12419b3
+    -24e64b9 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/24e64b9
+    -0b16703 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/0b16703
+    -1410939 Update README.md
+    --https://github.com/openhie/openinfoman-dhis/commmit/1410939
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Thu, 12 Mar 2015 18:12:10 +0000
+
+openinfoman-dhis (1.0.18~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.18
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 02 Mar 2015 14:26:05 -0500
+
+openinfoman-dhis (1.0.17~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.17
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 02 Mar 2015 14:25:26 -0500
+
+openinfoman-dhis (1.0.16~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.16
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 18 Feb 2015 19:06:54 +0000
+
+openinfoman-dhis (1.0.15~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.15
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Wed, 18 Feb 2015 19:05:50 +0000
+
+openinfoman-dhis (1.0.14~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.14
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 19:04:50 +0000
+
+openinfoman-dhis (1.0.13~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.13
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 18:09:09 +0000
+
+openinfoman-dhis (1.0.12~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.12
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 18:08:38 +0000
+
+openinfoman-dhis (1.0.11~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.11
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 17:41:02 +0000
+
+openinfoman-dhis (1.0.10~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.10
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 17:40:36 +0000
+
+openinfoman-dhis (1.0.9~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.9
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 16:14:55 +0000
+
+openinfoman-dhis (1.0.8~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.8
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 15:58:01 +0000
+
+openinfoman-dhis (1.0.7~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.7
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 15:57:45 +0000
+
+openinfoman-dhis (1.0.6~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.6
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 15:35:59 +0000
+
+openinfoman-dhis (1.0.5~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.5
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 15:35:40 +0000
+
+openinfoman-dhis (1.0.4~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.4
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 15:06:46 +0000
+
+openinfoman-dhis (1.0.3~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.3
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 14:44:18 +0000
+
+openinfoman-dhis (1.0.2~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 14:18:24 +0000
+
+openinfoman-dhis (1.0.1~trusty) trusty; urgency=medium
+
+  * Release Version 1.0.1
+    -4b6747d fixup URL reference to source
+    --https://github.com/openhie/openinfoman-dhis/commit/4b6747d
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 Feb 2015 14:08:47 +0000
+
+openinfoman-dhis (1.0.0~trusty) trusty; urgency=low
+
+  [Carl Leitner <litlfred@ibiblio.org>]
+  * Initial Build
+    Fri 2015-02-13 13:55:10 -0500
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 February 2015 13:55:10 -0500
+

@@ -1,0 +1,29 @@
+#!/bin/bash
+set -x
+
+
+
+OI=/var/lib/openinfoman
+USERNAME=oi
+BASEX=$OI/bin/basex
+WGET=/usr/bin/wget
+
+REPOS=("dxf2csd.xqm" "dxf_1_0.xqm" "util.xqm")
+SFS=("stored_query_definitions/transform_to_dxf_v25.xml" "stored_query_definitions/aggregate_hw_export.xml" "stored_query_definitions/csd2dxf.xml" "stored_query_definitions/transform_to_dxf.xml" "stored_updating_query_definitions/dxf_to_svs.xml" "stored_updating_query_definitions/dxf_to_csd.xml" "stored_updating_query_definitions/extract_from_dxf.xml" "stored_updating_query_definitions/extract_from_dxf_v25.xml")
+
+for REPO in ${REPOS[@]}
+do
+   INST="REPO INSTALL ${OI}/repo-src/${REPO}"
+   $BASEX -Vc "${INST}"
+done
+
+for SF in ${SFS[@]}
+do
+  cd $OI
+  $OI/resources/scripts/install_stored_function.php $OI/resources/$SF 
+  if [[ $? != 0 ]]; then exit 1; fi
+done
+
+chown -R $USERNAME:$USERNAME $OI
+
+
