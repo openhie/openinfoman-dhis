@@ -1,3 +1,11 @@
+openinfoman-dhis (1.4.30~vivid) vivid; urgency=medium
+
+  * Release Version 1.4.30
+    -1c0964a packaging for ubuntu 18.04
+    --https://github.com/openhie/openinfoman-dhis/commmit/1c0964a
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 15 Apr 2018 07:36:31 +0000
+
 openinfoman-dhis (1.4.29~vivid) vivid; urgency=medium
 
   * Release Version 1.4.29
