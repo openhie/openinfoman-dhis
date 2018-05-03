@@ -5,7 +5,7 @@ CONFIG=publish_to_ilr.cfg
 
 ########################################################################
 # Dependencies:
-#  sudo apt-get install libxml2-utils jshon
+#  sudo apt-get install libxml2-utils 
 # 
 #
 #    DO NOT EDIT BELOW HERE    
@@ -18,7 +18,6 @@ CURL=/usr/bin/curl
 PRINTF=/usr/bin/printf
 XMLLINT=/usr/bin/xmllint
 GREP=/bin/grep
-JSHON=/usr/bin/jshon
 #########################################################################
 #    Actual work is below      
 #########################################################################
@@ -134,12 +133,7 @@ elif [ "$NOTHASKEY" = "1" ]; then
     LASTUPDATE=false
 else
     echo "Getting last export time from $DHIS2_URL"
-    LASTUPDATE=`$CURL -sv  $DHIS2_AUTH -H "$DHIS2_AUTH_HEAD"  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | $JSHON -e value`
-    #strip any beginning / ending quotes
-    LASTUPDATE="${LASTUPDATE%\"}"
-    LASTUPDATE="${LASTUPDATE#\"}"
-    LASTUPDATE="${LASTUPDATE%\'}"
-    LASTUPDATE="${LASTUPDATE#\'}"
+    LASTUPDATE=`$CURL -sv  $DHIS2_AUTH -H "$DHIS2_AUTH_HEAD"  -H 'Accept: application/json' $DHIS2_URL/api/dataStore/CSD-Loader-Last-Export/$ILR_DOC | sed -E 's/^.+["\x27]value["\x27] *: *["\x27]([^"\x27]+)["\x27].+$/\1/gim'`
     echo "Last export performed succesfully at $LASTUPDATE"
     #convert to yyyy-mm-dd format (dropping time as it is ignored by DHIS2)
     LASTUPDATE=$(date --date="$LASTUPDATE" +%F)
